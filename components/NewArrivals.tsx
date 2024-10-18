@@ -38,7 +38,7 @@ export default function NewArrivals() {
             Harry Potter and cursed child
           </CardTitle>
           <CardDescription className="text-center">J.K rowling</CardDescription>
-          <CardContent className="font-bold text-lg text-center text-emerald-600">
+          <CardContent className="font-bold text-lg text-center text-teal-600">
             23 $
           </CardContent>
           <CardFooter className="flex justify-around items-center">
@@ -63,7 +63,7 @@ export default function NewArrivals() {
             Harry Potter and cursed child
           </CardTitle>
           <CardDescription className="text-center">J.K rowling</CardDescription>
-          <CardContent className="font-bold text-lg text-center text-emerald-600">
+          <CardContent className="font-bold text-lg text-center text-teal-600">
             23 $
           </CardContent>
           <CardFooter className="flex justify-around items-center">
@@ -88,7 +88,7 @@ export default function NewArrivals() {
             Harry Potter and cursed child
           </CardTitle>
           <CardDescription className="text-center">J.K rowling</CardDescription>
-          <CardContent className="font-bold text-lg text-center text-emerald-600">
+          <CardContent className="font-bold text-lg text-center text-teal-600">
             23 $
           </CardContent>
           <CardFooter className="flex justify-around items-center">
@@ -113,7 +113,7 @@ export default function NewArrivals() {
             Harry Potter and cursed child
           </CardTitle>
           <CardDescription className="text-center">J.K rowling</CardDescription>
-          <CardContent className="font-bold text-lg text-center text-emerald-600">
+          <CardContent className="font-bold text-lg text-center text-teal-600">
             23 $
           </CardContent>
           <CardFooter className="flex justify-around items-center">

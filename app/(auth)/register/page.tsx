@@ -1,128 +1,108 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useFormState } from "react-dom";
+import { registerUserAction } from "@/data/actions/auth-actions";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z.string().email(),
-  password: z.string().min(8),
-});
+import {
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Card,
+} from "@/components/ui/card";
+
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { ZodErrors } from "@/components/custom/ZodErrors";
+import { StrapiErrors } from "@/components/custom/StrapiErrors";
+import { SubmitButton } from "@/components/custom/SubmitButton";
+
+const INITIAL_STATE = {
+  data: null,
+  zodErrors: null,
+  message: null,
+};
 
 export default function Register() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-    },
-  });
+  const [formState, formAction] = useFormState(
+    registerUserAction,
+    INITIAL_STATE
+  );
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-  };
+  console.log(formState, "client");
 
   return (
-    <div>
-      <div className="bg-amber-950 py-9 rounded-lg bg-opacity-85 sm:w-96 w-80">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 flex flex-col justify-between items-center"
-          >
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex flex-col items-center mb-4 text-amber-50">
-                    Username
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="bg-amber-50 bg-opacity-85 sm:w-72 w-64"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className="w-fit sm:w-full max-w-md">
+      <form action={formAction}>
+        <Card className="bg-amber-950 rounded-lg bg-opacity-85 border-none">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-3xl font-bold text-amber-100">
+              Sign Up
+            </CardTitle>
+            <CardDescription className="text-amber-200">
+              Enter your details to create a new account
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-amber-50" htmlFor="username">
+                Username
+              </Label>
+              <Input
+                className="text-amber-100"
+                id="username"
+                name="username"
+                type="text"
+                placeholder="username"
+              />
+              <ZodErrors error={formState?.zodErrors?.username} />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-amber-50" htmlFor="email">
+                Email
+              </Label>
+              <Input
+                className="text-amber-100"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="name@example.com"
+              />
+              <ZodErrors error={formState?.zodErrors?.email} />
+            </div>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex flex-col items-center mb-4 text-amber-50">
-                    Email
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="bg-amber-50 bg-opacity-85 sm:w-72 w-64"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <div className="space-y-2">
+              <Label className="text-amber-50" htmlFor="password">
+                Password
+              </Label>
+              <Input
+                className="text-amber-100"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="password"
+              />
+              <ZodErrors error={formState?.zodErrors?.password} />
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col">
+            <SubmitButton
+              className="w-full hover:bg-amber-200 text-amber-950 font-bold bg-amber-100"
+              text="Sign Up"
+              loadingText="Loading"
             />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex flex-col items-center mb-4 text-amber-50">
-                    Password
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      className="bg-amber-50 bg-opacity-85 sm:w-72 w-64"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              className="hover:bg-amber-50 text-amber-950 font-bold bg-amber-100 text-center"
-            >
-              Submit
-            </Button>
-          </form>
-        </Form>
-      </div>
-      <div className="flex flex-col justify-normal items-center mt-10 bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">
-        <span>
-          Already have an account?{" "}
-          <Link
-            href="/log-in"
-            className="text-amber-300 font-bold hover:text-amber-500"
-          >
+            <StrapiErrors error={formState?.strapiErrors} />
+          </CardFooter>
+        </Card>
+        <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">
+          Have an account?
+          <Link className="underline ml-2" href="log-in">
             Log In
           </Link>
-        </span>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }

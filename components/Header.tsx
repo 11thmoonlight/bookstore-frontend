@@ -70,8 +70,8 @@ export default function Header() {
                       </i>
                     </button>
                   </div>
-                  <Link href="/sign-up" className="flex justify-between">
-                    Account
+                  <Link href="/register" className="flex justify-between">
+                    Sign up
                     <GoPerson size={27} />
                   </Link>
 
