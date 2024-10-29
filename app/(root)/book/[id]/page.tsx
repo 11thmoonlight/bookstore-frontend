@@ -1,32 +1,90 @@
+"use client";
+
+import { getBookById } from "@/data/services/get-books";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React from "react";
 import { IoStar } from "react-icons/io5";
 import { IoStarHalf } from "react-icons/io5";
 
-export default function Book() {
+interface Image {
+  url: string;
+  alternativeText: string;
+}
+
+interface Books {
+  author: string;
+  category: string;
+  createdAt: string;
+  description: string;
+  discount: number;
+  documentId: string;
+  id: number;
+  image: Image[];
+  language: string;
+  locale: null;
+  name: string;
+  pagesNum: number;
+  price: number;
+  publicationYear: string;
+  publishedAt: string;
+  publisher: string;
+  rate: number;
+  stock: number;
+  updatedAt: string;
+}
+
+export default function BooksById() {
+  const { id } = useParams<{ id: string }>();
+
+  // const [book, setBook] = useState<Books[]>([]);
+
+  const [book, setBook] = useState<Books | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const data = await getBookById(id);
+        const idBook = data?.data;
+
+        if (idBook) {
+          setBook(idBook);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+
+    fetchBooks();
+  }, [id]);
+
+  console.log(book);
+
   return (
     <>
       <div className="flex gap-10 mt-[160px] mb-10 justify-center px-10">
         <div className="relative">
-          <Image
-            src="/img/harry.jpg"
-            alt="book image cover"
-            width={400}
-            height={700}
-          />
+          {!loading && (
+            <Image
+              src={`http://localhost:1337${book?.image[0]?.url}`}
+              alt="book image cover"
+              width={400}
+              height={700}
+            />
+          )}
         </div>
         <div className="w-fit flex flex-col gap-3">
-          <h2 className="font-bold text-2xl">
-            Harry Potter And The Cursed Child
-          </h2>
+          <h2 className="font-bold text-2xl">{book?.name}</h2>
           <div className="text-lg flex gap-4 items-center">
             <Avatar>
               <AvatarImage src="/img/jkRowling.jpg" alt="writer image" />
               <AvatarFallback>A</AvatarFallback>
             </Avatar>
-            <p>By J.K. Rowling</p>
+            <p>By {book?.author}</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex">
@@ -37,57 +95,40 @@ export default function Book() {
               <IoStarHalf className="text-amber-600" />
             </div>
 
-            <p>1,056,107 ratings</p>
+            <p>{book?.rate}</p>
           </div>
 
-          <div className="text-sm">
-            The eighth story, nineteen years later... It was always difficult
-            being Harry Potter, and it isn't much easier now that he is an
-            overworked employee of the Ministry of Magic, a husband, and a
-            father of three school-age children. While Harry grapples with a
-            past that refuses to stay where it belongs, his youngest son, Albus,
-            must struggle with the weight of a family legacy he never wanted. As
-            past and present fuse ominously, both father and son learn the
-            uncomfortable truth: sometimes, darkness comes from unexpected
-            places. Based on an original new story by J.K. Rowling, Jack Thorne,
-            and John Tiffany, a new play by Jack Thorne, "Harry Potter and the
-            Cursed Child" is the complete and official playscript of the
-            original, award-winning West End production. This updated edition
-            includes the final dialogue and stage directions, a conversation
-            piece between director John Tiffany and playwright Jack Thorne, the
-            Potter family tree, and a timeline of events in the wizarding world
-            leading up to "Harry Potter and the Cursed Child."
-          </div>
+          <div className="text-sm">{book?.description}</div>
 
-          <div className="w-48 flex flex-col gap-2">
+          <div className="w-96 flex flex-col gap-2">
             <div className="flex justify-between">
               <p className="font-bold">Publisher</p>
-              <p>Generic</p>
+              <p>{book?.publisher}</p>
             </div>
 
             <div className="flex justify-between">
               <p className="font-bold">Publication Date</p>
-              <p>2017</p>
+              <p>{book?.publicationYear.replaceAll("-", "/")}</p>
             </div>
 
             <div className="flex justify-between">
               <p className="font-bold">Language</p>
-              <p>English</p>
+              <p>{book?.language}</p>
             </div>
 
             <div className="flex justify-between">
               <p className="font-bold">Pages</p>
-              <p>670</p>
+              <p>{book?.pagesNum}</p>
             </div>
 
             <div className="flex justify-between">
               <p className="font-bold">Genere</p>
-              <p>Fantacy</p>
+              <p>{book?.category}</p>
             </div>
 
             <div className="flex justify-between">
               <p className="font-bold">Price</p>
-              <p className="text-teal-700 text-lg font-bold">13.99$</p>
+              <p className="text-teal-700 text-lg font-bold">{book?.price}$</p>
             </div>
           </div>
           <Button className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50">
@@ -95,7 +136,6 @@ export default function Book() {
           </Button>
         </div>
       </div>
-      {/* <Button>Add to cart</Button> */}
     </>
   );
 }

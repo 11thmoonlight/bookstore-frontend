@@ -11,8 +11,13 @@ import Image from "next/image";
 import { GoHeart } from "react-icons/go";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { Button } from "./ui/button";
+import { getBooks } from "@/data/services/get-books";
 
-export default function NewArrivals() {
+export default async function NewArrivals() {
+  const books = await getBooks();
+  // console.log("books", books);
+  // const genre = await getBooksByGenre("Horror");
+  // console.log("genre", genre!.data[0].id);
   return (
     <div className="px-6 mb-28 mt-14">
       <div className="flex items-center justify-center w-full my-8">
@@ -35,9 +40,11 @@ export default function NewArrivals() {
             />
           </CardHeader>
           <CardTitle className="text-base text-center">
-            Harry Potter and cursed child
+            {books.data[0].name}
           </CardTitle>
-          <CardDescription className="text-center">J.K rowling</CardDescription>
+          <CardDescription className="text-center">
+            {books.data[0].author}
+          </CardDescription>
           <CardContent className="font-bold text-lg text-center text-teal-600">
             23 $
           </CardContent>
