@@ -40,11 +40,9 @@ export default async function NewArrivals() {
             />
           </CardHeader>
           <CardTitle className="text-base text-center">
-            {books.data[0].name}
+            Harry Potter and cursed child
           </CardTitle>
-          <CardDescription className="text-center">
-            {books.data[0].author}
-          </CardDescription>
+          <CardDescription className="text-center">J.K rowling</CardDescription>
           <CardContent className="font-bold text-lg text-center text-teal-600">
             23 $
           </CardContent>

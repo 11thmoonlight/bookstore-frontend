@@ -1,3 +1,5 @@
+"use server";
+
 import { getStrapiURL } from "@/lib/utils";
 import qs from "qs";
 

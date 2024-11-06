@@ -37,20 +37,20 @@ export default function LogIn() {
               Sign In
             </CardTitle>
             <CardDescription className="text-amber-200">
-              Enter your details to sign in to your account
+              Enter your details to log in to your account
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-amber-50" htmlFor="email">
-                Email
+              <Label className="text-amber-50" htmlFor="identifier">
+                Username
               </Label>
               <Input
                 className="text-amber-100"
                 id="identifier"
                 name="identifier"
                 type="text"
-                placeholder="username or email"
+                placeholder="username"
               />
               <ZodErrors error={formState?.zodErrors?.identifier} />
             </div>

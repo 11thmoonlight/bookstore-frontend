@@ -1,14 +1,20 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { GrAdd } from "react-icons/gr";
 import { FaMinus } from "react-icons/fa6";
-import { GoHeart } from "react-icons/go";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCart } from "@/data/services/cart-services";
+import { useUser } from "@/context/userContext";
 
 export default function Cart() {
+  const { user } = useUser();
+  console.log(typeof user?.data);
+
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-center">
       <Table>
@@ -24,7 +30,7 @@ export default function Cart() {
               <div className="flex flex-col justify-between gap-4">
                 <div className="flex flex-col gap-2 justify-center">
                   <p className="md:font-bold lg:text-lg font-semibold text-base">
-                    Harry Potter And The Cursed Child
+                    {}
                   </p>
                   <p>By J.K. Rowling</p>
                   <p className="font-bold text-teal-600 text-lg lg:text-2xl">

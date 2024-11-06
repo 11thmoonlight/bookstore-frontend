@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import { GoPerson } from "react-icons/go";
@@ -19,9 +21,12 @@ import {
 } from "./ui/menubar";
 import { logoutAction } from "@/data/actions/auth-actions";
 import { LogOut } from "lucide-react";
+import { useUser } from "@/context/userContext";
 
-export default async function Header() {
-  const user = await getUserMeLoader();
+export default function Header() {
+  const { user } = useUser();
+  console.log(user);
+
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-white shadow-lg z-50">
@@ -81,8 +86,12 @@ export default async function Header() {
                         <span>Log Out</span>
                       </Link> */}
                       <form action={logoutAction}>
-                        <button type="submit">
+                        <button
+                          type="submit"
+                          className="flex items-center gap-4 w-full"
+                        >
                           <LogOut className="w-6 h-6 hover:text-primary" />
+                          Log out
                         </button>
                       </form>
                     </MenubarItem>

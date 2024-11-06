@@ -8,6 +8,21 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { IoStar } from "react-icons/io5";
 import { IoStarHalf } from "react-icons/io5";
+import { addToCart } from "@/data/services/cart-services";
+
+// interface User {
+//   id: number;
+//   documentId: string;
+//   username: string;
+//   email: string;
+//   provider: string;
+//   confirmed: boolean;
+//   blocked: false;
+//   createdAt: string;
+//   updatedAt: string;
+//   publishedAt: string;
+//   locale: null;
+// }
 
 interface Image {
   url: string;
@@ -36,13 +51,18 @@ interface Books {
   updatedAt: string;
 }
 
+type ResponseType = {
+  success: boolean;
+  error?: string;
+};
+
 export default function BooksById() {
   const { id } = useParams<{ id: string }>();
 
-  // const [book, setBook] = useState<Books[]>([]);
-
   const [book, setBook] = useState<Books | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -62,7 +82,27 @@ export default function BooksById() {
     fetchBooks();
   }, [id]);
 
-  console.log(book);
+  console.log("book", book);
+  // console.log("user", user);
+
+  const handleAddToCart = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const response: ResponseType = await addToCart(book?.documentId);
+      if (response.success) {
+        setSuccess(true); // Operation was successful
+      } else {
+        setError(response.error || "Error adding to cart");
+      }
+    } catch (err) {
+      setError((err as Error).message || "Error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -131,7 +171,10 @@ export default function BooksById() {
               <p className="text-teal-700 text-lg font-bold">{book?.price}$</p>
             </div>
           </div>
-          <Button className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50">
+          <Button
+            onClick={handleAddToCart}
+            className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
+          >
             Add to cart
           </Button>
         </div>
