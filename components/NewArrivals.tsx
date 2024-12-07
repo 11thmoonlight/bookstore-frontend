@@ -11,13 +11,11 @@ import Image from "next/image";
 import { GoHeart } from "react-icons/go";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { Button } from "./ui/button";
-import { getBooks } from "@/data/services/get-books";
+import { getBooks, getBooksByGenre } from "@/data/services/get-books";
 
 export default async function NewArrivals() {
-  const books = await getBooks();
-  // console.log("books", books);
-  // const genre = await getBooksByGenre("Horror");
-  // console.log("genre", genre!.data[0].id);
+
+
   return (
     <div className="px-6 mb-28 mt-14">
       <div className="flex items-center justify-center w-full my-8">

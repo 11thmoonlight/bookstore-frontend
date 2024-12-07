@@ -90,13 +90,19 @@ export default function Genre() {
               {book.price} $
             </CardContent>
             <CardFooter className="flex justify-around items-center w-full">
-              <GoHeart size={27} />
+              <button>
+                <GoHeart size={27} />
+              </button>
+
               <Button className="bg-amber-800 text-base hover:bg-amber-700">
                 <Link href={`/book/${book.documentId}`} className="w-full">
                   More Details
                 </Link>
               </Button>
-              <PiShoppingCartLight size={27} />
+
+              <button>
+                <PiShoppingCartLight size={27} />
+              </button>
             </CardFooter>
           </Card>
         ))}

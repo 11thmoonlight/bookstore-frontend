@@ -8,6 +8,11 @@ interface Image {
   alternativeText: string;
 }
 
+interface AuthorImage {
+  url: string;
+  alternativeText: string;
+}
+
 interface Book {
   author: string;
   category: string;
@@ -17,6 +22,7 @@ interface Book {
   documentId: string;
   id: number;
   image: Image[];
+  authorImg: AuthorImage[];
   language: string;
   locale: null;
   name: string;
@@ -35,7 +41,10 @@ interface StrapiResponse<T> {
 }
 
 const query = qs.stringify({
-  populate: { image: { fields: ["url", "alternativeText"] } },
+  populate: {
+    image: { fields: ["url", "alternativeText"] },
+    authorImg: { fields: ["url", "alternativeText"] },
+  },
 });
 
 export async function getBooks() {
@@ -74,7 +83,7 @@ export async function getBookById(
     });
 
     const data = await response.json();
-    console.log(data);
+
     return data;
   } catch (error) {
     console.error(error);
@@ -93,7 +102,10 @@ export async function getBooksByGenre(
           },
         }
       : {},
-    populate: { image: { fields: ["url", "alternativeText"] } },
+    populate: {
+      image: { fields: ["url", "alternativeText"] },
+      authorImg: { fields: ["url", "alternativeText"] },
+    },
   });
 
   const baseUrl = getStrapiURL();

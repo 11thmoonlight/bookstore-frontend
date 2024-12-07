@@ -31,8 +31,6 @@ export default function Register() {
     INITIAL_STATE
   );
 
-  console.log(formState, "client");
-
   return (
     <div className="w-fit sm:w-full max-w-md">
       <form action={formAction}>

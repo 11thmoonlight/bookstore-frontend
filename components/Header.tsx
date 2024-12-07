@@ -8,7 +8,6 @@ import { IoSearchOutline } from "react-icons/io5";
 import { GoHeart } from "react-icons/go";
 import { Input } from "./ui/input";
 import Link from "next/link";
-import { getUserMeLoader } from "@/data/services/get-user-me-loader";
 import { IoIosLogIn } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import {
@@ -25,7 +24,6 @@ import { useUser } from "@/context/userContext";
 
 export default function Header() {
   const { user } = useUser();
-  console.log(user);
 
   return (
     <>

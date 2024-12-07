@@ -8,23 +8,19 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { IoStar } from "react-icons/io5";
 import { IoStarHalf } from "react-icons/io5";
-import { addToCart } from "@/data/services/cart-services";
-
-// interface User {
-//   id: number;
-//   documentId: string;
-//   username: string;
-//   email: string;
-//   provider: string;
-//   confirmed: boolean;
-//   blocked: false;
-//   createdAt: string;
-//   updatedAt: string;
-//   publishedAt: string;
-//   locale: null;
-// }
+import {
+  addToCart,
+  updateCartItemQuantity,
+} from "@/data/services/cart-services";
+import { useUser } from "@/context/userContext";
+import { addToWishList } from "@/data/services/wishList-services";
 
 interface Image {
+  url: string;
+  alternativeText: string;
+}
+
+interface AuthorImage {
   url: string;
   alternativeText: string;
 }
@@ -33,6 +29,7 @@ interface Books {
   author: string;
   category: string;
   createdAt: string;
+  authorImg: AuthorImage[];
   description: string;
   discount: number;
   documentId: string;
@@ -51,17 +48,11 @@ interface Books {
   updatedAt: string;
 }
 
-type ResponseType = {
-  success: boolean;
-  error?: string;
-};
-
 export default function BooksById() {
+  const { user } = useUser();
+  console.log("user", user?.wishlists);
   const { id } = useParams<{ id: string }>();
-
   const [book, setBook] = useState<Books | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -69,6 +60,7 @@ export default function BooksById() {
       try {
         const data = await getBookById(id);
         const idBook = data?.data;
+        console.log(idBook);
 
         if (idBook) {
           setBook(idBook);
@@ -82,27 +74,36 @@ export default function BooksById() {
     fetchBooks();
   }, [id]);
 
-  console.log("book", book);
-  // console.log("user", user);
-
   const handleAddToCart = async () => {
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
-
     try {
-      const response: ResponseType = await addToCart(book?.documentId);
-      if (response.success) {
-        setSuccess(true); // Operation was successful
-      } else {
-        setError(response.error || "Error adding to cart");
-      }
+      const response = await addToCart(user?.cart.documentId, book?.documentId);
+
+      console.log(response);
     } catch (err) {
-      setError((err as Error).message || "Error");
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleAddToWishList = async () => {
+    try {
+      const response = await addToWishList(
+        user?.wishlists[0].documentId,
+        book?.documentId
+      );
+
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // const cartItemId = "CART_ITEM_ID"; // آی‌دی آیتم مربوطه
+  // const currentQuantity = 3; // مقدار فعلی که از سرور گرفتی
+  // await updateCartItemQuantity(cartItemId, currentQuantity + 1);
 
   return (
     <>
@@ -121,7 +122,10 @@ export default function BooksById() {
           <h2 className="font-bold text-2xl">{book?.name}</h2>
           <div className="text-lg flex gap-4 items-center">
             <Avatar>
-              <AvatarImage src="/img/jkRowling.jpg" alt="writer image" />
+              <AvatarImage
+                src={`http://localhost:1337${book?.authorImg.url}`}
+                alt="writer image"
+              />
               <AvatarFallback>A</AvatarFallback>
             </Avatar>
             <p>By {book?.author}</p>
@@ -176,6 +180,12 @@ export default function BooksById() {
             className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
           >
             Add to cart
+          </Button>
+          <Button
+            onClick={handleAddToWishList}
+            className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
+          >
+            Add to wish list
           </Button>
         </div>
       </div>

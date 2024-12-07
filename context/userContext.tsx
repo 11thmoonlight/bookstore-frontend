@@ -9,9 +9,29 @@ import {
   ReactNode,
 } from "react";
 
+interface Cart {
+  createdAt: string;
+  documentId: string;
+  products: unknown[];
+  id: number;
+  locale: null;
+  publishedAt: null;
+  updatedAt: string;
+}
+
+interface WishList {
+  createdAt: string;
+  documentId: string;
+  products: unknown[];
+  id: number;
+  locale: null;
+  publishedAt: null;
+  updatedAt: string;
+}
+
 interface User {
   blocked: boolean;
-  cart: unknown[];
+  cart: Cart;
   confirmed: boolean;
   createdAt: string;
   documentId: string;
@@ -24,31 +44,18 @@ interface User {
   publishedAt: string;
   updatedAt: string;
   username: string;
-  wishlists: unknown[];
-}
-
-// interface User {
-//   documentId: number;
-//   username: string;
-//   email: string;
-//   blocked: boolean;
-// }
-
-interface UserResponse {
-  ok: boolean;
-  data: User | null;
-  error: string | null;
+  wishlists: WishList;
 }
 
 interface UserContextType {
-  user: UserResponse | null;
-  setUser: (user: UserResponse | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserResponse | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {

@@ -4,7 +4,7 @@ import { getStrapiURL } from "@/lib/utils";
 import { getAuthToken } from "./get-token";
 import qs from "qs";
 
-interface Cart {
+interface WhishList {
   createdAt: string;
   documentId: string;
   products: unknown[];
@@ -30,10 +30,10 @@ const query = qs.stringify({
   },
 });
 
-export async function getCart() {
+export async function getWishList() {
   const baseUrl = getStrapiURL();
 
-  const url = new URL("/api/carts", baseUrl);
+  const url = new URL("/api/wishlists", baseUrl);
   url.search = query;
 
   const authToken = await getAuthToken();
@@ -57,17 +57,15 @@ export async function getCart() {
   }
 }
 
-export async function getCartById(
+export async function getWhishListById(
   id: string
-): Promise<StrapiResponse<Cart> | null> {
+): Promise<StrapiResponse<WhishList> | null> {
   const baseUrl = getStrapiURL();
 
-  const url = new URL(`/api/carts/${id}`, baseUrl);
+  const url = new URL(`/api/wishlists/${id}`, baseUrl);
   url.search = query;
 
   const authToken = await getAuthToken();
-
-  // if (!authToken) return { ok: false, data: null, error: null };
 
   try {
     const response = await fetch(url.href, {
@@ -88,8 +86,8 @@ export async function getCartById(
   }
 }
 
-export const removeFromCart = async (
-  cartId: string | undefined,
+export const addToWishList = async (
+  wishListId: string | undefined,
   productId: string | undefined
 ) => {
   const authToken = await getAuthToken();
@@ -98,7 +96,46 @@ export const removeFromCart = async (
   }
 
   const baseUrl = getStrapiURL();
-  const url = new URL(`/api/carts/${cartId}`, baseUrl);
+  const url = new URL(`/api/wishlists/${wishListId}`, baseUrl);
+
+  try {
+    const response = await fetch(url.href, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        data: {
+          products: {
+            connect: [{ documentId: productId }],
+          },
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error adding book to the wish list");
+    }
+
+    const updatedWishList = await response.json();
+    console.log("adding was successful", updatedWishList);
+  } catch (error) {
+    console.error("something went wrong", error);
+  }
+};
+
+export const removeFromWishList = async (
+  wishListId: string | undefined,
+  productId: string | undefined
+) => {
+  const authToken = await getAuthToken();
+  if (!authToken) {
+    return { success: false, error: "Authentication token not found" };
+  }
+
+  const baseUrl = getStrapiURL();
+  const url = new URL(`/api/wishlists/${wishListId}`, baseUrl);
   try {
     const response = await fetch(url.href, {
       method: "PUT",
@@ -123,82 +160,5 @@ export const removeFromCart = async (
     console.log("deleting was successful", updatedCart);
   } catch (error) {
     console.error("something went wrong", error);
-  }
-};
-
-export const addToCart = async (
-  cartId: string | undefined,
-  productId: string | undefined
-) => {
-  const authToken = await getAuthToken();
-  if (!authToken) {
-    return { success: false, error: "Authentication token not found" };
-  }
-
-  const baseUrl = getStrapiURL();
-  const url = new URL(`/api/carts/${cartId}`, baseUrl);
-
-  try {
-    const response = await fetch(url.href, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        data: {
-          products: {
-            connect: [{ documentId: productId }],
-          },
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Error adding book to the cart");
-    }
-
-    const updatedCart = await response.json();
-    console.log("adding was successful", updatedCart);
-  } catch (error) {
-    console.error("something went wrong", error);
-  }
-};
-
-export const updateCartItemQuantity = async (
-  cartItemId: string,
-  newQuantity: number
-) => {
-  const authToken = await getAuthToken();
-  if (!authToken) {
-    return { success: false, error: "Authentication token not found" };
-  }
-
-  const baseUrl = getStrapiURL();
-  const url = new URL(`/api/cart-items/${cartItemId}`, baseUrl);
-
-  try {
-    const response = await fetch(url.href, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        data: {
-          quantity: newQuantity,
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to update cart item quantity");
-    }
-
-    const updatedCartItem = await response.json();
-    console.log("Quantity updated successfully", updatedCartItem);
-    return { success: true, data: updatedCartItem };
-  } catch (error) {
-    console.error("Error updating cart item quantity:", error);
   }
 };
