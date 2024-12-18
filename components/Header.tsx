@@ -4,7 +4,6 @@ import Image from "next/image";
 import React from "react";
 import { GoPerson } from "react-icons/go";
 import { PiShoppingCartLight } from "react-icons/pi";
-import { IoSearchOutline } from "react-icons/io5";
 import { GoHeart } from "react-icons/go";
 import { Input } from "./ui/input";
 import Link from "next/link";
@@ -21,6 +20,7 @@ import {
 import { logoutAction } from "@/data/actions/auth-actions";
 import { LogOut } from "lucide-react";
 import { useUser } from "@/context/userContext";
+import Search from "./Search";
 
 export default function Header() {
   const { user } = useUser();
@@ -29,21 +29,16 @@ export default function Header() {
     <>
       <header className="fixed top-0 left-0 w-full bg-white shadow-lg z-50">
         <div className="flex justify-between items-center px-4 md:px-6 border-b-2">
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center w-[400px]">
             <Image src="/img/logo2.png" alt="logo" width={80} height={80} />
             <h1 className="font-bold text-4xl font-mono text-amber-600 ">
               HINDOE
             </h1>
           </div>
-          <div className="relative hidden md:inline-block md:w-[260px] lg:w-[400px]">
-            <Input type="text" placeholder="Search..." />
-            <button className="block w-7 h-7 text-center text-xl leading-0 absolute top-1 right-1 text-gray-400 focus:outline-none hover:text-gray-900 transition-colors">
-              <i>
-                <IoSearchOutline size={20} />
-              </i>
-            </button>
-          </div>
-          <div className="gap-4 pl-14 flex items-center">
+
+          <Search />
+
+          <div className="gap-4 flex items-center w-[400px] justify-end">
             {user ? (
               <Menubar className="border-none shadow-none p-0">
                 <MenubarMenu>
@@ -79,10 +74,6 @@ export default function Header() {
                     </MenubarItem>
                     <MenubarSeparator />
                     <MenubarItem>
-                      {/* <Link href="/" className="flex items-center gap-4 w-full">
-                        <IoIosLogOut size={27} />
-                        <span>Log Out</span>
-                      </Link> */}
                       <form action={logoutAction}>
                         <button
                           type="submit"

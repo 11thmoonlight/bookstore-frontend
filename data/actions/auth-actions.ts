@@ -121,8 +121,10 @@ export async function loginUserAction(prevState: any, formData: FormData) {
     };
   }
 
-  cookies().set("jwt", responseData.jwt);
-  redirect("/");
+  if (responseData && !responseData.error) {
+    cookies().set("jwt", responseData.jwt);
+    redirect("/");
+  }
 }
 
 export async function logoutAction() {

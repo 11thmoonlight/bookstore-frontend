@@ -27,6 +27,7 @@ const query = qs.stringify({
         },
       },
     },
+    cart_items: "*",
   },
 });
 
@@ -160,45 +161,8 @@ export const addToCart = async (
 
     const updatedCart = await response.json();
     console.log("adding was successful", updatedCart);
+    return updatedCart;
   } catch (error) {
     console.error("something went wrong", error);
-  }
-};
-
-export const updateCartItemQuantity = async (
-  cartItemId: string,
-  newQuantity: number
-) => {
-  const authToken = await getAuthToken();
-  if (!authToken) {
-    return { success: false, error: "Authentication token not found" };
-  }
-
-  const baseUrl = getStrapiURL();
-  const url = new URL(`/api/cart-items/${cartItemId}`, baseUrl);
-
-  try {
-    const response = await fetch(url.href, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        data: {
-          quantity: newQuantity,
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to update cart item quantity");
-    }
-
-    const updatedCartItem = await response.json();
-    console.log("Quantity updated successfully", updatedCartItem);
-    return { success: true, data: updatedCartItem };
-  } catch (error) {
-    console.error("Error updating cart item quantity:", error);
   }
 };

@@ -8,12 +8,11 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { IoStar } from "react-icons/io5";
 import { IoStarHalf } from "react-icons/io5";
-import {
-  addToCart,
-  updateCartItemQuantity,
-} from "@/data/services/cart-services";
+import { addToCart } from "@/data/services/cart-services";
 import { useUser } from "@/context/userContext";
 import { addToWishList } from "@/data/services/wishList-services";
+import { addCartItem } from "@/data/services/cartItem-service";
+import { toast } from "react-toastify";
 
 interface Image {
   url: string;
@@ -50,7 +49,6 @@ interface Books {
 
 export default function BooksById() {
   const { user } = useUser();
-  console.log("user", user?.wishlists);
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Books | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -60,7 +58,6 @@ export default function BooksById() {
       try {
         const data = await getBookById(id);
         const idBook = data?.data;
-        console.log(idBook);
 
         if (idBook) {
           setBook(idBook);
@@ -76,9 +73,8 @@ export default function BooksById() {
 
   const handleAddToCart = async () => {
     try {
-      const response = await addToCart(user?.cart.documentId, book?.documentId);
-
-      console.log(response);
+      await addToCart(user?.cart.documentId, book?.documentId);
+      await addCartItem(user?.cart.documentId, book?.documentId);
     } catch (err) {
       console.error(err);
     } finally {
@@ -88,12 +84,7 @@ export default function BooksById() {
 
   const handleAddToWishList = async () => {
     try {
-      const response = await addToWishList(
-        user?.wishlists[0].documentId,
-        book?.documentId
-      );
-
-      console.log(response);
+      await addToWishList(user?.wishlists[0].documentId, book?.documentId);
     } catch (err) {
       console.error(err);
     } finally {
@@ -101,9 +92,7 @@ export default function BooksById() {
     }
   };
 
-  // const cartItemId = "CART_ITEM_ID"; // آی‌دی آیتم مربوطه
-  // const currentQuantity = 3; // مقدار فعلی که از سرور گرفتی
-  // await updateCartItemQuantity(cartItemId, currentQuantity + 1);
+  const notify = () => toast("Wow so easy!");
 
   return (
     <>
@@ -187,6 +176,7 @@ export default function BooksById() {
           >
             Add to wish list
           </Button>
+          <button onClick={notify}>Notify!</button>
         </div>
       </div>
     </>

@@ -17,6 +17,10 @@ import React, { useEffect, useState } from "react";
 import { GoHeart } from "react-icons/go";
 import { PiShoppingCartLight } from "react-icons/pi";
 import Link from "next/link";
+import { addToCart } from "@/data/services/cart-services";
+import { addCartItem } from "@/data/services/cartItem-service";
+import { addToWishList } from "@/data/services/wishList-services";
+import { useUser } from "@/context/userContext";
 
 interface Image {
   url: string;
@@ -46,8 +50,10 @@ interface Books {
 }
 
 export default function Genre() {
+  const { user } = useUser();
   const { genre } = useParams<{ genre: string }>();
   const [books, setBooks] = useState<Books[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -65,6 +71,27 @@ export default function Genre() {
 
     fetchBooks();
   }, [genre]);
+
+  const handleAddToCart = async () => {
+    try {
+      await addToCart(user?.cart.documentId, book?.documentId);
+      await addCartItem(user?.cart.documentId, book?.documentId);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddToWishList = async () => {
+    try {
+      await addToWishList(user?.wishlists[0].documentId, book?.documentId);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-center">

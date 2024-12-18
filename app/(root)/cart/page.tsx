@@ -9,8 +9,13 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUser } from "@/context/userContext";
-import { getCartById } from "@/data/services/cart-services";
+import { getCartById, removeFromCart } from "@/data/services/cart-services";
 import { IoMdArrowRoundForward } from "react-icons/io";
+import {
+  getCartItemByIds,
+  removeCartItem,
+  updateCartItemQuantity,
+} from "@/data/services/cartItem-service";
 
 interface CartItems {
   createdAt: string;
@@ -26,18 +31,26 @@ export default function Cart() {
   const { user } = useUser();
 
   const [items, setItems] = useState<CartItems[]>([]);
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchItems = async () => {
       if (user?.cart?.documentId) {
         try {
           const itemsData = await getCartById(user.cart.documentId);
-          console.log("Fetched items data:", itemsData);
-
           if (itemsData) {
             setItems(itemsData);
-          } else {
-            console.error("Invalid items data structure", itemsData);
+
+            const quantityData = {};
+            for (const item of itemsData?.data?.products) {
+              const { cartItemData } = await getCartItemByIds(
+                user.cart.documentId,
+                item.documentId
+              );
+              quantityData[item.documentId] = cartItemData.quantity;
+            }
+            setQuantities(quantityData);
           }
         } catch (error) {
           console.error("Error fetching cart items:", error);
@@ -48,13 +61,93 @@ export default function Cart() {
     fetchItems();
   }, [user]);
 
+  const handleIncreaseItem = async (productId: string) => {
+    try {
+      const { cartItemData } = await getCartItemByIds(
+        user?.cart?.documentId,
+        productId
+      );
+
+      const quantity = cartItemData.quantity;
+      const response = await updateCartItemQuantity(
+        cartItemData.documentId,
+        quantity + 1
+      );
+
+      if (response) {
+        setQuantities((prevQuantities) => ({
+          ...prevQuantities,
+          [productId]: (prevQuantities[productId] || 0) + 1,
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDecreaseItem = async (productId: string) => {
+    try {
+      const { cartItemData } = await getCartItemByIds(
+        user?.cart?.documentId,
+        productId
+      );
+
+      const quantity = cartItemData.quantity;
+
+      if (quantity > 1) {
+        const response = await updateCartItemQuantity(
+          cartItemData.documentId,
+          quantity - 1
+        );
+
+        if (response) {
+          setQuantities((prevQuantities) => ({
+            ...prevQuantities,
+            [productId]: Math.max((prevQuantities[productId] || 0) - 1, 0),
+          }));
+        }
+      } else {
+        await removeFromCart(user?.cart?.documentId, productId);
+
+        await removeCartItem(cartItemData.documentId);
+
+        setItems((prevItems) => ({
+          ...prevItems,
+          data: {
+            ...prevItems.data,
+            products: prevItems.data.products.filter(
+              (product) => product.documentId !== productId
+            ),
+          },
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const discounts = items?.data?.products
-    .reduce((sum, product) => sum + product.discount, 0)
+    .reduce((sum, product) => {
+      const quantity = quantities[product.documentId] || 0;
+      return sum + product.discount * quantity;
+    }, 0)
     .toFixed(2);
 
   const totalPrice = items?.data?.products
-    .reduce((sum, product) => sum + product.price, 0)
+    .reduce((sum, product) => {
+      const quantity = quantities[product.documentId] || 0;
+      return sum + product.price * quantity;
+    }, 0)
     .toFixed(2);
+
+  const totalItems = items?.data?.products.reduce((sum, product) => {
+    const quantity = quantities[product.documentId] || 0;
+    return sum + quantity;
+  }, 0);
 
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-start">
@@ -82,11 +175,18 @@ export default function Cart() {
                       </p>
                     </div>
                     <div className="flex gap-4 items-center">
-                      <Button className="bg-white hover:bg-amber-50 rounded-full">
+                      <Button
+                        onClick={() => handleDecreaseItem(item.documentId)}
+                        className="bg-white hover:bg-amber-50 rounded-full"
+                      >
                         <FaMinus size={18} className="text-amber-800" />
                       </Button>
-                      <p>1</p>
-                      <Button className="bg-white hover:bg-amber-50 rounded-full">
+                      <p>{quantities[item.documentId]}</p>
+                      <Button
+                        onClick={() => handleIncreaseItem(item.documentId)}
+                        className="bg-white hover:bg-amber-50 rounded-full"
+                        disabled={quantities[item.documentId] >= item.stock}
+                      >
                         <GrAdd size={18} className="text-amber-800" />
                       </Button>
                     </div>
@@ -107,9 +207,7 @@ export default function Cart() {
           <div className="flex flex-col gap-4">
             <div className="flex justify-between">
               <p className="text-amber-800 text-sm">Items</p>
-              <p className="text-amber-800 text-sm">
-                {items?.data?.products.length}
-              </p>
+              <p className="text-amber-800 text-sm">{totalItems}</p>
             </div>
 
             <div className="flex justify-between">

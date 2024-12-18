@@ -16,6 +16,8 @@ import {
   removeFromWishList,
 } from "@/data/services/wishList-services";
 import { useUser } from "@/context/userContext";
+import { addToCart } from "@/data/services/cart-services";
+import { addCartItem } from "@/data/services/cartItem-service";
 
 interface WhishListItems {
   createdAt: string;
@@ -60,9 +62,17 @@ export default function WishList() {
     productId: string | undefined
   ) => {
     try {
-      const response = await removeFromWishList(wishListId, productId);
+      await removeFromWishList(wishListId, productId);
 
-      console.log(response);
+      setItems((prevItems) => ({
+        ...prevItems,
+        data: {
+          ...prevItems.data,
+          products: prevItems.data.products.filter(
+            (product) => product.documentId !== productId
+          ),
+        },
+      }));
     } catch (err) {
       console.error(err);
     } finally {
@@ -70,7 +80,16 @@ export default function WishList() {
     }
   };
 
-  console.log("items", items);
+  const handleAddToCart = async (bookId: string) => {
+    try {
+      await addToCart(user?.cart.documentId, bookId);
+      await addCartItem(user?.cart.documentId, bookId);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="mt-[160px] lg:px-20 md:px-10 px-2">
@@ -99,15 +118,28 @@ export default function WishList() {
                     <p className="font-bold text-teal-600 text-xl lg:hidden">
                       {item.price}$
                     </p>
-                    <p className="font-bold text-teal-500">100 in stock</p>
+                    <p className="font-bold text-teal-500">
+                      {item.stock} in stock
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex md:hidden gap-6 items-center justify-center">
-                  <Button className="bg-teal-100 hover:bg-teal-50 text-amber-900">
+                  <Button
+                    onClick={() => handleAddToCart(item.documentId)}
+                    className="bg-teal-100 hover:bg-teal-50 text-amber-900"
+                  >
                     Add to cart
                   </Button>
-                  <Button className="bg-red-100 hover:bg-red-50 text-amber-900">
+                  <Button
+                    onClick={() =>
+                      handleRemoveWishList(
+                        user?.wishlists[0].documentId,
+                        item.documentId
+                      )
+                    }
+                    className="bg-red-100 hover:bg-red-50 text-amber-900"
+                  >
                     Delete from wish list
                   </Button>
                 </div>
@@ -120,7 +152,10 @@ export default function WishList() {
               </TableCell>
               <TableCell>
                 <div className="hidden md:flex gap-6 items-center justify-center">
-                  <Button className="bg-teal-100 hover:bg-teal-50 text-amber-900">
+                  <Button
+                    onClick={() => handleAddToCart(item.documentId)}
+                    className="bg-teal-100 hover:bg-teal-50 text-amber-900"
+                  >
                     Add to cart
                   </Button>
                   <Button

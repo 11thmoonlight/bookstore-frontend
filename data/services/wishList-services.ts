@@ -3,6 +3,7 @@
 import { getStrapiURL } from "@/lib/utils";
 import { getAuthToken } from "./get-token";
 import qs from "qs";
+import { toast } from "react-toastify";
 
 interface WhishList {
   createdAt: string;
@@ -115,11 +116,15 @@ export const addToWishList = async (
     });
 
     if (!response.ok) {
+      toast.error("Error adding book to the wish list");
       throw new Error("Error adding book to the wish list");
     }
 
     const updatedWishList = await response.json();
-    console.log("adding was successful", updatedWishList);
+
+    if (updatedWishList) {
+      toast.success("Book added to your wish list");
+    }
   } catch (error) {
     console.error("something went wrong", error);
   }
