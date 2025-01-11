@@ -9,6 +9,7 @@ import Image from "next/image";
 import { IoStar } from "react-icons/io5";
 import { IoStarHalf } from "react-icons/io5";
 import { addToCart } from "@/data/services/cart-services";
+import { IoStarOutline } from "react-icons/io5";
 import { useUser } from "@/context/userContext";
 import { addToWishList } from "@/data/services/wishList-services";
 import { addCartItem } from "@/data/services/cartItem-service";
@@ -92,7 +93,32 @@ export default function BooksById() {
     }
   };
 
-  const notify = () => toast("Wow so easy!");
+  const StarRating = (rating: number) => {
+    const renderStars = () => {
+      const stars: JSX.Element[] = [];
+      const fullStars = Math.floor(rating);
+      const hasHalfStar = rating % 1 !== 0;
+      const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+      for (let i = 0; i < fullStars; i++) {
+        stars.push(<IoStar key={`full-${i}`} className="text-amber-600" />);
+      }
+
+      if (hasHalfStar) {
+        stars.push(<IoStarHalf key="half" className="text-amber-600" />);
+      }
+
+      for (let i = 0; i < emptyStars; i++) {
+        stars.push(
+          <IoStarOutline key={`empty-${i}`} className="text-amber-600" />
+        );
+      }
+
+      return stars;
+    };
+
+    return <div className="flex">{renderStars()}</div>;
+  };
 
   return (
     <>
@@ -120,13 +146,7 @@ export default function BooksById() {
             <p>By {book?.author}</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex">
-              <IoStar className="text-amber-600" />
-              <IoStar className="text-amber-600" />
-              <IoStar className="text-amber-600" />
-              <IoStar className="text-amber-600" />
-              <IoStarHalf className="text-amber-600" />
-            </div>
+            {StarRating(book?.rate)}
 
             <p>{book?.rate}</p>
           </div>
@@ -161,7 +181,7 @@ export default function BooksById() {
 
             <div className="flex justify-between">
               <p className="font-bold">Price</p>
-              <p className="text-teal-700 text-lg font-bold">{book?.price}$</p>
+              <p className="text-lime-600 text-lg font-bold">{book?.price}$</p>
             </div>
           </div>
           <Button
@@ -176,7 +196,6 @@ export default function BooksById() {
           >
             Add to wish list
           </Button>
-          <button onClick={notify}>Notify!</button>
         </div>
       </div>
     </>

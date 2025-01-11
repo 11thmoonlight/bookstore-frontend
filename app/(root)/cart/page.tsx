@@ -16,6 +16,8 @@ import {
   removeCartItem,
   updateCartItemQuantity,
 } from "@/data/services/cartItem-service";
+import CheckoutButton from "@/components/CheckoutButton";
+import Link from "next/link";
 
 interface CartItems {
   createdAt: string;
@@ -170,7 +172,7 @@ export default function Cart() {
                         {item.name}
                       </p>
                       <p>By {item.author}</p>
-                      <p className="font-bold text-teal-600 text-lg lg:text-2xl">
+                      <p className="font-bold text-lime-600 text-lg lg:text-2xl">
                         {item.price}$
                       </p>
                     </div>
@@ -225,16 +227,18 @@ export default function Cart() {
               <p className="text-amber-800 text-sm">{discounts}$</p>
             </div>
 
-            <div className="flex justify-between my-4 bg-stone-200 p-2 rounded-md">
+            <div className="flex justify-between my-4 bg-amber-100 p-2 rounded-md">
               <p className="text-amber-800 text-base">Total</p>
-              <p className="text-lg text-teal-600 font-semibold">
+              <p className="text-lg text-lime-600 font-semibold">
                 {Number(totalPrice) + 1.25}$
               </p>
             </div>
           </div>
         </CardContent>
-        <Button className="w-full bg-teal-700 hover:bg-teal-600 font-bold text-teal-50 text-lg py-6 flex gap-2">
-          <p>Accept and Continue</p>
+        <Button className="w-full bg-lime-600 hover:bg-lime-500 font-bold text-lime-50 text-lg py-6 flex gap-2">
+          <Link href="/cart/checkout">Checkout</Link>
+
+          {/* <CheckoutButton total={totalPrice} /> */}
           <IoMdArrowRoundForward />
         </Button>
       </Card>

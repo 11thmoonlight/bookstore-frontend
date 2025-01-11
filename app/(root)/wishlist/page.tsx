@@ -18,6 +18,7 @@ import {
 import { useUser } from "@/context/userContext";
 import { addToCart } from "@/data/services/cart-services";
 import { addCartItem } from "@/data/services/cartItem-service";
+import { toast } from "react-toastify";
 
 interface WhishListItems {
   createdAt: string;
@@ -81,11 +82,16 @@ export default function WishList() {
   };
 
   const handleAddToCart = async (bookId: string) => {
+    setLoading(true);
     try {
       await addToCart(user?.cart.documentId, bookId);
       await addCartItem(user?.cart.documentId, bookId);
+      console.log("Success Toast");
+      toast.success("Book added to the wish list successfully");
     } catch (err) {
       console.error(err);
+      console.log("Error Toast");
+      toast.error("Error adding book to the wish list");
     } finally {
       setLoading(false);
     }
@@ -115,10 +121,10 @@ export default function WishList() {
                   <div className="flex flex-col justify-between gap-2">
                     <p className="font-bold text-base">{item.name}</p>
                     <p>By {item.author}</p>
-                    <p className="font-bold text-teal-600 text-xl lg:hidden">
+                    <p className="font-bold text-lime-600 text-xl lg:hidden">
                       {item.price}$
                     </p>
-                    <p className="font-bold text-teal-500">
+                    <p className="font-bold text-lime-600">
                       {item.stock} in stock
                     </p>
                   </div>
@@ -127,7 +133,7 @@ export default function WishList() {
                 <div className="flex md:hidden gap-6 items-center justify-center">
                   <Button
                     onClick={() => handleAddToCart(item.documentId)}
-                    className="bg-teal-100 hover:bg-teal-50 text-amber-900"
+                    className="bg-lime-200 hover:bg-lime-300 text-lime-900"
                   >
                     Add to cart
                   </Button>
@@ -138,7 +144,7 @@ export default function WishList() {
                         item.documentId
                       )
                     }
-                    className="bg-red-100 hover:bg-red-50 text-amber-900"
+                    className="bg-red-200 hover:bg-red-300 text-amber-900"
                   >
                     Delete from wish list
                   </Button>
@@ -146,7 +152,7 @@ export default function WishList() {
               </TableCell>
 
               <TableCell>
-                <div className="font-bold text-teal-600 text-xl hidden lg:flex">
+                <div className="font-bold text-lime-600 text-xl hidden lg:flex">
                   {item.price}$
                 </div>
               </TableCell>
@@ -154,7 +160,7 @@ export default function WishList() {
                 <div className="hidden md:flex gap-6 items-center justify-center">
                   <Button
                     onClick={() => handleAddToCart(item.documentId)}
-                    className="bg-teal-100 hover:bg-teal-50 text-amber-900"
+                    className="bg-lime-100 hover:bg-lime-50 text-lime-900"
                   >
                     Add to cart
                   </Button>

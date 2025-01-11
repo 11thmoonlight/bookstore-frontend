@@ -72,10 +72,10 @@ export default function Genre() {
     fetchBooks();
   }, [genre]);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (bookId: string) => {
     try {
-      await addToCart(user?.cart.documentId, book?.documentId);
-      await addCartItem(user?.cart.documentId, book?.documentId);
+      await addToCart(user?.cart.documentId, bookId);
+      await addCartItem(user?.cart.documentId, bookId);
     } catch (err) {
       console.error(err);
     } finally {
@@ -83,9 +83,9 @@ export default function Genre() {
     }
   };
 
-  const handleAddToWishList = async () => {
+  const handleAddToWishList = async (bookId: string) => {
     try {
-      await addToWishList(user?.wishlists[0].documentId, book?.documentId);
+      await addToWishList(user?.wishlists[0].documentId, bookId);
     } catch (err) {
       console.error(err);
     } finally {
@@ -113,11 +113,11 @@ export default function Genre() {
             <CardDescription className="text-center">
               {book.author}
             </CardDescription>
-            <CardContent className="font-bold text-lg text-center text-teal-600">
+            <CardContent className="font-bold text-lg text-center text-lime-600">
               {book.price} $
             </CardContent>
             <CardFooter className="flex justify-around items-center w-full">
-              <button>
+              <button onClick={() => handleAddToWishList(book.documentId)}>
                 <GoHeart size={27} />
               </button>
 
@@ -127,7 +127,7 @@ export default function Genre() {
                 </Link>
               </Button>
 
-              <button>
+              <button onClick={() => handleAddToCart(book.documentId)}>
                 <PiShoppingCartLight size={27} />
               </button>
             </CardFooter>

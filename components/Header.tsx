@@ -1,14 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GoPerson } from "react-icons/go";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { GoHeart } from "react-icons/go";
-import { Input } from "./ui/input";
 import Link from "next/link";
 import { IoIosLogIn } from "react-icons/io";
-import { IoSettingsOutline } from "react-icons/io5";
+import { BsPersonGear } from "react-icons/bs";
 import {
   Menubar,
   MenubarContent,
@@ -21,9 +20,17 @@ import { logoutAction } from "@/data/actions/auth-actions";
 import { LogOut } from "lucide-react";
 import { useUser } from "@/context/userContext";
 import Search from "./Search";
+import { BsBagCheck } from "react-icons/bs";
 
 export default function Header() {
   const { user } = useUser();
+  const [currentUser, setCurrentUser] = useState(user);
+
+  console.log("User", user);
+
+  useEffect(() => {
+    setCurrentUser(user);
+  }, [user]);
 
   return (
     <>
@@ -39,7 +46,7 @@ export default function Header() {
           <Search />
 
           <div className="gap-4 flex items-center w-[400px] justify-end">
-            {user ? (
+            {currentUser ? (
               <Menubar className="border-none shadow-none p-0">
                 <MenubarMenu>
                   <MenubarTrigger className="p-0">
@@ -67,9 +74,12 @@ export default function Header() {
                     </MenubarItem>
                     <MenubarSeparator />
                     <MenubarItem>
-                      <Link href="/" className="flex items-center gap-4 w-full">
-                        <IoSettingsOutline size={27} />
-                        <span>Settings</span>
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-4 w-full"
+                      >
+                        <BsBagCheck size={24} />
+                        <span>Orders</span>
                       </Link>
                     </MenubarItem>
                     <MenubarSeparator />

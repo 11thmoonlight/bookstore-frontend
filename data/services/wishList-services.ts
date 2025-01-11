@@ -3,7 +3,6 @@
 import { getStrapiURL } from "@/lib/utils";
 import { getAuthToken } from "./get-token";
 import qs from "qs";
-import { toast } from "react-toastify";
 
 interface WhishList {
   createdAt: string;
@@ -116,15 +115,10 @@ export const addToWishList = async (
     });
 
     if (!response.ok) {
-      toast.error("Error adding book to the wish list");
       throw new Error("Error adding book to the wish list");
     }
 
-    const updatedWishList = await response.json();
-
-    if (updatedWishList) {
-      toast.success("Book added to your wish list");
-    }
+    await response.json();
   } catch (error) {
     console.error("something went wrong", error);
   }
@@ -161,8 +155,8 @@ export const removeFromWishList = async (
       throw new Error("Error deleting book from the cart");
     }
 
-    const updatedCart = await response.json();
-    console.log("deleting was successful", updatedCart);
+    const updatedWishlist = await response.json();
+    console.log("deleting was successful", updatedWishlist);
   } catch (error) {
     console.error("something went wrong", error);
   }
