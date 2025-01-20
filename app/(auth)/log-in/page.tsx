@@ -79,7 +79,7 @@ export default function LogIn() {
           </CardFooter>
         </Card>
         <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">
-          Don't have an account?
+          Do not have an account?
           <Link className="underline ml-2" href="register">
             Sign Up
           </Link>

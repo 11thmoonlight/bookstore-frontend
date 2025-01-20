@@ -19,83 +19,82 @@ import { useUser } from "@/context/userContext";
 import { addToCart } from "@/data/services/cart-services";
 import { addCartItem } from "@/data/services/cartItem-service";
 import { toast } from "react-toastify";
-
-interface WhishListItems {
-  createdAt: string;
-  documentId: string;
-  products: unknown[];
-  id: number;
-  locale: null;
-  publishedAt: null;
-  updatedAt: string;
-}
+import { useWishlist } from "@/hooks/useWishlist";
 
 export default function WishList() {
   const { user } = useUser();
+  const {
+    wishlist,
+    loading,
+    error,
+    fetchWishlist,
+    addProductToWishlist,
+    removeProductFromWishlist,
+  } = useWishlist();
 
-  const [items, setItems] = useState<WhishListItems[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [items, setItems] = useState<WhishListItems[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      if (user?.wishlists[0]?.documentId) {
-        try {
-          const itemsData = await getWhishListById(
-            user.wishlists[0].documentId
-          );
+  // useEffect(() => {
+  //   const fetchItems = async () => {
+  //     if (user?.wishlists[0]?.documentId) {
+  //       try {
+  //         const itemsData = await getWhishListById(
+  //           user.wishlists[0].documentId
+  //         );
 
-          if (itemsData) {
-            setItems(itemsData);
-          } else {
-            console.error("Invalid items data structure", itemsData);
-          }
-        } catch (error) {
-          console.error("Error fetching whish list items:", error);
-        }
-      }
-    };
+  //         if (itemsData) {
+  //           setItems(itemsData);
+  //         } else {
+  //           console.error("Invalid items data structure", itemsData);
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching whish list items:", error);
+  //       }
+  //     }
+  //   };
 
-    fetchItems();
-  }, [user]);
+  //   fetchItems();
+  // }, [user]);
 
-  const handleRemoveWishList = async (
-    wishListId: string | undefined,
-    productId: string | undefined
-  ) => {
-    try {
-      await removeFromWishList(wishListId, productId);
+  // const handleRemoveWishList = async (
+  //   wishListId: string | undefined,
+  //   productId: string | undefined
+  // ) => {
+  //   try {
+  //     await removeFromWishList(wishListId, productId);
 
-      setItems((prevItems) => ({
-        ...prevItems,
-        data: {
-          ...prevItems.data,
-          products: prevItems.data.products.filter(
-            (product) => product.documentId !== productId
-          ),
-        },
-      }));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setItems((prevItems) => ({
+  //       ...prevItems,
+  //       data: {
+  //         ...prevItems.data,
+  //         products: prevItems.data.products.filter(
+  //           (product) => product.documentId !== productId
+  //         ),
+  //       },
+  //     }));
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const handleAddToCart = async (bookId: string) => {
-    setLoading(true);
-    try {
-      await addToCart(user?.cart.documentId, bookId);
-      await addCartItem(user?.cart.documentId, bookId);
-      console.log("Success Toast");
-      toast.success("Book added to the wish list successfully");
-    } catch (err) {
-      console.error(err);
-      console.log("Error Toast");
-      toast.error("Error adding book to the wish list");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleAddToCart = async (bookId: string) => {
+  //   setLoading(true);
+  //   try {
+  //     await addToCart(user?.cart.documentId, bookId);
+  //     await addCartItem(user?.cart.documentId, bookId);
+  //     console.log("Success Toast");
+  //     toast.success("Book added to the wish list successfully");
+  //   } catch (err) {
+  //     console.error(err);
+  //     console.log("Error Toast");
+  //     toast.error("Error adding book to the wish list");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="mt-[160px] lg:px-20 md:px-10 px-2">
@@ -107,7 +106,7 @@ export default function WishList() {
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
-        {items?.data?.products.map((item) => (
+        {wishlist?.products.map((item) => (
           <TableBody key={item.id}>
             <TableRow>
               <TableCell className="flex flex-col gap-8">
@@ -132,7 +131,7 @@ export default function WishList() {
 
                 <div className="flex md:hidden gap-6 items-center justify-center">
                   <Button
-                    onClick={() => handleAddToCart(item.documentId)}
+                    // onClick={() => handleAddToCart(item.documentId)}
                     className="bg-lime-200 hover:bg-lime-300 text-lime-900"
                   >
                     Add to cart

@@ -23,16 +23,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { createCheckout } from "@/data/services/createCheckout";
 
-interface CartItems {
-  createdAt: string;
-  documentId: string;
-  products: unknown[];
-  id: number;
-  locale: null;
-  publishedAt: null;
-  updatedAt: string;
-}
-
 const formSchema = z.object({
   address: z
     .string()

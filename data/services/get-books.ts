@@ -3,39 +3,6 @@
 import { getStrapiURL } from "@/lib/utils";
 import qs from "qs";
 
-interface Image {
-  url: string;
-  alternativeText: string;
-}
-
-interface AuthorImage {
-  url: string;
-  alternativeText: string;
-}
-
-interface Book {
-  author: string;
-  category: string;
-  createdAt: string;
-  description: string;
-  discount: number;
-  documentId: string;
-  id: number;
-  image: Image[];
-  authorImg: AuthorImage[];
-  language: string;
-  locale: null;
-  name: string;
-  pagesNum: number;
-  price: number;
-  publicationYear: string;
-  publishedAt: string;
-  publisher: string;
-  rate: number;
-  stock: number;
-  updatedAt: string;
-}
-
 interface StrapiResponse<T> {
   data: T[];
 }

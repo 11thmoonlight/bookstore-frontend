@@ -4,16 +4,6 @@ import { getStrapiURL } from "@/lib/utils";
 import { getAuthToken } from "./get-token";
 import qs from "qs";
 
-interface Cart {
-  createdAt: string;
-  documentId: string;
-  products: unknown[];
-  id: number;
-  locale: null;
-  publishedAt: null;
-  updatedAt: string;
-}
-
 interface StrapiResponse<T> {
   data: T[];
 }
@@ -60,7 +50,7 @@ export async function getCart() {
 
 export async function getCartById(
   id: string
-): Promise<StrapiResponse<Cart> | null> {
+): Promise<StrapiResponse<CartItems> | null> {
   const baseUrl = getStrapiURL();
 
   const url = new URL(`/api/carts/${id}`, baseUrl);

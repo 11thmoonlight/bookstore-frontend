@@ -13,55 +13,20 @@ import { IoStarOutline } from "react-icons/io5";
 import { useUser } from "@/context/userContext";
 import { addToWishList } from "@/data/services/wishList-services";
 import { addCartItem } from "@/data/services/cartItem-service";
-import { toast } from "react-toastify";
-
-interface Image {
-  url: string;
-  alternativeText: string;
-}
-
-interface AuthorImage {
-  url: string;
-  alternativeText: string;
-}
-
-interface Books {
-  author: string;
-  category: string;
-  createdAt: string;
-  authorImg: AuthorImage[];
-  description: string;
-  discount: number;
-  documentId: string;
-  id: number;
-  image: Image[];
-  language: string;
-  locale: null;
-  name: string;
-  pagesNum: number;
-  price: number;
-  publicationYear: string;
-  publishedAt: string;
-  publisher: string;
-  rate: number;
-  stock: number;
-  updatedAt: string;
-}
 
 export default function BooksById() {
   const { user } = useUser();
   const { id } = useParams<{ id: string }>();
-  const [book, setBook] = useState<Books | null>(null);
+  const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const data = await getBookById(id);
-        const idBook = data?.data;
 
-        if (idBook) {
-          setBook(idBook);
+        if (data) {
+          setBook(data);
           setLoading(false);
         }
       } catch (error) {
@@ -71,6 +36,8 @@ export default function BooksById() {
 
     fetchBooks();
   }, [id]);
+
+  console.log("book", book);
 
   const handleAddToCart = async () => {
     try {
@@ -85,7 +52,7 @@ export default function BooksById() {
 
   const handleAddToWishList = async () => {
     try {
-      await addToWishList(user?.wishlists[0].documentId, book?.documentId);
+      await addToWishList(user?.wishlists.documentId, book?.documentId);
     } catch (err) {
       console.error(err);
     } finally {

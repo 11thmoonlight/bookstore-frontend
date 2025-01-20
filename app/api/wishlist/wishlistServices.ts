@@ -1,7 +1,7 @@
 "use server";
 
 import { getStrapiURL } from "@/lib/utils";
-import { getAuthToken } from "./get-token";
+import { getAuthToken } from "@/data/services/get-token";
 import qs from "qs";
 
 interface StrapiResponse<T> {

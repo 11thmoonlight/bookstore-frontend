@@ -9,100 +9,87 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUser } from "@/context/userContext";
-import { getCartById, removeFromCart } from "@/data/services/cart-services";
+import { useCartItem } from "@/hooks/useCartItem";
 import { IoMdArrowRoundForward } from "react-icons/io";
-import {
-  getCartItemByIds,
-  removeCartItem,
-  updateCartItemQuantity,
-} from "@/data/services/cartItem-service";
-import CheckoutButton from "@/components/CheckoutButton";
 import Link from "next/link";
-
-interface CartItems {
-  createdAt: string;
-  documentId: string;
-  products: unknown[];
-  id: number;
-  locale: null;
-  publishedAt: null;
-  updatedAt: string;
-}
+import { useCart } from "@/hooks/useCart";
 
 export default function Cart() {
   const { user } = useUser();
-
-  const [items, setItems] = useState<CartItems[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
-  const [loading, setLoading] = useState<boolean>(true);
+  const { cart, loading, error, setCart, removeFromCart } = useCart(
+    user?.cart?.documentId || ""
+  );
+  const {
+    loading: cartItemLoading,
+    error: cartItemError,
+    fetchCartItemByIds,
+    updateQuantity,
+    addItemToCart,
+    removeItemFromCart,
+  } = useCartItem();
 
   useEffect(() => {
-    const fetchItems = async () => {
-      if (user?.cart?.documentId) {
-        try {
-          const itemsData = await getCartById(user.cart.documentId);
-          if (itemsData) {
-            setItems(itemsData);
-
-            const quantityData = {};
-            for (const item of itemsData?.data?.products) {
-              const { cartItemData } = await getCartItemByIds(
-                user.cart.documentId,
-                item.documentId
-              );
-              quantityData[item.documentId] = cartItemData.quantity;
-            }
-            setQuantities(quantityData);
+    const fetchQuantities = async () => {
+      if (user?.cart?.documentId && cart?.products?.length) {
+        const quantityData: Record<string, number> = {};
+        const promises = cart.products.map(async (item) => {
+          const data = await fetchCartItemByIds(
+            user.cart.documentId,
+            item.documentId
+          );
+          if (data) {
+            quantityData[item.documentId] = data.quantity;
           }
-        } catch (error) {
-          console.error("Error fetching cart items:", error);
-        }
+        });
+
+        await Promise.all(promises);
+        setQuantities(quantityData);
       }
     };
 
-    fetchItems();
-  }, [user]);
+    fetchQuantities();
+  }, [cart?.products, user?.cart?.documentId]);
 
   const handleIncreaseItem = async (productId: string) => {
+    if (!user?.cart?.documentId || !cart?.products?.length) return;
+
     try {
-      const { cartItemData } = await getCartItemByIds(
-        user?.cart?.documentId,
+      const cartItemData = await fetchCartItemByIds(
+        user.cart.documentId,
         productId
       );
+      const newQuantity = cartItemData.quantity + 1;
 
-      const quantity = cartItemData.quantity;
-      const response = await updateCartItemQuantity(
+      const response = await updateQuantity(
         cartItemData.documentId,
-        quantity + 1
+        newQuantity
       );
 
       if (response) {
         setQuantities((prevQuantities) => ({
           ...prevQuantities,
-          [productId]: (prevQuantities[productId] || 0) + 1,
+          [productId]: newQuantity,
         }));
       }
     } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+      console.error("Error increasing item quantity:", err);
     }
   };
 
   const handleDecreaseItem = async (productId: string) => {
+    if (!user?.cart?.documentId) return;
+
     try {
-      const { cartItemData } = await getCartItemByIds(
-        user?.cart?.documentId,
+      const cartItemData = await fetchCartItemByIds(
+        user.cart.documentId,
         productId
       );
 
-      const quantity = cartItemData.quantity;
+      const { documentId: cartItemId, quantity } = cartItemData;
 
       if (quantity > 1) {
-        const response = await updateCartItemQuantity(
-          cartItemData.documentId,
-          quantity - 1
-        );
+        const response = await updateQuantity(cartItemId, quantity - 1);
 
         if (response) {
           setQuantities((prevQuantities) => ({
@@ -111,42 +98,45 @@ export default function Cart() {
           }));
         }
       } else {
-        await removeFromCart(user?.cart?.documentId, productId);
+        await removeFromCart(productId);
+        await removeItemFromCart(cartItemId);
 
-        await removeCartItem(cartItemData.documentId);
+        setCart((prevItems) => {
+          if (!prevItems || !prevItems || !prevItems.products) {
+            return prevItems;
+          }
 
-        setItems((prevItems) => ({
-          ...prevItems,
-          data: {
-            ...prevItems.data,
-            products: prevItems.data.products.filter(
-              (product) => product.documentId !== productId
-            ),
-          },
-        }));
+          return {
+            ...prevItems,
+            data: {
+              ...prevItems,
+              products: prevItems.products.filter(
+                (product) => product.documentId !== productId
+              ),
+            },
+          };
+        });
       }
     } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+      console.error("Error decreasing item quantity:", err);
     }
   };
 
-  const discounts = items?.data?.products
+  const discounts = cart?.products
     .reduce((sum, product) => {
       const quantity = quantities[product.documentId] || 0;
       return sum + product.discount * quantity;
     }, 0)
     .toFixed(2);
 
-  const totalPrice = items?.data?.products
+  const totalPrice = cart?.products
     .reduce((sum, product) => {
       const quantity = quantities[product.documentId] || 0;
       return sum + product.price * quantity;
     }, 0)
     .toFixed(2);
 
-  const totalItems = items?.data?.products.reduce((sum, product) => {
+  const totalItems = cart?.products.reduce((sum, product) => {
     const quantity = quantities[product.documentId] || 0;
     return sum + quantity;
   }, 0);
@@ -154,7 +144,7 @@ export default function Cart() {
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-start">
       <div className="w-full flex flex-col gap-8">
-        {items?.data?.products.map((item) => (
+        {cart?.products.map((item) => (
           <Table key={item.id}>
             <TableBody>
               <TableRow>
@@ -237,8 +227,6 @@ export default function Cart() {
         </CardContent>
         <Button className="w-full bg-lime-600 hover:bg-lime-500 font-bold text-lime-50 text-lg py-6 flex gap-2">
           <Link href="/cart/checkout">Checkout</Link>
-
-          {/* <CheckoutButton total={totalPrice} /> */}
           <IoMdArrowRoundForward />
         </Button>
       </Card>

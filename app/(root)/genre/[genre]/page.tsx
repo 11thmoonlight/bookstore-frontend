@@ -22,37 +22,10 @@ import { addCartItem } from "@/data/services/cartItem-service";
 import { addToWishList } from "@/data/services/wishList-services";
 import { useUser } from "@/context/userContext";
 
-interface Image {
-  url: string;
-  alternativeText: string;
-}
-
-interface Books {
-  author: string;
-  category: string;
-  createdAt: string;
-  description: string;
-  discount: number;
-  documentId: string;
-  id: number;
-  image: Image[];
-  language: string;
-  locale: null;
-  name: string;
-  pagesNum: number;
-  price: number;
-  publicationYear: string;
-  publishedAt: string;
-  publisher: string;
-  rate: number;
-  stock: number;
-  updatedAt: string;
-}
-
 export default function Genre() {
   const { user } = useUser();
   const { genre } = useParams<{ genre: string }>();
-  const [books, setBooks] = useState<Books[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
