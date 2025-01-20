@@ -25,7 +25,6 @@ export default function Cart() {
     error: cartItemError,
     fetchCartItemByIds,
     updateQuantity,
-    addItemToCart,
     removeItemFromCart,
   } = useCartItem();
 
@@ -102,7 +101,7 @@ export default function Cart() {
         await removeItemFromCart(cartItemId);
 
         setCart((prevItems) => {
-          if (!prevItems || !prevItems || !prevItems.products) {
+          if (!prevItems || !prevItems.products) {
             return prevItems;
           }
 

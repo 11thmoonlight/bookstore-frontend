@@ -1,12 +1,5 @@
-"use server";
-
-import { getStrapiURL } from "@/lib/utils";
-import { getAuthToken } from "@/data/services/get-token";
+import axiosInstance from "@/lib/axiosInstance";
 import qs from "qs";
-
-interface StrapiResponse<T> {
-  data: T[];
-}
 
 const query = qs.stringify({
   populate: {
@@ -20,134 +13,87 @@ const query = qs.stringify({
   },
 });
 
-export async function getWishList() {
-  const baseUrl = getStrapiURL();
+// Fetch the wishlist data.
 
-  const url = new URL("/api/wishlists", baseUrl);
-  url.search = query;
-
-  const authToken = await getAuthToken();
-  if (!authToken) return { ok: false, data: null, error: null };
-
+export async function getWishlist() {
   try {
-    const response = await fetch(url.href, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      cache: "no-cache",
-    });
-    const data = await response.json();
-    if (data.error) return { ok: false, data: null, error: data.error };
-    return { ok: true, data: data, error: null };
-  } catch (error) {
-    console.log(error);
-    return { ok: false, data: null, error: error };
+    const response = await axiosInstance.get(`/api/wishlists?${query}`);
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching cart:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
+    }
   }
 }
 
-export async function getWhishListById(
-  id: string
-): Promise<StrapiResponse<WhishListItems> | null> {
-  const baseUrl = getStrapiURL();
+// Fetch a wishlist by its ID.
 
-  const url = new URL(`/api/wishlists/${id}`, baseUrl);
-  url.search = query;
-
-  const authToken = await getAuthToken();
-
+export async function getwishlistById(wishlistId: string) {
   try {
-    const response = await fetch(url.href, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      cache: "no-cache",
-    });
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.error(error);
-    return null;
+    const response = await axiosInstance.get(
+      `/api/wishlists/${wishlistId}?${query}`
+    );
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching cart:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
+    }
   }
 }
 
-export const addToWishList = async (
-  wishListId: string | undefined,
-  productId: string | undefined
-) => {
-  const authToken = await getAuthToken();
-  if (!authToken) {
-    return { success: false, error: "Authentication token not found" };
-  }
+// Add a product to the wishlist.
 
-  const baseUrl = getStrapiURL();
-  const url = new URL(`/api/wishlists/${wishListId}`, baseUrl);
-
+export async function addItemTowishlist(wishlistId: string, productId: string) {
   try {
-    const response = await fetch(url.href, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        data: {
-          products: {
-            connect: [{ documentId: productId }],
-          },
+    const response = await axiosInstance.put(`/api/wishlists/${wishlistId}`, {
+      data: {
+        products: {
+          connect: [{ documentId: productId }],
         },
-      }),
+      },
     });
-
-    if (!response.ok) {
-      throw new Error("Error adding book to the wish list");
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching cart:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
     }
-
-    await response.json();
-  } catch (error) {
-    console.error("something went wrong", error);
   }
-};
+}
 
-export const removeFromWishList = async (
-  wishListId: string | undefined,
-  productId: string | undefined
-) => {
-  const authToken = await getAuthToken();
-  if (!authToken) {
-    return { success: false, error: "Authentication token not found" };
-  }
+// Remove a product from the wishlist.
 
-  const baseUrl = getStrapiURL();
-  const url = new URL(`/api/wishlists/${wishListId}`, baseUrl);
+export async function removeItemFromwishlist(
+  wishlistId: string,
+  productId: string
+) {
   try {
-    const response = await fetch(url.href, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        data: {
-          products: {
-            disconnect: [{ documentId: productId }],
-          },
+    const response = await axiosInstance.put(`/api/wishlists/${wishlistId}`, {
+      data: {
+        products: {
+          disconnect: [{ documentId: productId }],
         },
-      }),
+      },
     });
-
-    if (!response.ok) {
-      throw new Error("Error deleting book from the cart");
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching cart:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
     }
-
-    const updatedWishlist = await response.json();
-    console.log("deleting was successful", updatedWishlist);
-  } catch (error) {
-    console.error("something went wrong", error);
   }
-};
+}
