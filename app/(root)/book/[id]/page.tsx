@@ -1,62 +1,39 @@
 "use client";
 
-import { getBookById } from "@/data/services/get-books";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { IoStar } from "react-icons/io5";
 import { IoStarHalf } from "react-icons/io5";
-import { addToCart } from "@/data/services/cart-services";
 import { IoStarOutline } from "react-icons/io5";
 import { useUser } from "@/context/userContext";
-import { addToWishList } from "@/data/services/wishList-services";
-import { addCartItem } from "@/data/services/cartItem-service";
+import { useBook } from "@/hooks/useBook";
+import { addItemToCart } from "@/app/api/cart/cartServices";
+import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 
 export default function BooksById() {
   const { user } = useUser();
   const { id } = useParams<{ id: string }>();
-  const [book, setBook] = useState<Book | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { book, error, loading } = useBook(id);
+  const { addToCart } = useCart(user?.cart?.documentId || "");
+  const { addToWishList } = useWishlist(user?.wishlists.documentId || "");
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const data = await getBookById(id);
-
-        if (data) {
-          setBook(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-
-    fetchBooks();
-  }, [id]);
-
-  console.log("book", book);
-
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (productId: string) => {
     try {
-      await addToCart(user?.cart.documentId, book?.documentId);
-      await addCartItem(user?.cart.documentId, book?.documentId);
+      await addToCart(productId);
+      await addItemToCart(user?.cart?.documentId || "", productId);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleAddToWishList = async () => {
+  const handleAddToWishList = async (productId: string) => {
     try {
-      await addToWishList(user?.wishlists.documentId, book?.documentId);
+      await addToWishList(productId);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -152,13 +129,13 @@ export default function BooksById() {
             </div>
           </div>
           <Button
-            onClick={handleAddToCart}
+            onClick={() => handleAddToCart(book?.documentId)}
             className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
           >
             Add to cart
           </Button>
           <Button
-            onClick={handleAddToWishList}
+            onClick={() => handleAddToWishList(book?.documentId)}
             className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
           >
             Add to wish list

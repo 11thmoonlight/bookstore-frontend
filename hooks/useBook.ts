@@ -113,6 +113,7 @@ export function useBooksBySearch(searchQuery: string) {
 
   return {
     books,
+    setBooks,
     loading,
     error,
   };

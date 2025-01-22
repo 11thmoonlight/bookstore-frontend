@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import { getBooksBySearch } from "@/data/services/get-books";
 import Image from "next/image";
+import { useBooksBySearch } from "@/hooks/useBook";
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [loading, setLoading] = useState(false);
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { books: suggestions, setBooks: setSuggestions } =
+    useBooksBySearch(searchQuery);
+
+  console.log("suggestions", suggestions);
 
   const handleOutsideClick = (event: MouseEvent) => {
     if (
@@ -34,29 +36,6 @@ export default function Search() {
     };
   }, []);
 
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setSuggestions([]);
-      return;
-    }
-
-    const fetchSuggestions = async () => {
-      setLoading(true);
-      try {
-        const data = await getBooksBySearch(searchQuery);
-        setSuggestions(data?.data || []);
-      } catch {
-        setSuggestions([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const delayDebounce = setTimeout(fetchSuggestions, 300);
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchQuery]);
-
   return (
     <div ref={searchBoxRef} className="relative w-full max-w-md mx-auto">
       <div className="flex justify-between relative">
@@ -71,9 +50,9 @@ export default function Search() {
           <IoSearchOutline size={20} />
         </button>
 
-        {suggestions.length > 0 && (
-          <ul className="absolute top-full max-h-[400px] left-0 w-full bg-white border rounded shadow mt-1 z-10 overflow-y-auto">
-            {suggestions.map((book: any) => (
+        {suggestions && suggestions?.length > 0 && (
+          <ul className="absolute top-full max-h-[400px] left-0 w-full bg-white border rounded shadow mt-1 z-50 overflow-y-auto">
+            {suggestions?.map((book: Book) => (
               <li
                 key={book.id}
                 className="p-2 hover:bg-gray-100 cursor-pointer"
