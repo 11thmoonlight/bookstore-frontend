@@ -45,7 +45,7 @@ export function useBook(bookId: string) {
       setLoading(true);
       const result = await getBookById(bookId);
       if (result.ok) {
-        setBook(result.data);
+        setBook(result.data.data);
       } else {
         setError(result.error?.message || "Failed to fetch book.");
       }
@@ -89,35 +89,6 @@ export function useBooksByGenre(genre: string) {
     error,
   };
 }
-
-// export function useBooksBySearch(searchQuery: string) {
-//   const [books, setBooks] = useState<Book[] | null>(null);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   // Fetch books by search query
-//   useEffect(() => {
-//     const fetchBooksBySearch = async () => {
-//       setLoading(true);
-//       const result = await getBooksBySearch(searchQuery);
-//       if (result.ok) {
-//         setBooks(result.data);
-//       } else {
-//         setError(result.error?.message || "Failed to fetch books by search.");
-//       }
-//       setLoading(false);
-//     };
-
-//     fetchBooksBySearch();
-//   }, [searchQuery]);
-
-//   return {
-//     books,
-//     setBooks,
-//     loading,
-//     error,
-//   };
-// }
 
 export function useBooksBySearch(searchQuery: string) {
   const [books, setBooks] = useState<Book[] | null>(null);

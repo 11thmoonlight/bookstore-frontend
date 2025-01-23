@@ -15,13 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userContext";
-import { getCartById } from "@/data/services/cart-services";
-import { getCartItemByIds } from "@/data/services/cartItem-service";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { createCheckout } from "@/data/services/createCheckout";
+import { useCart } from "@/hooks/useCart";
+import { useCartItem } from "@/hooks/useCartItem";
 
 const formSchema = z.object({
   address: z
@@ -39,55 +39,58 @@ const formSchema = z.object({
 
 export default function Checkout() {
   const { user } = useUser();
-  const [items, setItems] = useState<CartItems[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
-  const [loading, setLoading] = useState<boolean>(true);
+  const { cart, loading, error, setCart, removeFromCart } = useCart(
+    user?.cart?.documentId || ""
+  );
+  const {
+    loading: cartItemLoading,
+    error: cartItemError,
+    fetchCartItemByIds,
+    updateQuantity,
+    removeItemFromCart,
+  } = useCartItem();
 
-  const discounts = items?.data?.products
+  useEffect(() => {
+    const fetchQuantities = async () => {
+      if (user?.cart?.documentId && cart?.products?.length) {
+        const quantityData: Record<string, number> = {};
+        const promises = cart.products.map(async (item) => {
+          const data = await fetchCartItemByIds(
+            user.cart.documentId,
+            item.documentId
+          );
+          if (data) {
+            quantityData[item.documentId] = data.quantity;
+          }
+        });
+
+        await Promise.all(promises);
+        setQuantities(quantityData);
+      }
+    };
+
+    fetchQuantities();
+  }, [cart?.products, user?.cart?.documentId]);
+
+  const discounts = cart?.products
     .reduce((sum, product) => {
       const quantity = quantities[product.documentId] || 0;
       return sum + product.discount * quantity;
     }, 0)
     .toFixed(2);
 
-  const totalItems = items?.data?.products.reduce((sum, product) => {
-    const quantity = quantities[product.documentId] || 0;
-    return sum + quantity;
-  }, 0);
-
-  const totalPrice = items?.data?.products
+  const totalPrice = cart?.products
     .reduce((sum, product) => {
       const quantity = quantities[product.documentId] || 0;
       return sum + product.price * quantity;
     }, 0)
     .toFixed(2);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      if (user?.cart?.documentId) {
-        try {
-          const itemsData = await getCartById(user.cart.documentId);
-          if (itemsData) {
-            setItems(itemsData);
-
-            const quantityData = {};
-            for (const item of itemsData?.data?.products) {
-              const { cartItemData } = await getCartItemByIds(
-                user.cart.documentId,
-                item.documentId
-              );
-              quantityData[item.documentId] = cartItemData.quantity;
-            }
-            setQuantities(quantityData);
-          }
-        } catch (error) {
-          console.error("Error fetching cart items:", error);
-        }
-      }
-    };
-
-    fetchItems();
-  }, [user]);
+  const totalItems = cart?.products.reduce((sum, product) => {
+    const quantity = quantities[product.documentId] || 0;
+    return sum + quantity;
+  }, 0);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -185,7 +188,7 @@ export default function Checkout() {
       </div>
       <div className="w-1/2">
         <div className="flex flex-col gap-4">
-          {items?.data?.products.map((item) => (
+          {cart?.products.map((item) => (
             <Table key={item.id} className="bg-amber-50 text-amber-800">
               <TableBody>
                 <TableRow>

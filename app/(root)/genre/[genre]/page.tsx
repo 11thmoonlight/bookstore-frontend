@@ -9,67 +9,45 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getBooksByGenre } from "@/data/services/get-books";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-
-import React, { useEffect, useState } from "react";
 import { GoHeart } from "react-icons/go";
 import { PiShoppingCartLight } from "react-icons/pi";
 import Link from "next/link";
-import { addToCart } from "@/data/services/cart-services";
-import { addCartItem } from "@/data/services/cartItem-service";
-import { addToWishList } from "@/data/services/wishList-services";
 import { useUser } from "@/context/userContext";
+import { useBooksByGenre } from "@/hooks/useBook";
+import { addItemToCart } from "@/app/api/cart/cartServices";
+import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 
 export default function Genre() {
   const { user } = useUser();
   const { genre } = useParams<{ genre: string }>();
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { books, error, loading } = useBooksByGenre(genre);
+  const { addToCart } = useCart(user?.cart?.documentId || "");
+  const { addToWishList } = useWishlist(user?.wishlists.documentId || "");
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const data = await getBooksByGenre(genre);
-        const genreBooks = data?.data;
-
-        if (genreBooks) {
-          setBooks(genreBooks);
-        }
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-
-    fetchBooks();
-  }, [genre]);
-
-  const handleAddToCart = async (bookId: string) => {
+  const handleAddToCart = async (productId: string) => {
     try {
-      await addToCart(user?.cart.documentId, bookId);
-      await addCartItem(user?.cart.documentId, bookId);
+      await addToCart(productId);
+      await addItemToCart(user?.cart?.documentId || "", productId);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleAddToWishList = async (bookId: string) => {
+  const handleAddToWishList = async (productId: string) => {
     try {
-      await addToWishList(user?.wishlists[0].documentId, bookId);
+      await addToWishList(productId);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-center">
       <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {books.map((book) => (
+        {books?.map((book) => (
           <Card
             key={book.id}
             className="w-80 h-[420px] shadow-2xl bg-stone-100 flex flex-col justify-around items-center"
