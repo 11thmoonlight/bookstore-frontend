@@ -8,10 +8,8 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { books: suggestions, setBooks: setSuggestions } =
-    useBooksBySearch(searchQuery);
 
-  console.log("suggestions", suggestions);
+  const { books, loading, error, setBooks } = useBooksBySearch(searchQuery);
 
   const handleOutsideClick = (event: MouseEvent) => {
     if (
@@ -19,13 +17,13 @@ export default function Search() {
       !searchBoxRef.current.contains(event.target as Node)
     ) {
       setSearchQuery("");
-      setSuggestions([]);
+      setBooks([]);
     }
   };
 
   const handleSelectSuggestion = (documentId: string) => {
     setSearchQuery("");
-    setSuggestions([]);
+    setBooks([]);
     router.push(`/book/${documentId}`);
   };
 
@@ -35,6 +33,8 @@ export default function Search() {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, []);
+
+  console.log("books", books);
 
   return (
     <div ref={searchBoxRef} className="relative w-full max-w-md mx-auto">
@@ -50,9 +50,9 @@ export default function Search() {
           <IoSearchOutline size={20} />
         </button>
 
-        {suggestions && suggestions?.length > 0 && (
+        {books && books?.length > 0 && (
           <ul className="absolute top-full max-h-[400px] left-0 w-full bg-white border rounded shadow mt-1 z-50 overflow-y-auto">
-            {suggestions?.map((book: Book) => (
+            {books?.map((book: Book) => (
               <li
                 key={book.id}
                 className="p-2 hover:bg-gray-100 cursor-pointer"

@@ -73,7 +73,7 @@ export function useBooksByGenre(genre: string) {
       setLoading(true);
       const result = await getBooksByGenre(genre);
       if (result.ok) {
-        setBooks(result.data);
+        setBooks(result.data.data);
       } else {
         setError(result.error?.message || "Failed to fetch books by genre.");
       }
@@ -90,25 +90,67 @@ export function useBooksByGenre(genre: string) {
   };
 }
 
+// export function useBooksBySearch(searchQuery: string) {
+//   const [books, setBooks] = useState<Book[] | null>(null);
+//   const [loading, setLoading] = useState<boolean>(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   // Fetch books by search query
+//   useEffect(() => {
+//     const fetchBooksBySearch = async () => {
+//       setLoading(true);
+//       const result = await getBooksBySearch(searchQuery);
+//       if (result.ok) {
+//         setBooks(result.data);
+//       } else {
+//         setError(result.error?.message || "Failed to fetch books by search.");
+//       }
+//       setLoading(false);
+//     };
+
+//     fetchBooksBySearch();
+//   }, [searchQuery]);
+
+//   return {
+//     books,
+//     setBooks,
+//     loading,
+//     error,
+//   };
+// }
+
 export function useBooksBySearch(searchQuery: string) {
   const [books, setBooks] = useState<Book[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch books by search query
   useEffect(() => {
-    const fetchBooksBySearch = async () => {
-      setLoading(true);
-      const result = await getBooksBySearch(searchQuery);
-      if (result.ok) {
-        setBooks(result.data);
-      } else {
-        setError(result.error?.message || "Failed to fetch books by search.");
-      }
+    if (!searchQuery.trim()) {
+      setBooks([]);
       setLoading(false);
-    };
+      return;
+    }
 
-    fetchBooksBySearch();
+    const delayDebounceFn = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const result = await getBooksBySearch(searchQuery);
+        if (result.ok) {
+          setBooks(result.data.data);
+          setError(null);
+        } else {
+          setBooks(null);
+          setError(result.error?.message || "Failed to fetch books by search.");
+        }
+      } catch (err) {
+        setBooks(null);
+        setError("An unexpected error occurred.");
+      } finally {
+        setLoading(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
   }, [searchQuery]);
 
   return {
