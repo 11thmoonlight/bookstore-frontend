@@ -9,7 +9,7 @@ import { IoStarHalf } from "react-icons/io5";
 import { IoStarOutline } from "react-icons/io5";
 import { useUser } from "@/context/userContext";
 import { useBook } from "@/hooks/useBook";
-import { addItemToCart } from "@/app/api/cart/cartServices";
+import { useCartItem } from "@/hooks/useCartItem";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 
@@ -19,6 +19,7 @@ export default function BooksById() {
   const { book, error, loading } = useBook(id);
   const { addToCart } = useCart(user?.cart?.documentId || "");
   const { addToWishList } = useWishlist(user?.wishlists.documentId || "");
+  const { addItemToCart } = useCartItem();
 
   const handleAddToCart = async (productId: string) => {
     try {

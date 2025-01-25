@@ -33,21 +33,6 @@ export default function WishList() {
   const handleRemoveWishList = async (productId: string) => {
     try {
       await removeFromWishlist(productId);
-      // setWishlist((prevItems) => {
-      //   if (!prevItems || !prevItems.products) {
-      //     return prevItems;
-      //   }
-
-      //   return {
-      //     ...prevItems,
-      //     data: {
-      //       ...prevItems,
-      //       products: prevItems.products.filter(
-      //         (product) => product.documentId !== productId
-      //       ),
-      //     },
-      //   };
-      // });
     } catch (err) {
       console.error(err);
     }
@@ -61,6 +46,8 @@ export default function WishList() {
       console.error(err);
     }
   };
+
+  console.log("wishlist", wishlist);
 
   return (
     <div className="mt-[160px] lg:px-20 md:px-10 px-2">

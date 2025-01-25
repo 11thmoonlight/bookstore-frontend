@@ -5,7 +5,7 @@ import {
   updateCartItemQuantity,
   addCartItem,
   removeCartItem,
-} from "@/app/api/cartItem/cartItemService";
+} from "@/data/services/cartItemServices";
 
 export function useCartItem() {
   const [loading, setLoading] = useState(false);

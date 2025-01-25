@@ -3,7 +3,7 @@ import {
   getCartById,
   addItemToCart,
   removeItemFromCart,
-} from "@/app/api/cart/cartServices";
+} from "@/data/services/cartServices";
 
 export function useCart(cartId: string) {
   const [cart, setCart] = useState<CartItems | null>(null);
@@ -64,7 +64,12 @@ export function useCart(cartId: string) {
       try {
         const result = await removeItemFromCart(cartId, itemId);
         if (result.ok) {
-          setCart(result.data);
+          setCart((prevCart) => ({
+            ...prevCart,
+            products: prevCart.products.filter(
+              (product) => product.documentId !== itemId
+            ),
+          }));
           setError(null);
         } else {
           setError(result.error?.message || "Failed to remove item.");

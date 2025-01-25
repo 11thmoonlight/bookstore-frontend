@@ -3,7 +3,7 @@ import {
   getwishlistById,
   addItemTowishlist,
   removeItemFromwishlist,
-} from "@/app/api/wishlist/wishlistServices";
+} from "@/data/services/wishlistServices";
 
 export function useWishlist(wishlistId: string) {
   const [wishlist, setWishlist] = useState<WhishListItems | null>(null);
@@ -57,14 +57,18 @@ export function useWishlist(wishlistId: string) {
     [wishlistId]
   );
 
-  // Remove product from cart
   const removeFromWishlist = useCallback(
     async (itemId: string) => {
       setLoading(true);
       try {
         const result = await removeItemFromwishlist(wishlistId, itemId);
         if (result.ok) {
-          setWishlist(result.data);
+          setWishlist((prevWishlist) => ({
+            ...prevWishlist,
+            products: prevWishlist.products.filter(
+              (product) => product.documentId !== itemId
+            ),
+          }));
           setError(null);
         } else {
           setError(result.error?.message || "Failed to remove item.");

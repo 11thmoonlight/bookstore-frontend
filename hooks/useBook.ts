@@ -4,7 +4,7 @@ import {
   getBookById,
   getBooksByGenre,
   getBooksBySearch,
-} from "@/app/api/book/bookServices";
+} from "@/data/services/bookServices";
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[] | null>(null);

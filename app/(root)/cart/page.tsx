@@ -107,12 +107,9 @@ export default function Cart() {
 
           return {
             ...prevItems,
-            data: {
-              ...prevItems,
-              products: prevItems.products.filter(
-                (product) => product.documentId !== productId
-              ),
-            },
+            products: prevItems.products.filter(
+              (product) => product.documentId !== productId
+            ),
           };
         });
       }
@@ -121,24 +118,32 @@ export default function Cart() {
     }
   };
 
-  const discounts = cart?.products
-    .reduce((sum, product) => {
-      const quantity = quantities[product.documentId] || 0;
-      return sum + product.discount * quantity;
-    }, 0)
-    .toFixed(2);
+  const discounts = cart?.products?.length
+    ? cart.products
+        .reduce((sum, product) => {
+          const quantity = quantities[product.documentId] || 0;
+          return sum + product.discount * quantity;
+        }, 0)
+        .toFixed(2)
+    : "0.00";
 
-  const totalPrice = cart?.products
-    .reduce((sum, product) => {
-      const quantity = quantities[product.documentId] || 0;
-      return sum + product.price * quantity;
-    }, 0)
-    .toFixed(2);
+  const totalPrice = cart?.products?.length
+    ? cart.products
+        .reduce((sum, product) => {
+          const quantity = quantities[product.documentId] || 0;
+          return sum + product.price * quantity;
+        }, 0)
+        .toFixed(2)
+    : "0.00";
 
-  const totalItems = cart?.products.reduce((sum, product) => {
-    const quantity = quantities[product.documentId] || 0;
-    return sum + quantity;
-  }, 0);
+  const totalItems = cart?.products?.length
+    ? cart.products.reduce((sum, product) => {
+        const quantity = quantities[product.documentId] || 0;
+        return sum + quantity;
+      }, 0)
+    : 0;
+
+  console.log("cart", cart);
 
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-start">

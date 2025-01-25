@@ -16,21 +16,22 @@ import { PiShoppingCartLight } from "react-icons/pi";
 import Link from "next/link";
 import { useUser } from "@/context/userContext";
 import { useBooksByGenre } from "@/hooks/useBook";
-import { addItemToCart } from "@/app/api/cart/cartServices";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useCartItem } from "@/hooks/useCartItem";
 
 export default function Genre() {
   const { user } = useUser();
   const { genre } = useParams<{ genre: string }>();
   const { books, error, loading } = useBooksByGenre(genre);
   const { addToCart } = useCart(user?.cart?.documentId || "");
-  const { addToWishList } = useWishlist(user?.wishlists.documentId || "");
+  const { addToWishList } = useWishlist(user?.wishlists[0].documentId || "");
+  const { addItemToCart } = useCartItem();
 
   const handleAddToCart = async (productId: string) => {
     try {
       await addToCart(productId);
-      await addItemToCart(user?.cart?.documentId || "", productId);
+      await addItemToCart(user?.cart?.documentId, productId);
     } catch (err) {
       console.error(err);
     }
