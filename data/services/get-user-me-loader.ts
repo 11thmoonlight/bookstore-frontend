@@ -1,4 +1,5 @@
 "use server";
+import axios from "axios";
 import { getAuthToken } from "./get-token";
 import { getStrapiURL } from "@/lib/utils";
 
@@ -7,26 +8,26 @@ const query = "populate=*";
 export async function getUserMeLoader() {
   const baseUrl = getStrapiURL();
 
-  const url = new URL("/api/users/me", baseUrl);
-  url.search = query;
+  const url = `${baseUrl}/api/users/me?${query}`;
 
   const authToken = await getAuthToken();
   if (!authToken) return { ok: false, data: null, error: null };
 
   try {
-    const response = await fetch(url.href, {
-      method: "GET",
+    const response = await axios.get(url, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      cache: "no-cache",
     });
-    const data = await response.json();
-    if (data.error) return { ok: false, data: null, error: data.error };
-    return { ok: true, data: data, error: null };
+
+    if (response.data.error) {
+      return { ok: false, data: null, error: response.data.error };
+    }
+
+    return { ok: true, data: response.data, error: null };
   } catch (error) {
-    console.log(error);
-    return { ok: false, data: null, error: error };
+    console.error(error);
+    return { ok: false, data: null, error: error.message || error };
   }
 }

@@ -9,44 +9,6 @@ import {
   ReactNode,
 } from "react";
 
-interface Cart {
-  createdAt: string;
-  documentId: string;
-  products: unknown[];
-  id: number;
-  locale: null;
-  publishedAt: null;
-  updatedAt: string;
-}
-
-interface WishList {
-  createdAt: string;
-  documentId: string;
-  products: unknown[];
-  id: number;
-  locale: null;
-  publishedAt: null;
-  updatedAt: string;
-}
-
-interface User {
-  blocked: boolean;
-  cart: Cart;
-  confirmed: boolean;
-  createdAt: string;
-  documentId: string;
-  email: string;
-  id: number;
-  locale: null;
-  localizations: unknown[];
-  orders: unknown[];
-  provider: string;
-  publishedAt: string;
-  updatedAt: string;
-  username: string;
-  wishlists: WishList;
-}
-
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;

@@ -4,21 +4,19 @@ import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { IoStar } from "react-icons/io5";
-import { IoStarHalf } from "react-icons/io5";
-import { IoStarOutline } from "react-icons/io5";
 import { useUser } from "@/context/userContext";
 import { useBook } from "@/hooks/useBook";
 import { useCartItem } from "@/hooks/useCartItem";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
+import StarRating from "@/components/StarRating";
 
 export default function BooksById() {
   const { user } = useUser();
   const { id } = useParams<{ id: string }>();
   const { book, error, loading } = useBook(id);
   const { addToCart } = useCart(user?.cart?.documentId || "");
-  const { addToWishList } = useWishlist(user?.wishlists.documentId || "");
+  const { addToWishList } = useWishlist(user?.wishlists[0].documentId || "");
   const { addItemToCart } = useCartItem();
 
   const handleAddToCart = async (productId: string) => {
@@ -36,33 +34,6 @@ export default function BooksById() {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const StarRating = (rating: number) => {
-    const renderStars = () => {
-      const stars: JSX.Element[] = [];
-      const fullStars = Math.floor(rating);
-      const hasHalfStar = rating % 1 !== 0;
-      const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-      for (let i = 0; i < fullStars; i++) {
-        stars.push(<IoStar key={`full-${i}`} className="text-amber-600" />);
-      }
-
-      if (hasHalfStar) {
-        stars.push(<IoStarHalf key="half" className="text-amber-600" />);
-      }
-
-      for (let i = 0; i < emptyStars; i++) {
-        stars.push(
-          <IoStarOutline key={`empty-${i}`} className="text-amber-600" />
-        );
-      }
-
-      return stars;
-    };
-
-    return <div className="flex">{renderStars()}</div>;
   };
 
   return (
@@ -91,8 +62,7 @@ export default function BooksById() {
             <p>By {book?.author}</p>
           </div>
           <div className="flex items-center gap-2">
-            {StarRating(book?.rate)}
-
+            <StarRating rating={book?.rate ?? 0} />
             <p>{book?.rate}</p>
           </div>
 
@@ -130,13 +100,15 @@ export default function BooksById() {
             </div>
           </div>
           <Button
-            onClick={() => handleAddToCart(book?.documentId)}
+            onClick={() => book?.documentId && handleAddToCart(book.documentId)}
             className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
           >
             Add to cart
           </Button>
           <Button
-            onClick={() => handleAddToWishList(book?.documentId)}
+            onClick={() =>
+              book?.documentId && handleAddToWishList(book.documentId)
+            }
             className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
           >
             Add to wish list

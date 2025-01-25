@@ -1,3 +1,4 @@
+import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
@@ -8,20 +9,14 @@ export async function createCheckout(total: number) {
   try {
     const amountInCents = Math.round(total * 100);
 
-    const res = await fetch(
+    const res = await axios.post(
       "http://localhost:1337/api/create-checkout-session",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: amountInCents,
-        }),
+        amount: amountInCents,
       }
     );
 
-    const { id: sessionId } = await res.json();
+    const { id: sessionId } = res.data;
 
     const stripe = await stripePromise;
 

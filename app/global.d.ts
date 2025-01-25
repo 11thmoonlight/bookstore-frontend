@@ -59,6 +59,24 @@ declare global {
     postalCode: string;
     emailAddress: string;
   }
+
+  interface User {
+    blocked: boolean;
+    cart: CartItems;
+    confirmed: boolean;
+    createdAt: string;
+    documentId: string;
+    email: string;
+    id: number;
+    locale: null;
+    localizations: unknown[];
+    orders: unknown[];
+    provider: string;
+    publishedAt: string;
+    updatedAt: string;
+    username: string;
+    wishlists: WhishListItems[];
+  }
 }
 
 export {};
