@@ -11,39 +11,15 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { GoHeart } from "react-icons/go";
-import { PiShoppingCartLight } from "react-icons/pi";
+
 import Link from "next/link";
-import { useUser } from "@/context/userContext";
 import { useBooksByGenre } from "@/hooks/useBook";
-import { useCart } from "@/hooks/useCart";
-import { useWishlist } from "@/hooks/useWishlist";
-import { useCartItem } from "@/hooks/useCartItem";
+import AddToCartButton from "@/components/AddToCartButton";
+import AddToWishlistButton from "@/components/AddToWishlistButton";
 
 export default function Genre() {
-  const { user } = useUser();
   const { genre } = useParams<{ genre: string }>();
   const { books, error, loading } = useBooksByGenre(genre);
-  const { addToCart } = useCart(user?.cart?.documentId || "");
-  const { addToWishList } = useWishlist(user?.wishlists[0].documentId || "");
-  const { addItemToCart } = useCartItem();
-
-  const handleAddToCart = async (productId: string) => {
-    try {
-      await addToCart(productId);
-      await addItemToCart(user?.cart?.documentId, productId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleAddToWishList = async (productId: string) => {
-    try {
-      await addToWishList(productId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-center">
@@ -69,19 +45,13 @@ export default function Genre() {
               {book.price} $
             </CardContent>
             <CardFooter className="flex justify-around items-center w-full">
-              <button onClick={() => handleAddToWishList(book.documentId)}>
-                <GoHeart size={27} />
-              </button>
-
+              <AddToWishlistButton productId={book.documentId} variant="icon" />
               <Button className="bg-amber-800 text-base hover:bg-amber-700">
                 <Link href={`/book/${book.documentId}`} className="w-full">
                   More Details
                 </Link>
               </Button>
-
-              <button onClick={() => handleAddToCart(book.documentId)}>
-                <PiShoppingCartLight size={27} />
-              </button>
+              <AddToCartButton productId={book.documentId} variant="icon" />
             </CardFooter>
           </Card>
         ))}
