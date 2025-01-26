@@ -26,17 +26,14 @@ export default function Cart() {
     fetchCartItemByIds,
     updateQuantity,
     removeItemFromCart,
-  } = useCartItem();
+  } = useCartItem(user?.cart.documentId || "");
 
   useEffect(() => {
     const fetchQuantities = async () => {
       if (user?.cart?.documentId && cart?.products?.length) {
         const quantityData: Record<string, number> = {};
         const promises = cart.products.map(async (item) => {
-          const data = await fetchCartItemByIds(
-            user.cart.documentId,
-            item.documentId
-          );
+          const data = await fetchCartItemByIds(item.documentId);
           if (data) {
             quantityData[item.documentId] = data.quantity;
           }
@@ -54,10 +51,7 @@ export default function Cart() {
     if (!user?.cart?.documentId || !cart?.products?.length) return;
 
     try {
-      const cartItemData = await fetchCartItemByIds(
-        user.cart.documentId,
-        productId
-      );
+      const cartItemData = await fetchCartItemByIds(productId);
       const newQuantity = cartItemData.quantity + 1;
 
       const response = await updateQuantity(
@@ -80,10 +74,7 @@ export default function Cart() {
     if (!user?.cart?.documentId) return;
 
     try {
-      const cartItemData = await fetchCartItemByIds(
-        user.cart.documentId,
-        productId
-      );
+      const cartItemData = await fetchCartItemByIds(productId);
 
       const { documentId: cartItemId, quantity } = cartItemData;
 

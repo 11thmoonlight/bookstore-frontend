@@ -2,39 +2,15 @@
 
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useUser } from "@/context/userContext";
 import { useBook } from "@/hooks/useBook";
-import { useCartItem } from "@/hooks/useCartItem";
-import { useCart } from "@/hooks/useCart";
-import { useWishlist } from "@/hooks/useWishlist";
 import StarRating from "@/components/StarRating";
+import AddToCartButton from "@/components/AddToCartButton";
+import AddToWishlistButton from "@/components/AddToWishlistButton";
 
 export default function BooksById() {
-  const { user } = useUser();
   const { id } = useParams<{ id: string }>();
   const { book, error, loading } = useBook(id);
-  const { addToCart } = useCart(user?.cart?.documentId || "");
-  const { addToWishList } = useWishlist(user?.wishlists[0].documentId || "");
-  const { addItemToCart } = useCartItem();
-
-  const handleAddToCart = async (productId: string) => {
-    try {
-      await addToCart(productId);
-      await addItemToCart(user?.cart?.documentId || "", productId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleAddToWishList = async (productId: string) => {
-    try {
-      await addToWishList(productId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <>
@@ -99,20 +75,8 @@ export default function BooksById() {
               <p className="text-lime-600 text-lg font-bold">{book?.price}$</p>
             </div>
           </div>
-          <Button
-            onClick={() => book?.documentId && handleAddToCart(book.documentId)}
-            className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
-          >
-            Add to cart
-          </Button>
-          <Button
-            onClick={() =>
-              book?.documentId && handleAddToWishList(book.documentId)
-            }
-            className="w-96 bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50"
-          >
-            Add to wish list
-          </Button>
+          <AddToCartButton productId={book?.documentId ?? ""} />
+          <AddToWishlistButton productId={book?.documentId ?? ""} />
         </div>
       </div>
     </>

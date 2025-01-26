@@ -7,7 +7,7 @@ import {
   removeCartItem,
 } from "@/data/services/cartItemServices";
 
-export function useCartItem() {
+export function useCartItem(cartId: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -30,7 +30,7 @@ export function useCartItem() {
     }
   };
 
-  const fetchCartItemByIds = async (cartId: string, productId: string) => {
+  const fetchCartItemByIds = async (productId: string) => {
     setLoading(true);
     setError(null);
     try {
@@ -68,11 +68,7 @@ export function useCartItem() {
     }
   };
 
-  const addItemToCart = async (
-    cartId: string,
-    productId: string,
-    quantity = 1
-  ) => {
+  const addItemToCart = async (productId: string, quantity = 1) => {
     setLoading(true);
     setError(null);
     try {
