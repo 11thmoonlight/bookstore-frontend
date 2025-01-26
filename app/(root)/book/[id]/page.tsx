@@ -9,6 +9,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import AddToWishlistButton from "@/components/AddToWishlistButton";
 import ErrorMessage from "@/components/custom/ErrorMessage";
 import Loader from "@/components/custom/Loader";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function BooksById() {
   const { id } = useParams<{ id: string }>();
@@ -25,21 +26,19 @@ export default function BooksById() {
     <>
       <div className="flex gap-10 mt-[160px] mb-10 justify-center px-10">
         <div className="relative">
-          {!loading && !error && (
-            <Image
-              src={`http://localhost:1337${book?.image[0]?.url}`}
-              alt="book image cover"
-              width={400}
-              height={700}
-            />
-          )}
+          <Image
+            src={`http://localhost:1337/${book?.image[0]?.url}`}
+            alt="book image cover"
+            width={400}
+            height={700}
+          />
         </div>
         <div className="w-fit flex flex-col gap-3">
           <h2 className="font-bold text-2xl">{book?.name}</h2>
           <div className="text-lg flex gap-4 items-center">
             <Avatar>
               <AvatarImage
-                src={`http://localhost:1337${book?.authorImg.url}`}
+                src={`http://localhost:1337/${book?.authorImg.url}`}
                 alt="writer image"
               />
               <AvatarFallback>A</AvatarFallback>
@@ -52,41 +51,52 @@ export default function BooksById() {
           </div>
 
           <div className="text-sm">{book?.description}</div>
+        </div>
 
-          <div className="w-96 flex flex-col gap-2">
+        <Card className="bg-amber-50 w-full md:w-[700px] h-fit">
+          <CardHeader>
+            <CardTitle className="pb-4 text-amber-800 border-b-2">
+              Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
             <div className="flex justify-between">
-              <p className="font-bold">Publisher</p>
-              <p>{book?.publisher}</p>
+              <p className="font-bold text-amber-800">Publisher</p>
+              <p className="text-amber-800">{book?.publisher}</p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold">Publication Date</p>
-              <p>{book?.publicationYear.replaceAll("-", "/")}</p>
+              <p className="font-bold text-amber-800">Publication Date</p>
+              <p className="text-amber-800">
+                {book?.publicationYear.replaceAll("-", "/")}
+              </p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold">Language</p>
-              <p>{book?.language}</p>
+              <p className="font-bold text-amber-800">Language</p>
+              <p className="text-amber-800">{book?.language}</p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold">Pages</p>
-              <p>{book?.pagesNum}</p>
+              <p className="font-bold text-amber-800">Pages</p>
+              <p className="text-amber-800">{book?.pagesNum}</p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold">Genere</p>
-              <p>{book?.category}</p>
+              <p className="font-bold text-amber-800">Genere</p>
+              <p className="text-amber-800">{book?.category}</p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold">Price</p>
+              <p className="font-bold text-amber-800">Price</p>
               <p className="text-lime-600 text-lg font-bold">{book?.price}$</p>
             </div>
-          </div>
-          <AddToCartButton productId={book?.documentId ?? ""} />
-          <AddToWishlistButton productId={book?.documentId ?? ""} />
-        </div>
+            <div className="flex gap-2">
+              <AddToCartButton productId={book?.documentId ?? ""} />
+              <AddToWishlistButton productId={book?.documentId ?? ""} />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
