@@ -7,16 +7,25 @@ import { useBook } from "@/hooks/useBook";
 import StarRating from "@/components/StarRating";
 import AddToCartButton from "@/components/AddToCartButton";
 import AddToWishlistButton from "@/components/AddToWishlistButton";
+import ErrorMessage from "@/components/custom/ErrorMessage";
+import Loader from "@/components/custom/Loader";
 
 export default function BooksById() {
   const { id } = useParams<{ id: string }>();
   const { book, error, loading } = useBook(id);
 
+  if (loading) {
+    <Loader />;
+  }
+
+  if (error) {
+    <ErrorMessage message={error} />;
+  }
   return (
     <>
       <div className="flex gap-10 mt-[160px] mb-10 justify-center px-10">
         <div className="relative">
-          {!loading && (
+          {!loading && !error && (
             <Image
               src={`http://localhost:1337${book?.image[0]?.url}`}
               alt="book image cover"
