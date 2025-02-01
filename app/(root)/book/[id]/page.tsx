@@ -24,15 +24,17 @@ export default function BooksById() {
   }
   return (
     <>
-      <div className="flex flex-col md:flex-col lg:flex-row gap-10 mt-[160px] mb-10 justify-center px-10 lg:h-[370px]">
-        <div className="flex flex-col md:flex-row gap-10">
-          <Image
-            src={`http://localhost:1337/${book?.image[0]?.url}`}
-            alt="book image cover"
-            width={430}
-            height={900}
-            className="rounded-xl shadow-lg"
-          />
+      <div className="flex flex-col md:flex-col lg:flex-row gap-10 mt-[160px] mb-10 justify-center px-10 lg:h-[370px] items-center">
+        <div className="flex flex-col md:flex-row gap-10 items-center">
+          <div className="">
+            <Image
+              src={`http://localhost:1337/${book?.image[0]?.url}`}
+              alt="book image cover"
+              width={430}
+              height={900}
+              className="rounded-xl shadow-lg"
+            />
+          </div>
 
           <div className="w-fit flex flex-col gap-3 px-6 py-2 shadow-transparent bg-amber-50 rounded-xl md:h-[500px] lg:h-[370px]">
             <h2 className="font-bold text-2xl text-amber-950">{book?.name}</h2>
