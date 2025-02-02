@@ -16,17 +16,18 @@ export default function BooksById() {
   const { book, error, loading } = useBook(id);
 
   if (loading) {
-    <Loader />;
+    return <Loader />;
   }
 
   if (error) {
-    <ErrorMessage message={error} />;
+    return <ErrorMessage message={error} />;
   }
+
   return (
     <>
       <div className="flex flex-col md:flex-col lg:flex-row gap-10 mt-[160px] mb-10 justify-center px-10 lg:h-[370px] items-center">
         <div className="flex flex-col md:flex-row gap-10 items-center">
-          <div className="">
+          <div>
             <Image
               src={`http://localhost:1337/${book?.image[0]?.url}`}
               alt="book image cover"

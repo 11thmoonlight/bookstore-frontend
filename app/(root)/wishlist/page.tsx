@@ -15,20 +15,18 @@ import { useUser } from "@/context/userContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCartItem } from "@/hooks/useCartItem";
 import { useCart } from "@/hooks/useCart";
+import Loader from "@/components/custom/Loader";
+import ErrorMessage from "@/components/custom/ErrorMessage";
 
 export default function WishList() {
   const { user } = useUser();
-  const { wishlist, loading, setWishlist, removeFromWishlist } = useWishlist(
+  const { wishlist, loading, error, removeFromWishlist } = useWishlist(
     user?.wishlists[0]?.documentId || ""
   );
 
-  console.log("id", user?.wishlists[0]?.documentId);
-
   const { addToCart } = useCart(user?.cart?.documentId || "");
 
-  const { addItemToCart } = useCartItem();
-
-  console.log(wishlist, "wishlist");
+  const { addItemToCart } = useCartItem(user?.cart?.documentId || "");
 
   const handleRemoveWishList = async (productId: string) => {
     try {
@@ -41,13 +39,19 @@ export default function WishList() {
   const handleAddToCart = async (productId: string) => {
     try {
       await addToCart(productId);
-      await addItemToCart(user?.cart?.documentId || "", productId);
+      await addItemToCart(productId);
     } catch (err) {
       console.error(err);
     }
   };
 
-  console.log("wishlist", wishlist);
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <ErrorMessage message={error} />;
+  }
 
   return (
     <div className="mt-[160px] lg:px-20 md:px-10 px-2">
