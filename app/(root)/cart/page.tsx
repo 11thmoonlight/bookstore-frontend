@@ -27,14 +27,12 @@ export default function Cart() {
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-start">
       {cart && (
-        <div className="md:h-[370px] overflow-y-auto w-full scrollbar-thin">
-          <CartTable
-            cart={cart}
-            quantities={quantities}
-            onAdd={handleIncreaseItem}
-            onRemove={handleDecreaseItem}
-          />
-        </div>
+        <CartTable
+          cart={cart}
+          quantities={quantities}
+          onAdd={handleIncreaseItem}
+          onRemove={handleDecreaseItem}
+        />
       )}
       <CartSummary
         totalItems={totalItems}

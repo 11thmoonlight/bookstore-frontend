@@ -14,7 +14,7 @@ body {
     width: 4px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #edcda6;
+    background-color: #ebb778;
     border-radius: 10px;
   }
   .scrollbar-thin::-webkit-scrollbar-track {

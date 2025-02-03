@@ -26,8 +26,6 @@ export default function Header() {
   const { user } = useUser();
   const [currentUser, setCurrentUser] = useState(user);
 
-  console.log("User", user);
-
   useEffect(() => {
     setCurrentUser(user);
   }, [user]);

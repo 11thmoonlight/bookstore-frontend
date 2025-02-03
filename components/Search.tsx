@@ -34,8 +34,6 @@ export default function Search() {
     };
   }, []);
 
-  console.log("books", books);
-
   return (
     <div ref={searchBoxRef} className="relative w-full max-w-md mx-auto">
       <div className="flex justify-between relative">
@@ -51,7 +49,7 @@ export default function Search() {
         </button>
 
         {books && books?.length > 0 && (
-          <ul className="absolute top-full max-h-[400px] left-0 w-full bg-white border rounded shadow mt-1 z-50 overflow-y-auto">
+          <ul className="absolute top-full max-h-[400px] left-0 w-full bg-white border rounded shadow mt-1 z-50 overflow-y-auto scrollbar-thin">
             {books?.map((book: Book) => (
               <li
                 key={book.id}

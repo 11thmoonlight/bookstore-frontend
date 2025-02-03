@@ -1,6 +1,4 @@
 "use client";
-import React, { useEffect, useState } from "react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,14 +12,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@/context/userContext";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { IoMdArrowRoundForward } from "react-icons/io";
 import { createCheckout } from "@/data/services/createCheckout";
-import { useCart } from "@/hooks/useCart";
-import { useCartItem } from "@/hooks/useCartItem";
+import CartTable from "@/components/CartTable";
+import { useCartManager } from "@/hooks/useCartManager";
+import CartSummary from "@/components/CartSummary";
+import Loader from "@/components/custom/Loader";
+import ErrorMessage from "@/components/custom/ErrorMessage";
 
 const formSchema = z.object({
   address: z
@@ -38,59 +34,19 @@ const formSchema = z.object({
 });
 
 export default function Checkout() {
-  const { user } = useUser();
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
-  const { cart, loading, error, setCart, removeFromCart } = useCart(
-    user?.cart?.documentId || ""
-  );
   const {
-    loading: cartItemLoading,
-    error: cartItemError,
-    fetchCartItemByIds,
-    updateQuantity,
-    removeItemFromCart,
-  } = useCartItem();
-
-  useEffect(() => {
-    const fetchQuantities = async () => {
-      if (user?.cart?.documentId && cart?.products?.length) {
-        const quantityData: Record<string, number> = {};
-        const promises = cart.products.map(async (item) => {
-          const data = await fetchCartItemByIds(
-            user.cart.documentId,
-            item.documentId
-          );
-          if (data) {
-            quantityData[item.documentId] = data.quantity;
-          }
-        });
-
-        await Promise.all(promises);
-        setQuantities(quantityData);
-      }
-    };
-
-    fetchQuantities();
-  }, [cart?.products, user?.cart?.documentId]);
-
-  const discounts = cart?.products
-    .reduce((sum, product) => {
-      const quantity = quantities[product.documentId] || 0;
-      return sum + product.discount * quantity;
-    }, 0)
-    .toFixed(2);
-
-  const totalPrice = cart?.products
-    .reduce((sum, product) => {
-      const quantity = quantities[product.documentId] || 0;
-      return sum + product.price * quantity;
-    }, 0)
-    .toFixed(2);
-
-  const totalItems = cart?.products.reduce((sum, product) => {
-    const quantity = quantities[product.documentId] || 0;
-    return sum + quantity;
-  }, 0);
+    cart,
+    quantities,
+    handleIncreaseItem,
+    handleDecreaseItem,
+    totalItems,
+    totalPrice,
+    discounts,
+    loading,
+    cartItemLoading,
+    error,
+    cartItemError,
+  } = useCartManager();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -104,7 +60,7 @@ export default function Checkout() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      createCheckout(totalPrice);
+      createCheckout(Number(totalPrice));
 
       const response = await fetch("/api/create-payment-intent", {
         method: "POST",
@@ -119,8 +75,30 @@ export default function Checkout() {
     }
   };
 
+  if (loading || cartItemLoading) return <Loader />;
+  if (error || cartItemError) return <ErrorMessage />;
+
   return (
-    <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col mb-6 justify-between items-start gap-32">
+    <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col mb-6 justify-between items-start gap-16">
+      <div className="flex flex-col gap-4 w-full md:w-1/2">
+        {cart && (
+          <CartTable
+            variant="readonly"
+            cart={cart}
+            quantities={quantities}
+            onAdd={handleIncreaseItem}
+            onRemove={handleDecreaseItem}
+          />
+        )}
+
+        <CartSummary
+          variant="readonly"
+          totalItems={totalItems}
+          totalPrice={totalPrice}
+          discounts={discounts}
+        />
+      </div>
+
       <div className="w-full md:w-1/2 flex flex-col gap-4">
         <p className="bg-amber-800 text-amber-50 p-2 rounded-sm font-bold mb-8">
           Yout Information
@@ -185,77 +163,6 @@ export default function Checkout() {
             <Button type="submit">Submit</Button>
           </form>
         </Form>
-      </div>
-      <div className="w-1/2">
-        <div className="flex flex-col gap-4">
-          {cart?.products.map((item) => (
-            <Table key={item.id} className="bg-amber-50 text-amber-800">
-              <TableBody>
-                <TableRow>
-                  <TableCell className="flex gap-4 items-center">
-                    <Image
-                      src={`http://localhost:1337${item.image[0].url}`}
-                      alt="book image cover"
-                      width={70}
-                      height={70}
-                    />
-
-                    <div className="flex flex-col justify-between gap-4">
-                      <div className="flex flex-col gap-2 justify-center">
-                        <p className="lg:text-lg font-normal text-sm">
-                          {item.name}
-                        </p>
-                        <p>By {item.author}</p>
-                        <p className="text-lime-600">{item.price}$</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          ))}
-
-          <Card className="bg-amber-50 h-fit">
-            <CardHeader>
-              <CardTitle className="pb-4 text-amber-800 border-b-2">
-                Order Summery
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-4">
-                <div className="flex justify-between">
-                  <p className="text-amber-800 text-sm">Items</p>
-                  <p className="text-amber-800 text-sm">{totalItems}</p>
-                </div>
-
-                <div className="flex justify-between">
-                  <p className="text-amber-800 text-sm">Items Total Price</p>
-                  <p className="text-amber-800 text-sm">{totalPrice}$</p>
-                </div>
-
-                <div className="flex justify-between">
-                  <p className="text-amber-800 text-sm">Delivery</p>
-                  <p className="text-amber-800 text-sm">1.25$</p>
-                </div>
-
-                <div className="flex justify-between">
-                  <p className="text-amber-800 text-sm">Discount</p>
-                  <p className="text-amber-800 text-sm">{discounts}$</p>
-                </div>
-
-                <div className="flex justify-between my-4 bg-amber-100 p-2 rounded-md">
-                  <p className="text-amber-800 text-base">Total</p>
-                  <p className="text-lg text-lime-600 font-semibold">
-                    {Number(totalPrice) + 1.25}$
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-            <Button className="w-full bg-lime-600 hover:bg-lime-500 font-bold text-lime-50 text-lg py-6 flex gap-2">
-              <IoMdArrowRoundForward />
-            </Button>
-          </Card>
-        </div>
       </div>
     </div>
   );

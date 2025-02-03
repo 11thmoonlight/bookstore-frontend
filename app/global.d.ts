@@ -14,7 +14,7 @@ declare global {
     author: string;
     category: string;
     createdAt: string;
-    authorImg: AuthorImage[];
+    authorImg: AuthorImage;
     description: string;
     discount: number;
     documentId: string;

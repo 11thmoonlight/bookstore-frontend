@@ -8,15 +8,21 @@ interface CartSummaryProps {
   totalItems: number;
   totalPrice: string;
   discounts: string;
+  variant?: "default" | "readonly";
 }
 
 const CartSummary: React.FC<CartSummaryProps> = ({
   totalItems,
   totalPrice,
   discounts,
+  variant = "default",
 }) => {
   return (
-    <Card className="bg-amber-50 w-full md:w-96 h-fit">
+    <Card
+      className={`bg-amber-50 h-fit ${
+        variant === "readonly" ? "w-full" : "w-full md:w-96"
+      }`}
+    >
       <CardHeader>
         <CardTitle className="pb-4 text-amber-800 border-b-2">
           Order Summery
@@ -54,10 +60,12 @@ const CartSummary: React.FC<CartSummaryProps> = ({
           </div>
         </div>
       </CardContent>
-      <Button className="w-full bg-lime-600 hover:bg-lime-500 font-bold text-lime-50 text-lg py-6 flex gap-2">
-        <Link href="/cart/checkout">Checkout</Link>
-        <IoMdArrowRoundForward />
-      </Button>
+      {variant === "default" && (
+        <Button className="w-full bg-lime-600 hover:bg-lime-500 font-bold text-lime-50 text-lg py-6 flex gap-2">
+          <Link href="/cart/checkout">Checkout</Link>
+          <IoMdArrowRoundForward />
+        </Button>
+      )}
     </Card>
   );
 };
