@@ -42,7 +42,7 @@ export default function BooksById() {
             <div className="text-lg flex gap-4 items-center">
               <Avatar>
                 <AvatarImage
-                  src={`http://localhost:1337/${book?.authorImg.url}`}
+                  src={`http://localhost:1337/${book?.authorImg?.url}`}
                   alt="writer image"
                 />
                 <AvatarFallback>{book?.author}</AvatarFallback>
@@ -54,10 +54,7 @@ export default function BooksById() {
               <p className="text-amber-950">{book?.rate}</p>
             </div>
 
-            <div
-              className="text-sm overflow-y-auto text-amber-950"
-              style={{ scrollbarWidth: "none" }}
-            >
+            <div className="text-sm overflow-y-auto text-amber-950 scrollbar-thin">
               {book?.description}
             </div>
           </div>

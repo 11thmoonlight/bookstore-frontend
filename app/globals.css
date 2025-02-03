@@ -10,6 +10,16 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #edcda6;
+    border-radius: 10px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: #f3f4f6;
+  }
 }
 
 @layer base {
