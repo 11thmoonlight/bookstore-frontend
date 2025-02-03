@@ -19,7 +19,7 @@ const CartTable: React.FC<CartTableProps> = ({
   onRemove,
 }) => {
   return (
-    <div className="w-full flex flex-col gap-8">
+    <div className="flex flex-col gap-8">
       {cart?.products.map((item) => (
         <Table key={item.id}>
           <TableBody>
@@ -34,10 +34,10 @@ const CartTable: React.FC<CartTableProps> = ({
 
                 <div className="flex flex-col justify-between gap-4">
                   <div className="flex flex-col gap-2 justify-center">
-                    <p className="md:font-bold lg:text-lg font-semibold text-base">
+                    <p className="md:font-bold lg:text-lg font-semibold text-base text-amber-950">
                       {item.name}
                     </p>
-                    <p>By {item.author}</p>
+                    <p className="text-amber-950">By {item.author}</p>
                     <p className="font-bold text-lime-600 text-lg lg:text-2xl">
                       {item.price}$
                     </p>
@@ -49,7 +49,9 @@ const CartTable: React.FC<CartTableProps> = ({
                     >
                       <FaMinus size={18} className="text-amber-800" />
                     </Button>
-                    <p>{quantities[item.documentId]}</p>
+                    <p className="text-amber-950 text-lg">
+                      {quantities[item.documentId]}
+                    </p>
                     <Button
                       onClick={() => onAdd(item.documentId)}
                       className="bg-white hover:bg-amber-50 rounded-full"
