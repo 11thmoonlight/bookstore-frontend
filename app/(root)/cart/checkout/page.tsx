@@ -6,6 +6,7 @@ import CartSummary from "@/components/CartSummary";
 import Loader from "@/components/custom/Loader";
 import ErrorMessage from "@/components/custom/ErrorMessage";
 import CheckoutForm from "@/components/CheckoutFprm";
+import { useState } from "react";
 
 export default function Checkout() {
   const {
@@ -22,8 +23,11 @@ export default function Checkout() {
     cartItemError,
   } = useCartManager();
 
+  const [isSubmiting, setIsSubmiting] = useState(false);
+
   const onSubmit = async (values: CheckoutFormValues) => {
     try {
+      setIsSubmiting(true);
       createCheckout(Number(totalPrice));
 
       const response = await fetch("/api/create-payment-intent", {
@@ -36,6 +40,8 @@ export default function Checkout() {
       console.log("Stripe client secret:", clientSecret);
     } catch (error) {
       console.error("Error submitting the form:", error);
+    } finally {
+      setIsSubmiting(false);
     }
   };
 
@@ -67,7 +73,7 @@ export default function Checkout() {
         <p className="bg-stone-500 text-amber-50 p-2 rounded-sm font-bold mb-8 text-center">
           Shipping Information
         </p>
-        <CheckoutForm onSubmit={onSubmit} />
+        <CheckoutForm onSubmit={onSubmit} isSubmiting={isSubmiting}/>
       </div>
     </div>
   );

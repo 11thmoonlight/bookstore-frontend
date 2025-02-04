@@ -11,6 +11,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { ClipLoader } from "react-spinners";
 
 const formSchema = z.object({
   address: z
@@ -26,7 +27,10 @@ interface CheckoutFormProps {
   onSubmit: (values: z.infer<typeof formSchema>) => void;
 }
 
-export default function CheckoutForm({ onSubmit }: CheckoutFormProps) {
+export default function CheckoutForm({
+  onSubmit,
+  isSubmiting,
+}: CheckoutFormProps & { isSubmiting: boolean }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -119,7 +123,14 @@ export default function CheckoutForm({ onSubmit }: CheckoutFormProps) {
           className="bg-amber-600 hover:bg-amber-700 font-semibold text-amber-50"
           type="submit"
         >
-          Proceed to Payment
+          {isSubmiting ? (
+            <>
+              Processing
+              <ClipLoader size={18} color="#ffffff" />
+            </>
+          ) : (
+            "Proceed to Payment"
+          )}
         </Button>
       </form>
     </Form>
