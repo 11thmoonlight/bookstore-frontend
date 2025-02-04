@@ -21,7 +21,7 @@ export default function Cart() {
     cartItemError,
   } = useCartManager();
 
-  if (loading || cartItemLoading) return <Loader />;
+  if (loading || cartItemLoading || !quantities) return <Loader />;
   if (error || cartItemError) return <ErrorMessage />;
 
   return (

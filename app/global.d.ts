@@ -77,6 +77,13 @@ declare global {
     username: string;
     wishlists: WhishListItems[];
   }
+
+  interface CheckoutFormValues {
+    address: string;
+    phoneNumber: string;
+    postalCode: string;
+    emailAddress: string;
+  }
 }
 
 export {};
