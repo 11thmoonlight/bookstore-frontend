@@ -46,7 +46,7 @@ const OrderProcessingChart = ({ currentStage }) => {
   );
 };
 
-export default function Profile() {
+export default function Order() {
   const currentStage = 1;
 
   return (

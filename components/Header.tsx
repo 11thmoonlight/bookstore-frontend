@@ -7,7 +7,6 @@ import { PiShoppingCartLight } from "react-icons/pi";
 import { GoHeart } from "react-icons/go";
 import Link from "next/link";
 import { IoIosLogIn } from "react-icons/io";
-import { BsPersonGear } from "react-icons/bs";
 import {
   Menubar,
   MenubarContent,
@@ -73,7 +72,7 @@ export default function Header() {
                     <MenubarSeparator />
                     <MenubarItem>
                       <Link
-                        href="/profile"
+                        href="/order"
                         className="flex items-center gap-4 w-full"
                       >
                         <BsBagCheck size={24} />
