@@ -5,7 +5,7 @@ import { useCartManager } from "@/hooks/useCartManager";
 import CartSummary from "@/components/CartSummary";
 import Loader from "@/components/custom/Loader";
 import ErrorMessage from "@/components/custom/ErrorMessage";
-import CheckoutForm from "@/components/CheckoutFprm";
+import CheckoutForm from "@/components/CheckoutForm";
 import { useState } from "react";
 
 export default function Checkout() {
@@ -73,7 +73,7 @@ export default function Checkout() {
         <p className="bg-stone-500 text-amber-50 p-2 rounded-sm font-bold mb-8 text-center">
           Shipping Information
         </p>
-        <CheckoutForm onSubmit={onSubmit} isSubmiting={isSubmiting}/>
+        <CheckoutForm onSubmit={onSubmit} isSubmiting={isSubmiting} />
       </div>
     </div>
   );
