@@ -86,7 +86,7 @@ export default function WishList() {
                   </div>
                 </div>
 
-                <div className="flex md:hidden gap-6 items-center justify-center">
+                <div className="flex md:hidden gap-6 items-center justify-center bg-amber-50 p-4 rounded-lg">
                   <Button
                     onClick={() => handleAddToCart(item.documentId)}
                     className="bg-lime-200 hover:bg-lime-300 text-lime-900"
@@ -111,13 +111,13 @@ export default function WishList() {
                 <div className="hidden md:flex gap-6 items-center justify-center">
                   <Button
                     onClick={() => handleAddToCart(item.documentId)}
-                    className="bg-lime-100 hover:bg-lime-50 text-lime-900"
+                    className="bg-lime-200 hover:bg-lime-300 text-lime-900"
                   >
                     Add to cart
                   </Button>
                   <Button
                     onClick={() => handleRemoveWishList(item.documentId)}
-                    className="bg-red-100 hover:bg-red-50 text-amber-900"
+                    className="bg-red-200 hover:bg-red-300 text-amber-900"
                   >
                     Delete from wish list
                   </Button>

@@ -47,7 +47,7 @@ export default function Categories() {
         <div className="flex-grow border-t border-gray-300 border-2 border-dashed" />
       </div>
 
-      <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-4 grid-cols-2 gap-6 place-items-center">
+      <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-4 grid-cols-2 gap-6 place-items-center justify-center">
         {genres.map(({ name, icon: Icon }) => (
           <Card key={name} className="w-36 h-36 bg-amber-200 shadow-xl">
             <Link href={`/genre/${name}`}>
