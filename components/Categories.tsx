@@ -47,12 +47,21 @@ export default function Categories() {
         <div className="flex-grow border-t border-gray-300 border-2 border-dashed" />
       </div>
 
-      <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-4 grid-cols-2 gap-6 place-items-center justify-center">
+      <div className="flex flex-wrap justify-center gap-6">
         {genres.map(({ name, icon: Icon }) => (
-          <Card key={name} className="w-36 h-36 bg-amber-200 shadow-xl">
-            <Link href={`/genre/${name}`}>
+          <Card
+            key={name}
+            className="w-36 h-36 bg-amber-200 shadow-xl flex flex-col items-center transition-all duration-50 hover:scale-105 hover:bg-amber-300 active:scale-95 active:bg-amber-400"
+          >
+            <Link
+              href={`/genre/${name}`}
+              className="flex flex-col items-center w-full h-full group"
+            >
               <CardHeader className="items-center p-5">
-                <Icon size={60} className="text-amber-600" />
+                <Icon
+                  size={60}
+                  className="text-amber-600 transition-transform duration-300 group-hover:rotate-12"
+                />
               </CardHeader>
               <CardContent className="font-bold text-lg text-center text-amber-800">
                 {name}
