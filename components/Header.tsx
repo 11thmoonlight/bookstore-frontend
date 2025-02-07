@@ -35,15 +35,17 @@ export default function Header() {
         <div className="flex justify-between items-center px-4 md:px-6 border-b-2">
           <div className="flex gap-1 items-center w-[400px]">
             <Image src="/img/logo2.png" alt="logo" width={80} height={80} />
-            <h1 className="font-bold text-4xl font-mono text-amber-600 ">
+            <h1 className="font-bold text-4xl font-mono text-amber-600 hidden lg:flex">
               HINDOE
             </h1>
           </div>
 
-          <Search />
+          <div className="hidden sm:flex w-full max-w-md">
+            <Search />
+          </div>
 
           <div className="gap-4 flex items-center w-[400px] justify-end">
-            {currentUser ? (
+            {currentUser && user ? (
               <Menubar className="border-none shadow-none p-0">
                 <MenubarMenu>
                   <MenubarTrigger className="p-0">
@@ -102,11 +104,9 @@ export default function Header() {
             )}
           </div>
         </div>
-        <div className="flex justify-center items-center gap-8 py-2 ">
-          <Link href="/">Home</Link>
-          <Link href="/">shop</Link>
-          <Link href="/">Articles</Link>
-          <Link href="/">FAQ</Link>
+
+        <div className="flex sm:hidden bg-amber-50">
+          <Search />
         </div>
       </header>
     </>

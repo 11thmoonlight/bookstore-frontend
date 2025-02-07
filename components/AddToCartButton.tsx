@@ -34,9 +34,9 @@ export default function AddToCartButton({
       onClick={handleAddToCart}
       className={cn(
         variant === "default" &&
-          "w-full bg-amber-800 text-base hover:bg-amber-700 font-bold text-amber-50",
+          "w-full bg-amber-800 text-base transition-all hover:bg-amber-700 active:bg-amber-600 active:scale-95 font-bold text-amber-50",
         variant === "icon" &&
-          "bg-wight text-amber-800 hover:shadow-lg hover:bg-white"
+          "bg-wight text-amber-800 hover:shadow-lg hover:bg-white active:scale-95 transition-all active:bg-stone-200"
       )}
     >
       {variant === "default" ? (

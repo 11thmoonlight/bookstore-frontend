@@ -3,13 +3,15 @@ import { IoSearchOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useBooksBySearch } from "@/hooks/useBook";
+import { MdHeartBroken } from "react-icons/md";
+import { ClipLoader } from "react-spinners";
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const { books, loading, error, setBooks } = useBooksBySearch(searchQuery);
+  const { books, loading, setBooks } = useBooksBySearch(searchQuery);
 
   const handleOutsideClick = (event: MouseEvent) => {
     if (
@@ -42,35 +44,49 @@ export default function Search() {
           placeholder="Search by Title, Author or Publisher"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="border p-2 rounded w-full min-w-[300px] 
+                     focus:ring-1 focus:ring-amber-200 
+                     focus:border-amber-200 outline-none"
         />
         <button className="block w-7 h-7 text-center text-xl leading-0 absolute top-1 right-1 text-gray-400 focus:outline-none hover:text-gray-900 transition-colors">
           <IoSearchOutline size={20} />
         </button>
 
-        {books && books?.length > 0 && (
+        {searchQuery && (
           <ul className="absolute top-full max-h-[400px] left-0 w-full bg-white border rounded shadow mt-1 z-50 overflow-y-auto scrollbar-thin">
-            {books?.map((book: Book) => (
-              <li
-                key={book.id}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => handleSelectSuggestion(book.documentId)}
-              >
-                <div className="flex gap-4">
-                  <Image
-                    src={`http://localhost:1337${book.image[0].url}`}
-                    width={60}
-                    height={10}
-                    alt="book's cover"
-                  />
-                  <div className="flex flex-col gap-1">
-                    <p>{book.name}</p>
-                    <p className="text-gray-600 text-sm">By {book.author}</p>
-                    <p className="text-gray-600 text-sm">{book.publisher}</p>
-                  </div>
-                </div>
+            {loading ? (
+              <li className="p-2 text-gray-500 text-center flex gap-2 items-center justify-center">
+                <ClipLoader size={18} color="#eec211" />
+                <p>Searching...</p>
               </li>
-            ))}
+            ) : books && books?.length > 0 ? (
+              books.map((book: Book) => (
+                <li
+                  key={book.id}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleSelectSuggestion(book.documentId)}
+                >
+                  <div className="flex gap-4">
+                    <Image
+                      src={`http://localhost:1337${book.image[0].url}`}
+                      width={60}
+                      height={10}
+                      alt="book's cover"
+                    />
+                    <div className="flex flex-col gap-1">
+                      <p>{book.name}</p>
+                      <p className="text-gray-600 text-sm">By {book.author}</p>
+                      <p className="text-gray-600 text-sm">{book.publisher}</p>
+                    </div>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <li className="p-2 text-gray-500 text-center flex gap-2 items-center justify-center">
+                <p>Not Found</p>
+                <MdHeartBroken className="text-amber-600 text-3xl" />
+              </li>
+            )}
           </ul>
         )}
       </div>
