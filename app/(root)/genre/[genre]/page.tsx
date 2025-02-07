@@ -20,7 +20,7 @@ import ErrorMessage from "@/components/custom/ErrorMessage";
 import { useEffect, useState } from "react";
 import PaginationComponent from "@/components/PaginationComponent";
 
-const itemsPerPage = 1;
+const itemsPerPage = 9;
 
 export default function Genre() {
   const { genre } = useParams<{ genre: string }>();
@@ -42,7 +42,7 @@ export default function Genre() {
 
   return (
     <div className="mt-[160px] lg:px-2 px-2 flex flex-col gap-20 mb-6 justify-center items-center">
-      <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="flex flex-wrap justify-center gap-6">
         {paginatedBooks?.map((book) => (
           <Card
             key={book.id}
