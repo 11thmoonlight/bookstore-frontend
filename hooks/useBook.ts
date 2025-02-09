@@ -4,6 +4,7 @@ import {
   getBookById,
   getBooksByGenre,
   getBooksBySearch,
+  getNewBooks,
 } from "@/data/services/bookServices";
 
 export function useBooks() {
@@ -90,6 +91,35 @@ export function useBooksByGenre(genre: string) {
   };
 }
 
+
+  export function useNewBooks() {
+    const [books, setBooks] = useState<Book[] | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+  
+  // Fetch new books
+    useEffect(() => {
+      const fetchNewBooks = async () => {
+        setLoading(true);
+        const result = await getNewBooks();
+        if (result.ok) {
+          setBooks(result.data.data);
+        } else {
+          setError(result.error?.message || "Failed to fetch books by genre.");
+        }
+        setLoading(false);
+      };
+  
+      fetchNewBooks();
+    }, []);
+  
+    return {
+      books,
+      loading,
+      error,
+    };
+  }
+
 export function useBooksBySearch(searchQuery: string) {
   const [books, setBooks] = useState<Book[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -113,9 +143,10 @@ export function useBooksBySearch(searchQuery: string) {
           setBooks(null);
           setError(result.error?.message || "Failed to fetch books by search.");
         }
-      } catch (err) {
+      } catch (error) {
         setBooks(null);
         setError("An unexpected error occurred.");
+        console.log(error)
       } finally {
         setLoading(false);
       }
