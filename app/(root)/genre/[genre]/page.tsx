@@ -23,6 +23,8 @@ export default function Genre() {
     }
   }, [books, currentPage]);
 
+  console.log("books", books)
+
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;
 
