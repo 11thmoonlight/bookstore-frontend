@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import PaginationComponent from "@/components/PaginationComponent";
 import BookCard from "@/components/BookCard";
 
-const itemsPerPage = 9;
+const itemsPerPage = 8;
 
 export default function Genre() {
   const { genre } = useParams<{ genre: string }>();
@@ -22,8 +22,6 @@ export default function Genre() {
       setPaginatedBooks(books.slice(startIndex, startIndex + itemsPerPage));
     }
   }, [books, currentPage]);
-
-  console.log("books", books)
 
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;

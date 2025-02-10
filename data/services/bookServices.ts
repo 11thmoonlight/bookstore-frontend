@@ -112,7 +112,7 @@ export async function getBooksBySearch(searchQuery: string) {
 export const getNewBooks = async () => {
   const query = qs.stringify({
     sort: ['publishedAt:desc'],
-    pagination: { limit: 10 }, 
+    pagination: { limit: 4 }, 
     populate: '*', 
   });
 

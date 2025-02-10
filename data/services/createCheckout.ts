@@ -30,4 +30,4 @@ export async function createCheckout(total: number) {
   } catch (err) {
     console.error("Error in Checkout:", err);
   }
-}
+};
