@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, IBM_Plex_Serif } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/userContext";
+import { ThemeProvider } from "@/components/theme-provider"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,7 +29,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${ibmPlexSerif.variable}`}>
         <ToastContainer />
-        <UserProvider>{children}</UserProvider>
+        <UserProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+          {children}
+          </ThemeProvider>
+          </UserProvider>
       </body>
     </html>
   );

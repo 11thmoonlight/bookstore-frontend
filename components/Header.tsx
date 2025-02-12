@@ -20,6 +20,7 @@ import { LogOut } from "lucide-react";
 import { useUser } from "@/context/userContext";
 import Search from "./Search";
 import { BsBagCheck } from "react-icons/bs";
+import { ModeToggle } from "./custom/ModeToggle";
 
 export default function Header() {
   const { user } = useUser();
@@ -96,12 +97,14 @@ export default function Header() {
                   </MenubarContent>
                 </MenubarMenu>
               </Menubar>
+              
             ) : (
               <Link href="/register" className="flex justify-between">
                 Sign up
                 <IoIosLogIn size={27} />
               </Link>
             )}
+            <ModeToggle/>
           </div>
         </div>
 
