@@ -25,8 +25,10 @@ export default function Genre() {
 
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;
+  if (books?.length === 0) return <ErrorMessage message="It looks like there are no books available in this genre yet !"/>
 
   const totalPages = books ? Math.ceil(books?.length / itemsPerPage) : 1;
+
 
   return (
     <div className="mt-[160px] lg:px-2 px-2 flex flex-col gap-20 mb-6 justify-center items-center">

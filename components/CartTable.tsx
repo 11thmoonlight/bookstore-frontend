@@ -49,10 +49,10 @@ const CartTable: React.FC<CartTableProps> = ({
 
                   <div className="flex flex-col justify-between gap-4">
                     <div className="flex flex-col gap-2 justify-center">
-                      <p className="md:font-bold lg:text-lg font-semibold text-base text-amber-950">
+                      <p className="md:font-bold lg:text-lg font-semibold text-base">
                         {item.name}
                       </p>
-                      <p className="text-amber-950">By {item.author}</p>
+                      <p>By {item.author}</p>
                       <p className="font-bold text-lime-600 text-lg lg:text-2xl">
                         {item.price}$
                       </p>
@@ -66,7 +66,7 @@ const CartTable: React.FC<CartTableProps> = ({
                         >
                           <FaMinus size={18} className="text-amber-800" />
                         </Button>
-                        <p className="text-amber-950 text-lg">
+                        <p className="text-lg">
                           {quantities[item.documentId]}
                         </p>
                         <Button

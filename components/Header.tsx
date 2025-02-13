@@ -32,7 +32,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full bg-white shadow-lg z-50">
+      <header className="fixed top-0 left-0 w-full bg-white dark:bg-stone-700 shadow-lg z-50">
         <div className="flex justify-between items-center px-4 md:px-6 border-b-2">
           <div className="flex gap-1 items-center w-[400px]">
             <Image src="/img/logo2.png" alt="logo" width={80} height={80} />

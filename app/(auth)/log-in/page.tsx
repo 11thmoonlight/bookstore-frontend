@@ -71,7 +71,7 @@ export default function LogIn() {
           </CardContent>
           <CardFooter className="flex flex-col">
             <SubmitButton
-              className="w-full hover:bg-amber-200 text-amber-950 font-bold bg-amber-100"
+              className="w-full hover:bg-amber-200 font-bold bg-amber-100"
               text="Sign In"
               loadingText="Loading"
             />

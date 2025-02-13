@@ -40,7 +40,7 @@ const footerSections = [
 
 export default function Footer() {
   return (
-    <footer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 bg-amber-100 px-6 py-3 justify-between items-center border-dotted border-t-4 border-amber-600">
+    <footer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 bg-amber-100 dark:bg-stone-600 px-6 py-3 justify-between items-center border-dotted border-t-4 border-amber-600">
       <div className="flex flex-col gap-4 items-center">
         <div className="flex gap-1 items-center">
           <Image src="/img/logo2.png" width={80} height={80} alt="logo" />
@@ -61,10 +61,10 @@ export default function Footer() {
       </div>
 
       {footerSections.map(({ title, links }) => (
-        <div key={title} className="flex flex-col items-center text-amber-950">
+        <div key={title} className="flex flex-col items-center">
           <h1 className="font-bold text-lg mb-2">{title}</h1>
           {links.map((link, index) => (
-            <p key={index} className="text-sm text-amber-950">
+            <p key={index} className="text-sm">
               {link}
             </p>
           ))}
