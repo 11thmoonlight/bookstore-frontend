@@ -19,37 +19,37 @@ const CartSummary: React.FC<CartSummaryProps> = ({
 }) => {
   return (
     <Card
-      className={`bg-amber-50 h-fit ${
+      className={`bg-amber-50 dark:bg-stone-600 h-fit ${
         variant === "readonly" ? "w-full" : "w-full md:w-96"
       }`}
     >
       <CardHeader>
-        <CardTitle className="pb-4 text-amber-800 border-b-2">
+        <CardTitle className="pb-4 text-amber-800 dark:text-stone-200 border-b-2">
           Order Summery
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-4">
           <div className="flex justify-between">
-            <p className="text-amber-800 text-sm">Items</p>
-            <p className="text-amber-900 text-sm font-semibold">{totalItems}</p>
+            <p className="text-amber-800 dark:text-stone-200 text-sm">Items</p>
+            <p className="text-amber-900 dark:text-stone-300 text-sm font-semibold">{totalItems}</p>
           </div>
 
           <div className="flex justify-between">
-            <p className="text-amber-800 text-sm">Items Total Price</p>
-            <p className="text-amber-900 text-sm font-semibold">
+            <p className="text-amber-800 dark:text-stone-200 text-sm">Items Total Price</p>
+            <p className="text-amber-900 dark:text-stone-300 text-sm font-semibold">
               {totalPrice}$
             </p>
           </div>
 
           <div className="flex justify-between">
-            <p className="text-amber-800 text-sm">Delivery</p>
-            <p className="text-amber-900 text-sm font-semibold">1.25$</p>
+            <p className="text-amber-800 dark:text-stone-200 text-sm">Delivery</p>
+            <p className="text-amber-900 dark:text-stone-300 text-sm font-semibold">1.25$</p>
           </div>
 
           <div className="flex justify-between">
-            <p className="text-amber-800 text-sm">Discount</p>
-            <p className="text-amber-900 text-sm font-semibold">{discounts}$</p>
+            <p className="text-amber-800 dark:text-stone-200 text-sm">Discount</p>
+            <p className="text-amber-900 dark:text-stone-300 text-sm font-semibold">{discounts}$</p>
           </div>
 
           <div className="flex justify-between my-4 bg-amber-100 p-2 rounded-md">

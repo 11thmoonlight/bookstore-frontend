@@ -31,7 +31,7 @@ export default function AddToWishlistButton({
       onClick={handleAddToWishlist}
       className={cn(
         variant === "default" &&
-          "w-full bg-amber-800 text-base hover:bg-amber-700 transition-all active:bg-amber-600 active:scale-95 font-bold text-amber-50",
+          "w-full bg-amber-800 dark:bg-stone-500 dark:hover:bg-stone-400 text-base hover:bg-amber-700 transition-all active:bg-amber-600 active:scale-95 font-bold text-amber-50",
         variant === "icon" &&
           "bg-stone-200 text-amber-800 hover:shadow-lg transition-all hover:bg-white active:scale-95 active:bg-stone-200"
       )}
