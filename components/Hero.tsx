@@ -25,7 +25,7 @@ export default function Hero() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-10 px-6 justify-between">
-        <div className="flex gap-3 items-center bg-cyan-50 pr-3 shadow-md rounded-md w-full">
+        <div className="flex gap-3 items-center bg-cyan-50 dark:bg-cyan-900 pr-3 shadow-md rounded-md w-full">
           <MdAirplanemodeActive
             size={80}
             className="text-amber-600 shadow-2xl rounded-md p-2"
@@ -35,7 +35,7 @@ export default function Hero() {
             <span className="text-sm text-gray-400">whenever you choose</span>
           </div>
         </div>
-        <div className="flex gap-3 items-center bg-cyan-50 pr-3 shadow-md rounded-md w-full">
+        <div className="flex gap-3 items-center bg-cyan-50 dark:bg-cyan-900 pr-3 shadow-md rounded-md w-full">
           <MdPayments
             size={80}
             className="text-amber-600 shadow-2xl rounded-md p-2"
@@ -45,7 +45,7 @@ export default function Hero() {
             <span className="text-sm text-gray-400">with different ways</span>
           </div>
         </div>
-        <div className="flex gap-3 items-center bg-cyan-50 shadow-md pr-3 rounded-md w-full">
+        <div className="flex gap-3 items-center bg-cyan-50 dark:bg-cyan-900 shadow-md pr-3 rounded-md w-full">
           <MdHighQuality
             size={80}
             className="text-amber-600 shadow-2xl rounded-md p-2"
@@ -55,7 +55,7 @@ export default function Hero() {
             <span className="text-sm text-gray-400">with guaranti</span>
           </div>
         </div>
-        <div className="flex gap-3 items-center bg-cyan-50 pr-3 shadow-md rounded-md w-full">
+        <div className="flex gap-3 items-center bg-cyan-50 dark:bg-cyan-900 pr-3 shadow-md rounded-md w-full">
           <MdAssignmentReturn
             size={80}
             className="text-amber-600 shadow-2xl rounded-md p-2"

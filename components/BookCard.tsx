@@ -31,7 +31,7 @@ export default function BookCard({ book }: BookCardProps) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="w-80 h-[420px] shadow-2xl bg-stone-100 flex flex-col justify-around items-center">
+      <Card className="w-80 h-[420px] shadow-2xl bg-stone-100 dark:bg-stone-700 flex flex-col justify-around items-center">
         <CardHeader className="relative flex justify-center items-center mt-3 h-[200px] w-[130px]">
           <Image
             src={`http://localhost:1337${book.image[0].url}`}

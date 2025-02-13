@@ -33,7 +33,7 @@ export default function AddToWishlistButton({
         variant === "default" &&
           "w-full bg-amber-800 text-base hover:bg-amber-700 transition-all active:bg-amber-600 active:scale-95 font-bold text-amber-50",
         variant === "icon" &&
-          "bg-wight text-amber-800 hover:shadow-lg transition-all hover:bg-white active:scale-95 active:bg-stone-200"
+          "bg-stone-200 text-amber-800 hover:shadow-lg transition-all hover:bg-white active:scale-95 active:bg-stone-200"
       )}
     >
       {variant === "default" ? "Add to wishlist" : <GoHeart size={27} />}

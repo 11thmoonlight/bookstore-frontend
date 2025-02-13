@@ -51,7 +51,7 @@ export default function Categories() {
         {genres.map(({ name, icon: Icon }) => (
           <Card
             key={name}
-            className="w-36 h-36 bg-amber-200 shadow-xl flex flex-col items-center transition-all hover:scale-105 hover:bg-amber-300 active:scale-95 active:bg-amber-400"
+            className="w-36 h-36 bg-amber-200 dark:bg-stone-950 shadow-xl flex flex-col items-center transition-all hover:scale-105 hover:bg-amber-300 dark:hover:bg-stone-600 active:scale-95 active:bg-amber-400"
           >
             <Link
               href={`/genre/${name}`}
@@ -63,7 +63,7 @@ export default function Categories() {
                   className="text-amber-600 transition-transform duration-300 group-hover:rotate-12"
                 />
               </CardHeader>
-              <CardContent className="font-bold text-lg text-center text-amber-800">
+              <CardContent className="font-bold text-lg text-center text-amber-800 dark:text-amber-100">
                 {name}
               </CardContent>
             </Link>
