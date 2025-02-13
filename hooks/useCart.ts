@@ -4,6 +4,7 @@ import {
   addItemToCart,
   removeItemFromCart,
 } from "@/data/services/cartServices";
+import { toast } from "react-toastify";
 
 export function useCart(cartId: string) {
   const [cart, setCart] = useState<CartItems | null>(null);
@@ -19,6 +20,7 @@ export function useCart(cartId: string) {
         if (result.ok) {
           setCart(result.data.data);
           setError(null);
+          toast.error('Something went wrong')
         } else {
           setError(result.error?.message || "Failed to fetch cart.");
         }
@@ -44,8 +46,10 @@ export function useCart(cartId: string) {
         if (result.ok) {
           setCart(result.data);
           setError(null);
+          toast.success('Successfully added to your cart')
         } else {
           setError(result.error?.message || "Failed to add item.");
+          toast.error('Something went wrong')
         }
       } catch (error) {
         console.error("Error adding item:", error);
@@ -73,6 +77,7 @@ export function useCart(cartId: string) {
           setError(null);
         } else {
           setError(result.error?.message || "Failed to remove item.");
+          toast.error('Something went wrong')
         }
       } catch (error) {
         console.error("Error removing item:", error);

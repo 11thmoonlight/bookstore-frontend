@@ -6,6 +6,7 @@ import {
   getBooksBySearch,
   getNewBooks,
 } from "@/data/services/bookServices";
+import { toast } from "react-toastify";
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[] | null>(null);
@@ -21,6 +22,7 @@ export function useBooks() {
         setBooks(result.data);
       } else {
         setError(result.error?.message || "Failed to fetch books.");
+        toast.error('Something went wrong')
       }
       setLoading(false);
     };
@@ -49,6 +51,7 @@ export function useBook(bookId: string) {
         setBook(result.data.data);
       } else {
         setError(result.error?.message || "Failed to fetch book.");
+        toast.error('Something went wrong')
       }
       setLoading(false);
     };
@@ -77,6 +80,7 @@ export function useBooksByGenre(genre: string) {
         setBooks(result.data.data);
       } else {
         setError(result.error?.message || "Failed to fetch books by genre.");
+        toast.error('Something went wrong')
       }
       setLoading(false);
     };
@@ -106,6 +110,7 @@ export function useBooksByGenre(genre: string) {
           setBooks(result.data.data);
         } else {
           setError(result.error?.message || "Failed to fetch books by genre.");
+          toast.error('Something went wrong')
         }
         setLoading(false);
       };
@@ -142,6 +147,7 @@ export function useBooksBySearch(searchQuery: string) {
         } else {
           setBooks(null);
           setError(result.error?.message || "Failed to fetch books by search.");
+          toast.error('Something went wrong')
         }
       } catch (error) {
         setBooks(null);

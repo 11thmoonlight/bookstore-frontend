@@ -4,6 +4,7 @@ import {
   addItemTowishlist,
   removeItemFromwishlist,
 } from "@/data/services/wishlistServices";
+import { toast } from "react-toastify";
 
 export function useWishlist(wishlistId: string) {
   const [wishlist, setWishlist] = useState<WhishListItems | null>(null);
@@ -19,8 +20,10 @@ export function useWishlist(wishlistId: string) {
         if (result.ok) {
           setWishlist(result.data.data);
           setError(null);
+               toast.success('Successfully added to wishlist')
         } else {
           setError(result.error?.message || "Failed to fetch cart.");
+          toast.error('Something went wrong')
         }
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -70,6 +73,7 @@ export function useWishlist(wishlistId: string) {
             ),
           }));
           setError(null);
+          toast.error('Something went wrong')
         } else {
           setError(result.error?.message || "Failed to remove item.");
         }

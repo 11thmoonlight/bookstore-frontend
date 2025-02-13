@@ -6,6 +6,7 @@ import {
   addCartItem,
   removeCartItem,
 } from "@/data/services/cartItemServices";
+import { toast } from "react-toastify";
 
 export function useCartItem(cartId: string) {
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,9 @@ export function useCartItem(cartId: string) {
         return result.data;
       } else {
         setError(result.error);
+        toast.error('Something went wrong')
         return null;
+  
       }
     } catch (err: unknown) {
       setLoading(false);
@@ -40,6 +43,7 @@ export function useCartItem(cartId: string) {
         return result.data;
       } else {
         setError(new Error(result.error as string));
+        toast.error('Something went wrong')
         return null;
       }
     } catch (err: unknown) {
@@ -59,6 +63,7 @@ export function useCartItem(cartId: string) {
         return result.data;
       } else {
         setError(result.error);
+        toast.error('Something went wrong')
         return null;
       }
     } catch (err: unknown) {
@@ -78,6 +83,7 @@ export function useCartItem(cartId: string) {
         return result.data;
       } else {
         setError(result.error);
+        toast.error('Something went wrong')
         return null;
       }
     } catch (err: unknown) {
@@ -97,6 +103,7 @@ export function useCartItem(cartId: string) {
         return true;
       } else {
         setError(result.error);
+        toast.error('Something went wrong')
         return false;
       }
     } catch (err: unknown) {
