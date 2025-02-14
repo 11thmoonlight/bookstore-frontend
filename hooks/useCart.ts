@@ -20,9 +20,9 @@ export function useCart(cartId: string) {
         if (result.ok) {
           setCart(result.data.data);
           setError(null);
-          toast.error('Something went wrong')
         } else {
           setError(result.error?.message || "Failed to fetch cart.");
+          toast.error('Something went wrong')
         }
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -68,16 +68,20 @@ export function useCart(cartId: string) {
       try {
         const result = await removeItemFromCart(cartId, itemId);
         if (result.ok) {
-          setCart((prevCart) => ({
-            ...prevCart,
-            products: prevCart.products.filter(
-              (product) => product.documentId !== itemId
-            ),
-          }));
+          setCart((prevCart) => {
+            if (!prevCart) return null;
+  
+            return {
+              ...prevCart,
+              products: prevCart.products.filter(
+                (product) => product.documentId !== itemId
+              ),
+            };
+          });
           setError(null);
         } else {
           setError(result.error?.message || "Failed to remove item.");
-          toast.error('Something went wrong')
+          toast.error("Something went wrong");
         }
       } catch (error) {
         console.error("Error removing item:", error);

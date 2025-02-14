@@ -11,7 +11,7 @@ export function useWishlist(wishlistId: string) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch cart data
+  // Fetch wishlist data
   useEffect(() => {
     const fetchWishlist = async () => {
       setLoading(true);
@@ -20,7 +20,6 @@ export function useWishlist(wishlistId: string) {
         if (result.ok) {
           setWishlist(result.data.data);
           setError(null);
-               toast.success('Successfully added to wishlist')
         } else {
           setError(result.error?.message || "Failed to fetch cart.");
           toast.error('Something went wrong')
@@ -38,7 +37,7 @@ export function useWishlist(wishlistId: string) {
     }
   }, [wishlistId]);
 
-  // Add product to cart
+  // Add product to wishlist
   const addToWishList = useCallback(
     async (itemId: string) => {
       setLoading(true);
@@ -47,8 +46,10 @@ export function useWishlist(wishlistId: string) {
         if (result.ok) {
           setWishlist(result.data);
           setError(null);
+          toast.success('Successfully added to wishlist')
         } else {
           setError(result.error?.message || "Failed to add item.");
+          toast.error('Something went wrong')
         }
       } catch (error) {
         console.error("Error adding item:", error);
@@ -66,16 +67,20 @@ export function useWishlist(wishlistId: string) {
       try {
         const result = await removeItemFromwishlist(wishlistId, itemId);
         if (result.ok) {
-          setWishlist((prevWishlist) => ({
-            ...prevWishlist,
-            products: prevWishlist.products.filter(
-              (product) => product.documentId !== itemId
-            ),
-          }));
+          setWishlist((prevWishlist) => {
+            if (!prevWishlist) return null;
+  
+            return {
+              ...prevWishlist,
+              products: prevWishlist.products.filter(
+                (product) => product.documentId !== itemId
+              ),
+            };
+          });
           setError(null);
-          toast.error('Something went wrong')
         } else {
           setError(result.error?.message || "Failed to remove item.");
+          toast.error("Something went wrong");
         }
       } catch (error) {
         console.error("Error removing item:", error);
