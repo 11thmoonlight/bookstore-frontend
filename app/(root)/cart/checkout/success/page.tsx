@@ -1,41 +1,89 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+// 'use client'
 
-export default function CheckoutSuccess() {
-  const router = useRouter();
-  const [userInfo, setUserInfo] = useState(null);
-  const [cart, setCart] = useState(null);
+// import { useEffect, useState } from 'react';
+// import { useSearchParams } from 'next/navigation';
+
+// export default function Success() {
+//   const searchParams = useSearchParams();
+//   const session_id = searchParams.get('session_id');
+
+//   console.log('id', session_id)
+
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     if (!session_id) return;
+
+//     (async () => {
+//       const res = await fetch(`/api/confirm-payment?session_id=${session_id}`);
+//       const data = await res.json();
+
+//       if (data.success) {
+//         localStorage.removeItem('cart');
+//         alert('پرداخت با موفقیت انجام شد!');
+//       } else {
+//         alert('پرداخت ناموفق بود!');
+//       }
+
+//       setLoading(false);
+//     })();
+//   }, [session_id]);
+
+//   return loading ? <p className='mt-[160px]'>در حال پردازش...</p> : <p className='mt-[160px]'>پرداخت انجام شد!</p>;
+// }
+
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useCartManager } from '@/hooks/useCartManager';
+import { createOrder } from '@/data/services/order-services';
+
+export default function Success() {
+  const searchParams = useSearchParams();
+  const session_id = searchParams.get('session_id');
+
+    const { totalPrice } = useCartManager();
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!session_id) return;
+  
+    (async () => {
+      const cart =JSON.parse(localStorage.getItem("cart") || "{}");
+      const shippingInfo = JSON.parse(localStorage.getItem("shippingInfo") || "{}");
 
-    const storedUserInfo = localStorage.getItem("userInfo");
-    const storedCart = localStorage.getItem("cart");
+      console.log(shippingInfo, 'shipping')
+  
+      if (cart && shippingInfo.address) {
+        const res = await createOrder(
+          {
+            address: shippingInfo.address,
+            phoneNumber: Number(shippingInfo.phoneNumber),
+            postalCode: Number(shippingInfo.postalCode),
+            emailAddress: shippingInfo.emailAddress
+          },
+         cart.documentId,
+          session_id,
+          Number(totalPrice)
+        );
+  
+        if (res?.error) {
+          console.error("Order creation error:", res.error);
+          alert("پرداخت ناموفق بود!");
+        } else {
+          localStorage.removeItem("cart");
+          localStorage.removeItem("shippingInfo");
+          alert("پرداخت با موفقیت انجام شد!");
+        }
+      } else {
+        alert("اطلاعات ناقص است!");
+      }
+  
+      setLoading(false);
+    })();
+  }, [session_id]);
 
-    if (storedUserInfo && storedCart) {
-      setUserInfo(JSON.parse(storedUserInfo));
-      setCart(JSON.parse(storedCart));
-
-      fetch(`"http://localhost:1337"/api/orders/confirm-payment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user: JSON.parse(storedUserInfo),
-          cart: JSON.parse(storedCart),
-        }),
-      });
-
-      localStorage.removeItem("userInfo");
-      localStorage.removeItem("cart");
-    } else {
-      router.push("/cart");
-    }
-  }, [router]);
-
-  return (
-    <div className="max-w-md mx-auto p-4">
-      <h2 className="text-2xl font-bold text-green-600 mb-4">Payment was successful</h2>
-      <p>Your order successfully asigned</p>
-    </div>
-  );
+  return loading ? <p className='mt-[160px]'>در حال پردازش...</p> : <p className='mt-[160px]'>پرداخت انجام شد!</p>;
 }

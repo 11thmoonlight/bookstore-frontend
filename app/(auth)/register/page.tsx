@@ -87,7 +87,7 @@ export default function Register() {
           </CardContent>
           <CardFooter className="flex flex-col">
             <SubmitButton
-              className="w-full hover:bg-amber-200 font-bold bg-amber-100"
+              className="w-full hover:bg-amber-200 font-bold bg-amber-100 text-amber-950"
               text="Sign Up"
               loadingText="Loading"
             />

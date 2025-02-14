@@ -5,15 +5,16 @@ import { getAuthToken } from "./get-token";
 
 interface OrderProps {
   address: string;
-  phoneNumber: string;
-  postalCode: string;
+  phoneNumber: number;
+  postalCode: number;
   emailAddress: string;
 }
 
 export async function createOrder(
   orderData: OrderProps,
   cartId: string | undefined,
-  userPermissions: string | undefined
+  stripePaymentId:string,
+  payAmount:number
 ) {
   const baseUrl = getStrapiURL();
   const url = new URL("/api/orders", baseUrl);
@@ -35,7 +36,10 @@ export async function createOrder(
         data: {
           cart: cartId,
           ...orderData,
-          users_permissions_user: userPermissions,
+          stripePaymentId,
+          payAmount,
+          orderStatus:"processing"
+
         },
       }),
       cache: "no-cache",
