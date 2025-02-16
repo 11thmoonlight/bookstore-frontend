@@ -1,89 +1,65 @@
-// 'use client'
+"use client";
 
-// import { useEffect, useState } from 'react';
-// import { useSearchParams } from 'next/navigation';
-
-// export default function Success() {
-//   const searchParams = useSearchParams();
-//   const session_id = searchParams.get('session_id');
-
-//   console.log('id', session_id)
-
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     if (!session_id) return;
-
-//     (async () => {
-//       const res = await fetch(`/api/confirm-payment?session_id=${session_id}`);
-//       const data = await res.json();
-
-//       if (data.success) {
-//         localStorage.removeItem('cart');
-//         alert('پرداخت با موفقیت انجام شد!');
-//       } else {
-//         alert('پرداخت ناموفق بود!');
-//       }
-
-//       setLoading(false);
-//     })();
-//   }, [session_id]);
-
-//   return loading ? <p className='mt-[160px]'>در حال پردازش...</p> : <p className='mt-[160px]'>پرداخت انجام شد!</p>;
-// }
-
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useCartManager } from '@/hooks/useCartManager';
-import { createOrder } from '@/data/services/order-services';
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCartManager } from "@/hooks/useCartManager";
+import { createOrder } from "@/data/services/order-services";
+import { PacmanLoader } from "react-spinners";
 
 export default function Success() {
   const searchParams = useSearchParams();
-  const session_id = searchParams.get('session_id');
+  const session_id = searchParams.get("session_id");
 
-    const { totalPrice } = useCartManager();
+  const { totalPrice } = useCartManager();
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!session_id) return;
-  
-    (async () => {
-      const cart =JSON.parse(localStorage.getItem("cart") || "{}");
-      const shippingInfo = JSON.parse(localStorage.getItem("shippingInfo") || "{}");
 
-      console.log(shippingInfo, 'shipping')
-  
+    (async () => {
+      const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+      const shippingInfo = JSON.parse(
+        localStorage.getItem("shippingInfo") || "{}"
+      );
+
+      console.log(shippingInfo, "shipping");
+
       if (cart && shippingInfo.address) {
         const res = await createOrder(
           {
             address: shippingInfo.address,
             phoneNumber: Number(shippingInfo.phoneNumber),
             postalCode: Number(shippingInfo.postalCode),
-            emailAddress: shippingInfo.emailAddress
+            emailAddress: shippingInfo.emailAddress,
           },
-         cart.documentId,
+          cart.documentId,
           session_id,
           Number(totalPrice)
         );
-  
+
         if (res?.error) {
           console.error("Order creation error:", res.error);
-          alert("پرداخت ناموفق بود!");
         } else {
           localStorage.removeItem("cart");
           localStorage.removeItem("shippingInfo");
-          alert("پرداخت با موفقیت انجام شد!");
         }
-      } else {
-        alert("اطلاعات ناقص است!");
       }
-  
+
       setLoading(false);
     })();
   }, [session_id]);
 
-  return loading ? <p className='mt-[160px]'>در حال پردازش...</p> : <p className='mt-[160px]'>پرداخت انجام شد!</p>;
+  return loading ? (
+    <div className="flex flex-col gap-6 justify-center items-center bg-amber-50 dark:bg-stone-800 h-screen">
+      <p className="text-lg font-semibold text-amber-600">Payment Processing</p>
+      <PacmanLoader size={20} color={"#ff6f00"} />
+    </div>
+  ) : (
+    <div className="flex flex-col gap-6 justify-center items-center bg-amber-50 dark:bg-stone-800 h-screen">
+      <p className="text-lg font-semibold text-amber-600">
+        The payment was successful, and your order has been placed.
+      </p>
+    </div>
+  );
 }

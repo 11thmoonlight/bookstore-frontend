@@ -50,36 +50,3 @@ export async function createOrder(
     console.error("Some error happened", error);
   }
 }
-
-export async function orderUpdate(paymentIntent: any) {
-  const baseUrl = getStrapiURL();
-  const url = new URL("/api/orders", baseUrl);
-
-  const authToken = await getAuthToken();
-
-  if (!authToken) {
-    return { success: false, error: "Authentication token not found" };
-  }
-
-  try {
-    const response = await fetch(url.href, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        data: {
-          stripePaymentId: paymentIntent.id,
-          amount: paymentIntent.amount_received / 100,
-          status: "paid",
-        },
-      }),
-      cache: "no-cache",
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error("Some error happened", error);
-  }
-}
