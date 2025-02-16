@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { useCartManager } from "@/hooks/useCartManager";
 import { createOrder } from "@/data/services/order-services";
 import { PacmanLoader } from "react-spinners";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { FaArrowRight } from "react-icons/fa6";
 
 export default function Success() {
   const searchParams = useSearchParams();
@@ -60,6 +63,12 @@ export default function Success() {
       <p className="text-lg font-semibold text-amber-600">
         The payment was successful, and your order has been placed.
       </p>
+      <Button className="hover:bg-amber-200 font-bold bg-amber-100 text-amber-950 active:scale-95">
+        <Link href="/order" className="flex items-center justify-center gap-2">
+          Check your order progress.
+          <FaArrowRight />
+        </Link>
+      </Button>
     </div>
   );
 }
