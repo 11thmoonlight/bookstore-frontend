@@ -71,14 +71,14 @@ export default function LogIn() {
           </CardContent>
           <CardFooter className="flex flex-col">
             <SubmitButton
-              className="w-full hover:bg-amber-200 font-bold bg-amber-100 text-amber-950"
+              className="w-full hover:bg-amber-200 font-bold bg-amber-100 text-amber-950 active:scale-9"
               text="Sign In"
               loadingText="Loading"
             />
             <StrapiErrors error={formState?.strapiErrors} />
           </CardFooter>
         </Card>
-        <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">
+        <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-45">
           Do not have an account?
           <Link className="underline ml-2" href="register">
             Sign Up
