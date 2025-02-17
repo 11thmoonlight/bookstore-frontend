@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GoCheckCircleFill } from "react-icons/go";
@@ -6,17 +8,37 @@ import { LuPackageCheck } from "react-icons/lu";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import { GoCheckCircle } from "react-icons/go";
 import { Separator } from "@/components/ui/separator";
+import { useFetchOrder } from "@/hooks/useOrder";
+import { useUser } from "@/context/userContext";
+import { formatDate } from "@/lib/utils";
+import { useCartManager } from "@/hooks/useCartManager";
 
 const stages = [
-  { label: "Order Placed", icon: <BsClipboardCheck size={24} /> },
-  { label: "Processing", icon: <LuPackageCheck size={24} /> },
-  { label: "Shipped", icon: <LiaShippingFastSolid size={24} /> },
-  { label: "Delivered", icon: <GoCheckCircle size={24} /> },
+  {
+    label: "Order Placed",
+    icon: <BsClipboardCheck size={24} />,
+    status: "order placed",
+  },
+  {
+    label: "Processing",
+    icon: <LuPackageCheck size={24} />,
+    status: "processing",
+  },
+  {
+    label: "Shipped",
+    icon: <LiaShippingFastSolid size={24} />,
+    status: "shipped",
+  },
+  {
+    label: "Delivered",
+    icon: <GoCheckCircle size={24} />,
+    status: "delivered",
+  },
 ];
 
 const OrderProcessingChart = ({ currentStage }) => {
   return (
-    <div className="flex justify-between items-center w-full p-4 bg-amber-50 rounded-lg">
+    <div className="flex justify-between items-center w-full p-4 bg-amber-50 dark:bg-amber-300 rounded-lg">
       {stages.map((stage, index) => (
         <>
           <div key={index} className="flex flex-col items-center">
@@ -47,7 +69,30 @@ const OrderProcessingChart = ({ currentStage }) => {
 };
 
 export default function Order() {
-  const currentStage = 1;
+  const { user } = useUser();
+  const { order, loading, error } = useFetchOrder(
+    user?.orders[0]?.documentId || ""
+  );
+
+  const {
+    totalPrice,
+    cart,
+    quantities,
+    handleIncreaseItem,
+    handleDecreaseItem,
+    totalItems,
+    discounts,
+  } = useCartManager();
+
+  const formattedDate = formatDate(order?.createdAt);
+
+  console.log("order", order);
+
+  // Find the current status of the order
+  const currentStatus = order?.orderStatus || "order placed"; // Default to "order placed" if not available
+  const currentStage = stages.findIndex(
+    (stage) => stage.status === currentStatus
+  ); // Get the stage index based on the status
 
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-start">
@@ -61,7 +106,29 @@ export default function Order() {
           value="current"
         >
           <OrderProcessingChart currentStage={currentStage} />
+
+          <div className="flex flex-col p-7 gap-6">
+            <div className="flex gap-10">
+              <p className="flex gap-2">
+                <span>Submission Time:</span>
+                <p>{formattedDate}</p>
+              </p>
+              <p className="flex gap-2">
+                <span>Total Cost:</span>
+                <span>$ {totalPrice}</span>
+              </p>
+              <p className="flex gap-2">
+                <span>Discount:</span>
+                <span>$ {discounts}</span>
+              </p>
+              <p className="flex gap-2">
+                <span>Total Items:</span>
+                <span>{totalItems}</span>
+              </p>
+            </div>
+          </div>
         </TabsContent>
+
         <TabsContent
           className="text-center min-h-[250px] rounded-lg border-2 border-gray-100 border-solid"
           value="delivered"

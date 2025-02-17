@@ -55,9 +55,22 @@ declare global {
 
   interface OrderProps {
     address: string;
-    phoneNumber: string;
-    postalCode: string;
+    phoneNumber: number;
+    postalCode: number;
     emailAddress: string;
+  }
+
+  interface OrderItems {
+    OrderProps;
+    orderStatus: string;
+    payAmount: number;
+    stripePaymentId: string;
+    createdAt: string;
+    documentId: string;
+    id: number;
+    locale: null;
+    publishedAt: null;
+    updatedAt: string;
   }
 
   interface User {

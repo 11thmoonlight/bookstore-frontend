@@ -100,7 +100,10 @@ export default function Checkout() {
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newShippingInfo = { ...shippingInfo, [e.target.name]: e.target.value };
+    const newShippingInfo = {
+      ...shippingInfo,
+      [e.target.name]: e.target.value,
+    };
     setShippingInfo(newShippingInfo);
     localStorage.setItem("shippingInfo", JSON.stringify(newShippingInfo));
   };
@@ -126,12 +129,42 @@ export default function Checkout() {
   return (
     <div className="mt-[160px]">
       <h2>اطلاعات ارسال</h2>
-      <input name="name" placeholder="نام" value={shippingInfo.name} onChange={handleInputChange} />
-      <input name="address" placeholder="آدرس" value={shippingInfo.address} onChange={handleInputChange} />
-      <input name="city" placeholder="شهر" value={shippingInfo.city} onChange={handleInputChange} />
-      <input name="emailAddress" placeholder="email" value={shippingInfo.emailAddress} onChange={handleInputChange} />
-      <input name="phoneNumber" placeholder="شماره تلفن" value={shippingInfo.phoneNumber} onChange={handleInputChange} />
-      <input name="postalCode" placeholder="کد پستی" value={shippingInfo.postalCode} onChange={handleInputChange} />
+      <input
+        name="name"
+        placeholder="نام"
+        value={shippingInfo.name}
+        onChange={handleInputChange}
+      />
+      <input
+        name="address"
+        placeholder="آدرس"
+        value={shippingInfo.address}
+        onChange={handleInputChange}
+      />
+      <input
+        name="city"
+        placeholder="شهر"
+        value={shippingInfo.city}
+        onChange={handleInputChange}
+      />
+      <input
+        name="emailAddress"
+        placeholder="email"
+        value={shippingInfo.emailAddress}
+        onChange={handleInputChange}
+      />
+      <input
+        name="phoneNumber"
+        placeholder="شماره تلفن"
+        value={shippingInfo.phoneNumber}
+        onChange={handleInputChange}
+      />
+      <input
+        name="postalCode"
+        placeholder="کد پستی"
+        value={shippingInfo.postalCode}
+        onChange={handleInputChange}
+      />
       <button onClick={handleSubmit}>پرداخت</button>
     </div>
   );

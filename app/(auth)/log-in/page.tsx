@@ -78,7 +78,7 @@ export default function LogIn() {
             <StrapiErrors error={formState?.strapiErrors} />
           </CardFooter>
         </Card>
-        <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-45">
+        <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">
           Do not have an account?
           <Link className="underline ml-2" href="register">
             Sign Up

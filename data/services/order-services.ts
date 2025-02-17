@@ -1,52 +1,56 @@
-"use server";
+import axiosInstance from "@/lib/axiosInstance";
+import qs from "qs";
 
-import { getStrapiURL } from "@/lib/utils";
-import { getAuthToken } from "./get-token";
+// Query for populating necessary relations
+const query = qs.stringify({
+  populate: "*",
+});
 
-interface OrderProps {
-  address: string;
-  phoneNumber: number;
-  postalCode: number;
-  emailAddress: string;
-}
-
+// create new order
 export async function createOrder(
   orderData: OrderProps,
   cartId: string | undefined,
-  stripePaymentId:string,
-  payAmount:number
+  stripePaymentId: string,
+  payAmount: number
 ) {
-  const baseUrl = getStrapiURL();
-  const url = new URL("/api/orders", baseUrl);
-
-  const authToken = await getAuthToken();
-
-  if (!authToken) {
-    return { success: false, error: "Authentication token not found" };
-  }
-
   try {
-    const response = await fetch(url.href, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+    const response = await axiosInstance.post("/api/orders", {
+      data: {
+        cart: cartId,
+        ...orderData,
+        stripePaymentId,
+        payAmount,
+        orderStatus: "order placed",
       },
-      body: JSON.stringify({
-        data: {
-          cart: cartId,
-          ...orderData,
-          stripePaymentId,
-          payAmount,
-          orderStatus:"processing"
-
-        },
-      }),
-      cache: "no-cache",
     });
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error creating order:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
+    }
+  }
+}
 
-    return response.json();
-  } catch (error) {
-    console.error("Some error happened", error);
+// get order
+export async function getOrder(orderId: string) {
+  try {
+    const response = await axiosInstance.get(
+      `/api/orders/${orderId}?${query}`,
+      {}
+    );
+
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching order:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
+    }
   }
 }
