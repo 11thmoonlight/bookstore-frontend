@@ -61,7 +61,10 @@ declare global {
   }
 
   interface OrderItems {
-    OrderProps;
+    address: string;
+    phoneNumber: number;
+    postalCode: number;
+    emailAddress: string;
     orderStatus: string;
     payAmount: number;
     stripePaymentId: string;
@@ -83,7 +86,7 @@ declare global {
     id: number;
     locale: null;
     localizations: unknown[];
-    orders: unknown[];
+    orders: OrderItems[];
     provider: string;
     publishedAt: string;
     updatedAt: string;
