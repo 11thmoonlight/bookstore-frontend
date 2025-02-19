@@ -107,13 +107,12 @@ export async function getBooksBySearch(searchQuery: string) {
   }
 }
 
-
 // Fetch new books
 export const getNewBooks = async () => {
   const query = qs.stringify({
-    sort: ['publishedAt:desc'],
-    pagination: { limit: 4 }, 
-    populate: '*', 
+    sort: ["publishedAt:desc"],
+    pagination: { limit: 8 },
+    populate: "*",
   });
 
   try {
