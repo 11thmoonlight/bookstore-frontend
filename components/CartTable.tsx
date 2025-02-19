@@ -28,7 +28,7 @@ const CartTable: React.FC<CartTableProps> = ({
     >
       <div
         className={`flex flex-col gap-4 ${
-          variant === "readonly" ? "bg-amber-50" : ""
+          variant === "readonly" ? "bg-white dark:bg-stone-800" : ""
         }`}
       >
         {cart?.products.map((item) => (
@@ -37,7 +37,9 @@ const CartTable: React.FC<CartTableProps> = ({
               <TableRow>
                 <TableCell
                   className={`flex gap-4 items-center p-4 rounded-xl ${
-                    variant === "readonly" ? "bg-amber-100" : ""
+                    variant === "readonly"
+                      ? "bg-amber-100 dark:bg-stone-700"
+                      : ""
                   }`}
                 >
                   <Image
@@ -66,9 +68,7 @@ const CartTable: React.FC<CartTableProps> = ({
                         >
                           <FaMinus size={18} className="text-amber-800" />
                         </Button>
-                        <p className="text-lg">
-                          {quantities[item.documentId]}
-                        </p>
+                        <p className="text-lg">{quantities[item.documentId]}</p>
                         <Button
                           onClick={() => onAdd?.(item.documentId)}
                           className="bg-white hover:bg-amber-50 rounded-full"
