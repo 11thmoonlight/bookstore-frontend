@@ -41,7 +41,7 @@ export function useCreateOrder() {
 
   const createNewOrder = async (
     orderData: OrderProps,
-    cartId: string | undefined,
+    // cartId: string | undefined,
     stripePaymentId: string,
     payAmount: number
   ) => {
@@ -49,7 +49,7 @@ export function useCreateOrder() {
     try {
       const result = await createOrder(
         orderData,
-        cartId,
+        // cartId,
         stripePaymentId,
         payAmount
       );

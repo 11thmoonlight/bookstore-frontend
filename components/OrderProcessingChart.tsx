@@ -59,7 +59,7 @@ const OrderProcessingChart: React.FC<OrderProcessingChartProps> = ({
                 {stage.icon(20)}
               </div>
               <span
-                className={`mt-2 text-xs sm:text-xs whitespace-nowrap transition-all
+                className={`mt-2 text-xs sm:text-sm whitespace-nowrap transition-all font-semibold
                 ${index <= currentStage ? "text-lime-700" : "text-gray-500"}`}
               >
                 {stage.label}

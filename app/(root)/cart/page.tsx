@@ -25,7 +25,7 @@ export default function Cart() {
   if (error || cartItemError) return <ErrorMessage />;
 
   return (
-    <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-4 mb-6 justify-center items-start">
+    <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-8 mb-12 justify-center items-start">
       {cart && (
         <CartTable
           cart={cart}

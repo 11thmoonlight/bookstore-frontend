@@ -86,7 +86,7 @@ export default function WishList() {
                   </div>
                 </div>
 
-                <div className="flex md:hidden gap-6 items-center justify-center bg-amber-50 p-4 rounded-lg">
+                <div className="flex md:hidden gap-6 items-center justify-center bg-amber-50 p-4 rounded-lg mb-12">
                   <Button
                     onClick={() => handleAddToCart(item.documentId)}
                     className="bg-lime-200 hover:bg-lime-300 text-lime-900 active:scale-95 transition-all active:bg-lime-200"

@@ -9,14 +9,14 @@ const query = qs.stringify({
 // create new order
 export async function createOrder(
   orderData: OrderProps,
-  cartId: string | undefined,
+  // cartId: string | undefined,
   stripePaymentId: string,
   payAmount: number
 ) {
   try {
-    const response = await axiosInstance.post("/api/orders", {
+    const response = await axiosInstance.post("/api/orders/place", {
       data: {
-        cart: cartId,
+        // cart: cartId,
         ...orderData,
         stripePaymentId,
         payAmount,

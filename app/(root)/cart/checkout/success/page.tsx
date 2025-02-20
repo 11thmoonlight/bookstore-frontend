@@ -28,12 +28,7 @@ export default function Success() {
       );
 
       if (cart && shippingInfo.address) {
-        await createNewOrder(
-          shippingInfo,
-          cart.documentId,
-          session_id,
-          Number(totalPrice)
-        );
+        await createNewOrder(shippingInfo, session_id, Number(totalPrice));
 
         if (error) {
           console.error("Order creation error:", error);
