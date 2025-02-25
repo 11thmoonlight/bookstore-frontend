@@ -16,7 +16,7 @@ export default function AddToWishlistButton({
   variant = "default",
 }: AddToWishlistButtonProps) {
   const { user } = useUser();
-  const { addToWishList } = useWishlist(user?.wishlists[0].documentId || "");
+  const { addToWishList } = useWishlist(user?.wishlists[0]?.documentId || "");
 
   const handleAddToWishlist = async () => {
     try {
