@@ -53,6 +53,9 @@ export default function WishList() {
     return <ErrorMessage message={error} />;
   }
 
+  if (!wishlist?.products)
+    return <ErrorMessage message="There are no book in  your wish list !" />;
+
   return (
     <div className="mt-[160px] lg:px-20 md:px-10 px-2">
       <Table>
