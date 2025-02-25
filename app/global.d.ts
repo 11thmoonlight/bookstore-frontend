@@ -55,8 +55,8 @@ declare global {
 
   interface OrderProps {
     address: string;
-    phoneNumber: number;
-    postalCode: number;
+    phoneNumber: string;
+    postalCode: string;
     emailAddress: string;
   }
 
