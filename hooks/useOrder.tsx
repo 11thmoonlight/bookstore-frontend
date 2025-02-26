@@ -41,18 +41,11 @@ export function useCreateOrder() {
 
   const createNewOrder = async (
     orderData: OrderProps,
-    // cartId: string | undefined,
-    stripePaymentId: string,
-    payAmount: number
+    stripePaymentId: string
   ) => {
     setLoading(true);
     try {
-      const result = await createOrder(
-        orderData,
-        // cartId,
-        stripePaymentId,
-        payAmount
-      );
+      const result = await createOrder(orderData, stripePaymentId);
       if (result.ok) {
         toast.success("Order created successfully!");
         setError(null);
