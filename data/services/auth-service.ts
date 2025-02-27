@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getStrapiURL } from "@/lib/utils";
 
 interface RegisterUserProps {
@@ -36,14 +36,19 @@ export async function loginUserService(userData: LoginUserProps) {
 
   try {
     const response = await axios.post(url, userData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     return response.data;
-  } catch (error) {
-    console.error("Login Service Error:", error);
-    throw error;
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.error("Login Error Response:", error.response?.data);
+
+      if (error.response?.status === 400 || error.response?.status === 401) {
+        return { error: "Invalid username or password." };
+      }
+    }
+
+    return { error: "Something went wrong. Please try again." };
   }
 }
