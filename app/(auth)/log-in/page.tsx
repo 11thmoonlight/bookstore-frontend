@@ -53,7 +53,7 @@ export default function LogIn() {
                 type="text"
                 placeholder="username"
               />
-              <ZodErrors error={formState?.zodErrors?.identifier} />
+              <ZodErrors error={formState?.zodErrors?.identifier || []} />
             </div>
             <div className="space-y-2">
               <Label className="text-amber-50" htmlFor="password">
@@ -66,7 +66,7 @@ export default function LogIn() {
                 type="password"
                 placeholder="password"
               />
-              <ZodErrors error={formState.zodErrors?.password} />
+              <ZodErrors error={formState.zodErrors?.password || []} />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
@@ -75,6 +75,9 @@ export default function LogIn() {
               text="Sign In"
               loadingText="Loading"
             />
+            {formState?.message && (
+              <p className="text-red-500 text-sm mt-2">{formState.message}</p>
+            )}
             <StrapiErrors error={formState?.strapiErrors} />
           </CardFooter>
         </Card>
