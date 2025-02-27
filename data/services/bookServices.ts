@@ -1,4 +1,5 @@
-import axiosInstance from "@/lib/axiosInstance";
+import { getStrapiURL } from "@/lib/utils";
+import axios from "axios";
 import qs from "qs";
 
 // Fetch all books
@@ -11,7 +12,7 @@ export async function getBooks() {
   });
 
   try {
-    const response = await axiosInstance.get(`/api/products?${query}`);
+    const response = await axios.get(`${getStrapiURL()}/api/products?${query}`);
     return { ok: true, data: response.data, error: null };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -34,8 +35,8 @@ export async function getBookById(bookId: string) {
   });
 
   try {
-    const response = await axiosInstance.get(
-      `/api/products/${bookId}?${query}`
+    const response = await axios.get(
+      `${getStrapiURL()}/api/products/${bookId}?${query}`
     );
     return { ok: true, data: response.data, error: null };
   } catch (error: unknown) {
@@ -64,7 +65,7 @@ export async function getBooksByGenre(genre: string) {
   });
 
   try {
-    const response = await axiosInstance.get(`/api/products?${query}`);
+    const response = await axios.get(`${getStrapiURL()}/api/products?${query}`);
     return { ok: true, data: response.data, error: null };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -94,7 +95,7 @@ export async function getBooksBySearch(searchQuery: string) {
   });
 
   try {
-    const response = await axiosInstance.get(`/api/products?${query}`);
+    const response = await axios.get(`${getStrapiURL()}/api/products?${query}`);
     return { ok: true, data: response.data, error: null };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -116,7 +117,7 @@ export const getNewBooks = async () => {
   });
 
   try {
-    const response = await axiosInstance.get(`/api/products?${query}`);
+    const response = await axios.get(`${getStrapiURL()}/api/products?${query}`);
     return { ok: true, data: response.data, error: null };
   } catch (error: unknown) {
     if (error instanceof Error) {
