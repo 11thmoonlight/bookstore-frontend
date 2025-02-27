@@ -16,6 +16,12 @@ const config = {
   secure: process.env.NODE_ENV === "production",
 };
 
+interface AuthState {
+  zodErrors: Record<string, string[]> | null;
+  strapiErrors: string | null;
+  message: string;
+}
+
 const schemaRegister = z.object({
   username: z.string().min(3).max(20, {
     message: "Username must be between 3 and 20 characters",
@@ -28,7 +34,10 @@ const schemaRegister = z.object({
   }),
 });
 
-export async function registerUserAction(prevState: any, formData: FormData) {
+export async function registerUserAction(
+  prevState: AuthState,
+  formData: FormData
+) {
   const validatedFields = schemaRegister.safeParse({
     username: formData.get("username"),
     password: formData.get("password"),
@@ -87,7 +96,10 @@ const schemaLogin = z.object({
     }),
 });
 
-export async function loginUserAction(prevState: any, formData: FormData) {
+export async function loginUserAction(
+  prevState: AuthState,
+  formData: FormData
+) {
   const validatedFields = schemaLogin.safeParse({
     identifier: formData.get("identifier"),
     password: formData.get("password"),
@@ -103,28 +115,17 @@ export async function loginUserAction(prevState: any, formData: FormData) {
 
   const responseData = await loginUserService(validatedFields.data);
 
-  if (!responseData) {
+  if (!responseData || responseData.error) {
     return {
       ...prevState,
-      strapiErrors: responseData.error,
+      strapiErrors: responseData?.error || "Failed to Login.",
       zodErrors: null,
-      message: "Ops! Something went wrong. Please try again.",
+      message: responseData?.error || "Invalid credentials or user not found.",
     };
   }
 
-  if (responseData.error) {
-    return {
-      ...prevState,
-      strapiErrors: responseData.error,
-      zodErrors: null,
-      message: "Failed to Login.",
-    };
-  }
-
-  if (responseData && !responseData.error) {
-    cookies().set("jwt", responseData.jwt);
-    redirect("/");
-  }
+  cookies().set("jwt", responseData.jwt, config);
+  redirect("/");
 }
 
 export async function logoutAction() {
