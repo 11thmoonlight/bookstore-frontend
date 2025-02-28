@@ -33,14 +33,25 @@ declare global {
     updatedAt: string;
   }
 
-  interface CartItems {
+  interface CartItem {
     createdAt: string;
     documentId: string;
-    products: Book[];
     id: number;
     locale: null;
     publishedAt: null;
     updatedAt: string;
+    product: Book;
+    quantity: number;
+  }
+
+  interface Cart {
+    createdAt: string;
+    documentId: string;
+    id: number;
+    locale: null;
+    publishedAt: null;
+    updatedAt: string;
+    cart_items: CartItem[];
   }
 
   interface WhishListItems {
