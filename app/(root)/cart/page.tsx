@@ -18,19 +18,20 @@ export default function Cart() {
     loading,
     cartItemLoading,
     error,
+    products,
     cartItemError,
   } = useCartManager();
 
   if (loading || cartItemLoading || !quantities) return <Loader />;
   if (error || cartItemError) return <ErrorMessage />;
-  if (!cart?.products)
+  if (!cart?.cart_items)
     return <ErrorMessage message="There are no book in  your cart !" />;
 
   return (
     <div className="mt-[160px] lg:px-20 px-2 md:flex md:flex-row flex flex-col gap-8 mb-12 justify-center items-start">
       {cart && (
         <CartTable
-          cart={cart}
+          products={products}
           quantities={quantities}
           onAdd={handleIncreaseItem}
           onRemove={handleDecreaseItem}
