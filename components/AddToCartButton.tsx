@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userContext";
-import { useCart } from "@/hooks/useCart";
 import { useCartItem } from "@/hooks/useCartItem";
 import { cn } from "@/lib/utils";
 import { PiShoppingCartLight } from "react-icons/pi";
@@ -17,12 +16,10 @@ export default function AddToCartButton({
   variant = "default",
 }: AddToCartButtonProps) {
   const { user } = useUser();
-  const { addToCart } = useCart(user?.cart?.documentId || "");
   const { addItemToCart } = useCartItem(user?.cart?.documentId || "");
 
   const handleAddToCart = async () => {
     try {
-      await addToCart(productId);
       await addItemToCart(productId);
     } catch (err) {
       console.error(err);

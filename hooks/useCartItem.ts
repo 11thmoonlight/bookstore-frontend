@@ -9,6 +9,7 @@ import {
 import { toast } from "react-toastify";
 
 export function useCartItem(cartId: string) {
+  const [cartItem, setCartItem] = useState<CartItem | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -19,12 +20,12 @@ export function useCartItem(cartId: string) {
       const result = await getCartItemById(id);
       setLoading(false);
       if (result.ok) {
+        setCartItem(result.data.data);
         return result.data;
       } else {
         setError(result.error);
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
         return null;
-  
       }
     } catch (err: unknown) {
       setLoading(false);
@@ -43,7 +44,7 @@ export function useCartItem(cartId: string) {
         return result.data;
       } else {
         setError(new Error(result.error as string));
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
         return null;
       }
     } catch (err: unknown) {
@@ -63,7 +64,7 @@ export function useCartItem(cartId: string) {
         return result.data;
       } else {
         setError(result.error);
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
         return null;
       }
     } catch (err: unknown) {
@@ -80,10 +81,11 @@ export function useCartItem(cartId: string) {
       const result = await addCartItem(cartId, productId, quantity);
       setLoading(false);
       if (result.ok) {
+        toast.success("added to your cart");
         return result.data;
       } else {
         setError(result.error);
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
         return null;
       }
     } catch (err: unknown) {
@@ -103,7 +105,7 @@ export function useCartItem(cartId: string) {
         return true;
       } else {
         setError(result.error);
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
         return false;
       }
     } catch (err: unknown) {
@@ -114,6 +116,7 @@ export function useCartItem(cartId: string) {
   };
 
   return {
+    cartItem,
     loading,
     error,
     fetchCartItemById,

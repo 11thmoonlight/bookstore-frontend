@@ -97,14 +97,13 @@ export default function Header() {
                   </MenubarContent>
                 </MenubarMenu>
               </Menubar>
-              
             ) : (
               <Link href="/register" className="flex justify-between">
                 Sign up
                 <IoIosLogIn size={27} />
               </Link>
             )}
-            <ModeToggle/>
+            <ModeToggle />
           </div>
         </div>
 

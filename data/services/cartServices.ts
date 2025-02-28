@@ -3,14 +3,17 @@ import qs from "qs";
 
 const query = qs.stringify({
   populate: {
-    products: {
+    cart_items: {
       populate: {
-        image: {
-          fields: ["url", "alternativeText"],
+        product: {
+          populate: {
+            image: {
+              fields: ["url", "alternativeText"],
+            },
+          },
         },
       },
     },
-    cart_items: "*",
   },
 });
 
@@ -45,6 +48,56 @@ export async function getCartById(cartId: string) {
       console.error("An unexpected error occurred:", error);
       return { ok: false, data: null, error: new Error("Unknown error") };
     }
+  }
+}
+
+// create new cart for a user
+
+export async function createNewCart(userId: number | undefined) {
+  try {
+    const response = await axiosInstance.post(`/api/carts`, {
+      data: {
+        users_permissions_user: userId,
+      },
+    });
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error creating cart:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
+    }
+  }
+}
+
+export async function getOrCreateCart(userId: number | undefined) {
+  if (!userId)
+    return { ok: false, data: null, error: new Error("User ID is required") };
+
+  try {
+    const existingCart = await axiosInstance.get(
+      `/api/carts?filters[users_permissions_user][id]=${userId}`
+    );
+
+    if (existingCart.data?.data?.length > 0) {
+      return { ok: true, data: existingCart.data.data[0], error: null };
+    }
+    const response = await axiosInstance.post(`/api/carts`, {
+      data: {
+        users_permissions_user: userId,
+      },
+    });
+
+    return { ok: true, data: response.data, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error getting or creating cart:", error.message);
+      return { ok: false, data: null, error };
+    }
+    console.error("An unexpected error occurred:", error);
+    return { ok: false, data: null, error: new Error("Unknown error") };
   }
 }
 

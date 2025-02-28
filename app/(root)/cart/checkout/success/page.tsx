@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { useCartManager } from "@/hooks/useCartManager";
 import { PacmanLoader } from "react-spinners";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -13,14 +12,13 @@ export default function Success() {
   const { createNewOrder, loading, error, setLoading } = useCreateOrder();
   const searchParams = useSearchParams();
   const session_id = searchParams.get("session_id");
-  const { totalPrice } = useCartManager();
+
+  const isOrderCreated = useRef(false);
 
   useEffect(() => {
-    if (!session_id) return;
+    if (!session_id || isOrderCreated.current) return;
 
-    const orderPlaced = localStorage.getItem("order placed");
-    if (orderPlaced) return;
-
+    isOrderCreated.current = true;
     (async () => {
       const cart = JSON.parse(localStorage.getItem("cart") || "{}");
       const shippingInfo = JSON.parse(
@@ -28,22 +26,19 @@ export default function Success() {
       );
 
       if (cart && shippingInfo.address) {
-        await createNewOrder(shippingInfo, session_id, Number(totalPrice));
+        await createNewOrder(shippingInfo, session_id);
 
         if (error) {
           console.error("Order creation error:", error);
         } else {
           localStorage.removeItem("cart");
           localStorage.removeItem("shippingInfo");
-          localStorage.setItem("orderPlaced", "true");
         }
       }
 
       setLoading(false);
     })();
-  }, [session_id]);
-
-  console.log(totalPrice);
+  }, [session_id, createNewOrder, error, setLoading]);
 
   return loading ? (
     <div className="flex flex-col gap-6 justify-center items-center bg-amber-50 dark:bg-stone-800 h-screen">

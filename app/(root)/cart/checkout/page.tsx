@@ -20,6 +20,7 @@ export default function Checkout() {
     loading,
     cartItemLoading,
     error,
+    products,
     cartItemError,
   } = useCartManager();
 
@@ -34,7 +35,7 @@ export default function Checkout() {
         {cart && (
           <CartTable
             variant="readonly"
-            cart={cart}
+            products={products}
             quantities={quantities}
             onAdd={handleIncreaseItem}
             onRemove={handleDecreaseItem}
