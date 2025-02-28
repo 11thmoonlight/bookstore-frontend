@@ -9,12 +9,12 @@ interface CartTableProps {
   quantities: { [key: string]: number };
   onAdd?: (id: string) => void;
   onRemove?: (id: string) => void;
-  cart: CartItems;
+  products: Book[];
   variant?: "default" | "readonly";
 }
 
 const CartTable: React.FC<CartTableProps> = ({
-  cart,
+  products,
   quantities,
   onAdd,
   onRemove,
@@ -31,7 +31,7 @@ const CartTable: React.FC<CartTableProps> = ({
           variant === "readonly" ? "bg-white dark:bg-stone-800" : ""
         }`}
       >
-        {cart?.products.map((item) => (
+        {products.map((item) => (
           <Table key={item.id}>
             <TableBody>
               <TableRow>
