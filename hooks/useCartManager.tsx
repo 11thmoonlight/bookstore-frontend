@@ -45,7 +45,18 @@ export function useCartManager() {
       const response = await updateQuantity(cartItem.documentId, newQuantity);
 
       if (response) {
-        setQuantities((prev) => ({ ...prev, [productId]: newQuantity }));
+        setCart((prevCart) => {
+          if (!prevCart) return prevCart;
+
+          return {
+            ...prevCart,
+            cart_items: prevCart.cart_items.map((item) =>
+              item.documentId === cartItem.documentId
+                ? { ...item, quantity: newQuantity }
+                : item
+            ),
+          };
+        });
       }
     } catch (err) {
       console.error("Error increasing item quantity:", err);
@@ -62,27 +73,38 @@ export function useCartManager() {
 
       if (!cartItem) return;
 
-      if (cartItem.quantity >= 1) {
-        const response = await updateQuantity(
-          cartItem.documentId,
-          cartItem.quantity - 1
-        );
+      if (cartItem.quantity > 1) {
+        const newQuantity = cartItem.quantity - 1;
+        const response = await updateQuantity(cartItem.documentId, newQuantity);
 
         if (response) {
-          setQuantities((prev) => ({
-            ...prev,
-            [productId]: Math.max((prev[productId] || 0) - 1, 0),
-          }));
+          setCart((prevCart) => {
+            if (!prevCart) return prevCart;
+
+            return {
+              ...prevCart,
+              cart_items: prevCart.cart_items.map((item) =>
+                item.documentId === cartItem.documentId
+                  ? { ...item, quantity: newQuantity }
+                  : item
+              ),
+            };
+          });
         }
       } else {
-        await removeItemFromCart(cartItem.documentId);
+        const response = await removeItemFromCart(cartItem.documentId);
+        if (response) {
+          setCart((prevCart) => {
+            if (!prevCart) return prevCart;
 
-        setCart((prevCart) => ({
-          ...prevCart,
-          cart_items: prevCart.cart_items.filter(
-            (item) => item.documentId !== cartItem.documentId
-          ),
-        }));
+            return {
+              ...prevCart,
+              cart_items: prevCart.cart_items.filter(
+                (item) => item.documentId !== cartItem.documentId
+              ),
+            };
+          });
+        }
       }
     } catch (err) {
       console.error("Error decreasing item quantity:", err);
