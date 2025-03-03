@@ -25,7 +25,7 @@ const Order: React.FC = () => {
     (stage) => stage.status === currentStatus
   );
 
-  console.log(user?.orders);
+  console.log(order);
 
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;

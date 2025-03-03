@@ -85,11 +85,12 @@ declare global {
     locale: null;
     publishedAt: null;
     updatedAt: string;
+    cart_items: CartItem[];
   }
 
   interface User {
     blocked: boolean;
-    cart: CartItems;
+    cart: Cart;
     confirmed: boolean;
     createdAt: string;
     documentId: string;

@@ -1,7 +1,6 @@
 import React from "react";
 import OrderProcessingChart from "@/components/OrderProcessingChart";
 import { Separator } from "@/components/ui/separator";
-import { useCartManager } from "@/hooks/useCartManager";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { TabsContent } from "@radix-ui/react-tabs";
@@ -16,7 +15,17 @@ const CurrentOrderTab: React.FC<CurrentOrderTabProps> = ({
   order,
   currentStage,
 }) => {
-  const { totalPrice, cart, totalItems, discounts } = useCartManager();
+  const totalItems =
+    order?.cart_items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+
+  const discounts =
+    order?.cart_items
+      ?.reduce(
+        (sum, item) =>
+          sum + (item.product ? item.product.discount * item.quantity : 0),
+        0
+      )
+      .toFixed(2) || "0.00";
 
   const formattedDate = formatDate(order?.createdAt);
 
@@ -36,7 +45,7 @@ const CurrentOrderTab: React.FC<CurrentOrderTabProps> = ({
             </p>
             <p className="flex gap-2 whitespace-nowrap">
               <span className="font-bold">Total Cost:</span>
-              <span>$ {totalPrice}</span>
+              <span>$ {order.payAmount}</span>
             </p>
             <p className="flex gap-2 whitespace-nowrap">
               <span className="font-bold">Discount:</span>
@@ -74,14 +83,17 @@ const CurrentOrderTab: React.FC<CurrentOrderTabProps> = ({
         <Separator orientation="horizontal" />
 
         <div className="flex gap-10 overflow-x-auto scrollbar-thin">
-          {cart?.products.map((item) => (
-            <div key={item.id}>
+          {order.cart_items.map((item) => (
+            <div key={item.id} className="flex flex-col gap-4">
               <Image
-                src={`http://localhost:1337${item.image[0].url}`}
+                src={`http://localhost:1337${item.product.image[0].url}`}
                 alt="book image cover"
                 width={80}
                 height={80}
               />
+              <div className="text-sm text-stone-400">
+                {item.quantity} copies
+              </div>
             </div>
           ))}
         </div>

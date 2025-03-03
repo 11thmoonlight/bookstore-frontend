@@ -3,7 +3,19 @@ import qs from "qs";
 
 // Query for populating necessary relations
 const query = qs.stringify({
-  populate: "*",
+  populate: {
+    cart_items: {
+      populate: {
+        product: {
+          populate: {
+            image: {
+              fields: ["url", "alternativeText"],
+            },
+          },
+        },
+      },
+    },
+  },
 });
 
 // create new order
