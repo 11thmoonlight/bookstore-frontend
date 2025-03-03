@@ -24,7 +24,7 @@ export default function Cart() {
 
   if (loading || cartItemLoading || !quantities) return <Loader />;
   if (error || cartItemError) return <ErrorMessage />;
-  if (!cart?.cart_items)
+  if (cart?.cart_items.length === 0)
     return <ErrorMessage message="There are no book in  your cart !" />;
 
   return (
