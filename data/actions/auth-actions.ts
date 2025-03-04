@@ -129,6 +129,6 @@ export async function loginUserAction(
 }
 
 export async function logoutAction() {
-  cookies().set("jwt", "", { ...config, maxAge: 0 });
+  cookies().set("jwt", "", { ...config, expires: new Date(0) });
   redirect("/");
 }

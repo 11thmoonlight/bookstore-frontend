@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { GoPerson } from "react-icons/go";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { GoHeart } from "react-icons/go";
@@ -21,14 +21,19 @@ import { useUser } from "@/context/userContext";
 import Search from "./Search";
 import { BsBagCheck } from "react-icons/bs";
 import { ModeToggle } from "./custom/ModeToggle";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const { user } = useUser();
-  const [currentUser, setCurrentUser] = useState(user);
+  const { user, setUser } = useUser();
+  const router = useRouter();
 
-  useEffect(() => {
-    setCurrentUser(user);
-  }, [user]);
+  const handleLogout = async () => {
+    await logoutAction();
+    setUser(null);
+    router.refresh();
+  };
+
+  console.log("user", user);
 
   return (
     <>
@@ -46,7 +51,7 @@ export default function Header() {
           </div>
 
           <div className="gap-4 flex items-center w-[400px] justify-end">
-            {currentUser && user ? (
+            {user ? (
               <Menubar className="border-none shadow-none p-0">
                 <MenubarMenu>
                   <MenubarTrigger className="p-0">
@@ -84,15 +89,14 @@ export default function Header() {
                     </MenubarItem>
                     <MenubarSeparator />
                     <MenubarItem>
-                      <form action={logoutAction}>
-                        <button
-                          type="submit"
-                          className="flex items-center gap-4 w-full"
-                        >
-                          <LogOut className="w-6 h-6 hover:text-primary" />
-                          Log out
-                        </button>
-                      </form>
+                      <button
+                        type="submit"
+                        className="flex items-center gap-4 w-full"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="w-6 h-6 hover:text-primary" />
+                        Log out
+                      </button>
                     </MenubarItem>
                   </MenubarContent>
                 </MenubarMenu>
