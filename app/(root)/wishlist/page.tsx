@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCartItem } from "@/hooks/useCartItem";
-import { useCart } from "@/hooks/useCart";
 import Loader from "@/components/custom/Loader";
 import ErrorMessage from "@/components/custom/ErrorMessage";
 
@@ -23,8 +22,6 @@ export default function WishList() {
   const { wishlist, loading, error, removeFromWishlist } = useWishlist(
     user?.wishlists[0]?.documentId || ""
   );
-
-  const { addToCart } = useCart(user?.cart?.documentId || "");
 
   const { addItemToCart } = useCartItem(user?.cart?.documentId || "");
 
@@ -38,7 +35,6 @@ export default function WishList() {
 
   const handleAddToCart = async (productId: string) => {
     try {
-      await addToCart(productId);
       await addItemToCart(productId);
     } catch (err) {
       console.error(err);
@@ -53,7 +49,7 @@ export default function WishList() {
     return <ErrorMessage message={error} />;
   }
 
-  if (!wishlist?.products)
+  if (wishlist?.products.length === 0)
     return <ErrorMessage message="There are no book in  your wish list !" />;
 
   return (

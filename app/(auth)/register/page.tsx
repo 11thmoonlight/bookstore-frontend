@@ -20,9 +20,9 @@ import { StrapiErrors } from "@/components/custom/StrapiErrors";
 import { SubmitButton } from "@/components/custom/SubmitButton";
 
 const INITIAL_STATE = {
-  data: null,
   zodErrors: null,
-  message: null,
+  strapiErrors: null,
+  message: "",
 };
 
 export default function Register() {
