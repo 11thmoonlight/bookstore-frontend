@@ -77,49 +77,6 @@ export async function registerUserAction(
   redirect("/");
 }
 
-// export async function registerUserAction(
-//   prevState: AuthState,
-//   formData: FormData
-// ): Promise<AuthState> {
-//   const validatedFields = schemaRegister.safeParse({
-//     username: formData.get("username"),
-//     password: formData.get("password"),
-//     email: formData.get("email"),
-//   });
-
-//   if (!validatedFields.success) {
-//     return {
-//       ...prevState,
-//       zodErrors: validatedFields.error.flatten().fieldErrors,
-//       strapiErrors: null,
-//       message: "Missing Fields. Failed to Register.",
-//     };
-//   }
-
-//   const responseData = await registerUserService(validatedFields.data);
-
-//   if (!responseData) {
-//     return {
-//       ...prevState,
-//       strapiErrors: null,
-//       zodErrors: null,
-//       message: "Ops! Something went wrong. Please try again.",
-//     };
-//   }
-
-//   if (responseData.error) {
-//     return {
-//       ...prevState,
-//       strapiErrors: responseData.error,
-//       zodErrors: null,
-//       message: "Failed to Register.",
-//     };
-//   }
-
-//   cookies().set("jwt", responseData.jwt, config);
-//   redirect("/");
-// }
-
 const schemaLogin = z.object({
   identifier: z
     .string()

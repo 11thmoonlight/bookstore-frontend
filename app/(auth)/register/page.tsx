@@ -55,7 +55,7 @@ export default function Register() {
                 type="text"
                 placeholder="username"
               />
-              <ZodErrors error={formState?.zodErrors?.username} />
+              <ZodErrors error={formState?.zodErrors?.username ?? []} />
             </div>
             <div className="space-y-2">
               <Label className="text-amber-50" htmlFor="email">
@@ -68,7 +68,7 @@ export default function Register() {
                 type="email"
                 placeholder="name@example.com"
               />
-              <ZodErrors error={formState?.zodErrors?.email} />
+              <ZodErrors error={formState?.zodErrors?.email ?? []} />
             </div>
 
             <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function Register() {
                 type="password"
                 placeholder="password"
               />
-              <ZodErrors error={formState?.zodErrors?.password} />
+              <ZodErrors error={formState?.zodErrors?.password ?? []} />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
