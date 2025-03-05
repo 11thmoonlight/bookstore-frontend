@@ -4,17 +4,40 @@ import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { useFetchOrder } from "@/hooks/useOrder";
+import { useUser } from "@/context/userContext";
+import { stages } from "@/components/OrderProcessingChart";
+import Loader from "./custom/Loader";
+import ErrorMessage from "./custom/ErrorMessage";
 
-interface CurrentOrderTabProps {
-  order: OrderItems;
-  currentStage: number;
-  formattedDate: string;
-}
+const CurrentOrderTab: React.FC = () => {
+  const { user } = useUser();
+  const { order, loading, error } = useFetchOrder(
+    user?.orders[0]?.documentId || ""
+  );
 
-const CurrentOrderTab: React.FC<CurrentOrderTabProps> = ({
-  order,
-  currentStage,
-}) => {
+  console.log(order);
+
+  if (loading) return <Loader />;
+  if (error) return <ErrorMessage />;
+  if (!order?.cart_items) {
+    return (
+      <TabsContent
+        className="text-center min-h-[250px] rounded-lg border-1 border-2 border-gray-100 border-solid"
+        value="current"
+      >
+        <ErrorMessage message="You have no new order !" />
+      </TabsContent>
+    );
+  }
+
+  const formattedDate = formatDate(order?.createdAt ?? "");
+
+  const currentStatus = order?.orderStatus || "order placed";
+  const currentStage = stages.findIndex(
+    (stage) => stage.status === currentStatus
+  );
+
   const totalItems =
     order?.cart_items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
@@ -26,8 +49,6 @@ const CurrentOrderTab: React.FC<CurrentOrderTabProps> = ({
         0
       )
       .toFixed(2) || "0.00";
-
-  const formattedDate = formatDate(order?.createdAt);
 
   return (
     <TabsContent
