@@ -22,7 +22,7 @@ export function useBooks() {
         setBooks(result.data);
       } else {
         setError(result.error?.message || "Failed to fetch books.");
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
       }
       setLoading(false);
     };
@@ -51,7 +51,7 @@ export function useBook(bookId: string) {
         setBook(result.data.data);
       } else {
         setError(result.error?.message || "Failed to fetch book.");
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
       }
       setLoading(false);
     };
@@ -80,7 +80,7 @@ export function useBooksByGenre(genre: string) {
         setBooks(result.data.data);
       } else {
         setError(result.error?.message || "Failed to fetch books by genre.");
-        toast.error('Something went wrong')
+        toast.error("Something went wrong");
       }
       setLoading(false);
     };
@@ -95,35 +95,34 @@ export function useBooksByGenre(genre: string) {
   };
 }
 
+export function useNewBooks() {
+  const [books, setBooks] = useState<Book[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  export function useNewBooks() {
-    const [books, setBooks] = useState<Book[] | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-  
   // Fetch new books
-    useEffect(() => {
-      const fetchNewBooks = async () => {
-        setLoading(true);
-        const result = await getNewBooks();
-        if (result.ok) {
-          setBooks(result.data.data);
-        } else {
-          setError(result.error?.message || "Failed to fetch books by genre.");
-          toast.error('Something went wrong')
-        }
-        setLoading(false);
-      };
-  
-      fetchNewBooks();
-    }, []);
-  
-    return {
-      books,
-      loading,
-      error,
+  useEffect(() => {
+    const fetchNewBooks = async () => {
+      setLoading(true);
+      const result = await getNewBooks();
+      if (result.ok) {
+        setBooks(result.data.data);
+      } else {
+        setError(result.error?.message || "Failed to fetch books by genre.");
+        toast.error("Something went wrong");
+      }
+      setLoading(false);
     };
-  }
+
+    fetchNewBooks();
+  }, []);
+
+  return {
+    books,
+    loading,
+    error,
+  };
+}
 
 export function useBooksBySearch(searchQuery: string) {
   const [books, setBooks] = useState<Book[] | null>(null);
@@ -147,12 +146,12 @@ export function useBooksBySearch(searchQuery: string) {
         } else {
           setBooks(null);
           setError(result.error?.message || "Failed to fetch books by search.");
-          toast.error('Something went wrong')
+          toast.error("Something went wrong");
         }
       } catch (error) {
         setBooks(null);
         setError("An unexpected error occurred.");
-        console.log(error)
+        console.error(error);
       } finally {
         setLoading(false);
       }
