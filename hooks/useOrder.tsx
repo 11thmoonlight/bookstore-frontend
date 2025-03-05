@@ -1,4 +1,8 @@
-import { createOrder, getOrder } from "@/data/services/order-services";
+import {
+  createOrder,
+  getDeliveredOrders,
+  getOrder,
+} from "@/data/services/order-services";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -62,4 +66,35 @@ export function useCreateOrder() {
   };
 
   return { createNewOrder, loading, setLoading, error };
+}
+
+export function useFetchDelivered(userId: string) {
+  const [order, setOrder] = useState<OrderItems[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      setLoading(true);
+      try {
+        const result = await getDeliveredOrders(userId);
+        if (result.ok) {
+          setOrder(result.data.data);
+          setError(null);
+        } else {
+          setError(result.error?.message || "Failed to fetch order.");
+          toast.error("Something went wrong");
+        }
+      } catch (error) {
+        console.error("Error fetching order:", error);
+        setError("Failed to fetch order.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, []);
+
+  return { order, loading, error };
 }
