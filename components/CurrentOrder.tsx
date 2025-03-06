@@ -12,17 +12,13 @@ import ErrorMessage from "./custom/ErrorMessage";
 
 const CurrentOrderTab: React.FC = () => {
   const { user } = useUser();
-  const { order, loading, error } = useFetchOrder(
-    user?.orders[0]?.documentId || ""
-  );
-
-  console.log("user", user?.orders);
+  const { order, loading, error } = useFetchOrder(user?.id || 0);
 
   console.log("order", order);
 
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;
-  if (!order?.cart_items) {
+  if (!order || order.length === 0) {
     return (
       <TabsContent
         className="text-center min-h-[250px] rounded-lg border-1 border-2 border-gray-100 border-solid"
@@ -33,95 +29,110 @@ const CurrentOrderTab: React.FC = () => {
     );
   }
 
-  const formattedDate = formatDate(order?.createdAt ?? "");
-
-  const currentStatus = order?.orderStatus || "order placed";
-  const currentStage = stages.findIndex(
-    (stage) => stage.status === currentStatus
-  );
-
-  const totalItems =
-    order?.cart_items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-
-  const discounts =
-    order?.cart_items
-      ?.reduce(
-        (sum, item) =>
-          sum + (item.product ? item.product.discount * item.quantity : 0),
-        0
-      )
-      .toFixed(2) || "0.00";
-
   return (
-    <TabsContent
-      className="text-center min-h-[250px] rounded-lg border-1 border-2 border-gray-100 border-solid"
-      value="current"
-    >
-      <OrderProcessingChart currentStage={currentStage} />
+    <div>
+      {order?.map((item) => {
+        const formattedDate = formatDate(item?.createdAt ?? "");
 
-      <div className="flex flex-col p-7 gap-6">
-        <div className="flex flex-col justify-between gap-10 lg:flex-row">
-          <div className="flex flex-col gap-5 w-full bg-stone-50 dark:bg-stone-700 p-5 rounded-lg overflow-x-auto scrollbar-thin">
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Submission Time:</span>
-              <p>{formattedDate}</p>
-            </p>
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Total Cost:</span>
-              <span>$ {order.payAmount}</span>
-            </p>
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Discount:</span>
-              <span>$ {discounts}</span>
-            </p>
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Total Items:</span>
-              <span>{totalItems}</span>
-            </p>
-          </div>
+        const currentStatus = item?.orderStatus || "order placed";
+        const currentStage = stages.findIndex(
+          (stage) => stage.status === currentStatus
+        );
 
-          <div className="flex flex-col gap-5 w-full bg-stone-50 dark:bg-stone-700 p-5 rounded-lg overflow-x-auto scrollbar-thin">
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Address:</span>
-              <span>{order?.address}</span>
-            </p>
+        const totalItems =
+          item.cart_items?.reduce(
+            (sum, cartItem) => sum + cartItem.quantity,
+            0
+          ) || 0;
 
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Postal Code:</span>
-              <span>{order?.postalCode}</span>
-            </p>
+        const discounts =
+          item.cart_items
+            ?.reduce(
+              (sum, cartItem) =>
+                sum +
+                (cartItem.product
+                  ? cartItem.product.discount * cartItem.quantity
+                  : 0),
+              0
+            )
+            .toFixed(2) || "0.00";
 
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Email Address:</span>
-              <span>{order?.emailAddress}</span>
-            </p>
+        return (
+          <>
+            <TabsContent
+              className="text-center min-h-[250px] rounded-lg border-1 border-2 border-gray-100 border-solid"
+              value="current"
+            >
+              <OrderProcessingChart currentStage={currentStage} />
 
-            <p className="flex gap-2 whitespace-nowrap">
-              <span className="font-bold">Phone Number:</span>
-              <span>{order?.phoneNumber}</span>
-            </p>
-          </div>
-        </div>
+              <div className="flex flex-col p-7 gap-6">
+                <div className="flex flex-col justify-between gap-10 lg:flex-row">
+                  <div className="flex flex-col gap-5 w-full bg-stone-50 dark:bg-stone-700 p-5 rounded-lg overflow-x-auto scrollbar-thin">
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Submission Time:</span>
+                      <p>{formattedDate}</p>
+                    </p>
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Total Cost:</span>
+                      <span>$ {item.payAmount}</span>
+                    </p>
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Discount:</span>
+                      <span>$ {discounts}</span>
+                    </p>
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Total Items:</span>
+                      <span>{totalItems}</span>
+                    </p>
+                  </div>
 
-        <Separator orientation="horizontal" />
+                  <div className="flex flex-col gap-5 w-full bg-stone-50 dark:bg-stone-700 p-5 rounded-lg overflow-x-auto scrollbar-thin">
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Address:</span>
+                      <span>{item?.address}</span>
+                    </p>
 
-        <div className="flex gap-10 overflow-x-auto scrollbar-thin">
-          {order.cart_items.map((item) => (
-            <div key={item.id} className="flex flex-col gap-4">
-              <Image
-                src={`http://localhost:1337${item.product.image[0].url}`}
-                alt="book image cover"
-                width={80}
-                height={80}
-              />
-              <div className="text-sm text-stone-400">
-                {item.quantity} copies
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Postal Code:</span>
+                      <span>{item?.postalCode}</span>
+                    </p>
+
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Email Address:</span>
+                      <span>{item?.emailAddress}</span>
+                    </p>
+
+                    <p className="flex gap-2 whitespace-nowrap">
+                      <span className="font-bold">Phone Number:</span>
+                      <span>{item?.phoneNumber}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <Separator orientation="horizontal" />
+
+                <div className="flex gap-10 overflow-x-auto scrollbar-thin">
+                  {item.cart_items.map((item) => (
+                    <div key={item.id} className="flex flex-col gap-4">
+                      <Image
+                        src={`http://localhost:1337${item.product.image[0].url}`}
+                        alt="book image cover"
+                        width={80}
+                        height={80}
+                      />
+                      <div className="text-sm text-stone-400">
+                        {item.quantity} copies
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </TabsContent>
+            </TabsContent>
+            <Separator orientation="horizontal" />
+          </>
+        );
+      })}
+    </div>
   );
 };
 

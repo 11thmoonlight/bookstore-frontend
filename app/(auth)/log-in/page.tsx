@@ -38,7 +38,7 @@ export default function LogIn() {
               Sign In
             </CardTitle>
             <CardDescription className="text-amber-200">
-              Enter your details to log in to your account
+              Enter your credentials to sign in
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -84,7 +84,7 @@ export default function LogIn() {
         <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">
           Do not have an account?
           <Link className="underline ml-2" href="register">
-            Sign Up
+            Sign up
           </Link>
         </div>
       </form>

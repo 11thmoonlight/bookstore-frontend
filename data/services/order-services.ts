@@ -27,13 +27,17 @@ export async function createOrder(
 }
 
 // get order
-export async function getOrder(userId: string) {
+export async function getOrder(userId: number) {
   const query = qs.stringify({
     filters: {
       orderStatus: {
         $in: ["order placed", "processing", "shipped"],
       },
-      users_permissions_user: userId,
+      users_permissions_user: {
+        id: {
+          $eq: userId,
+        },
+      },
     },
     populate: {
       cart_items: {

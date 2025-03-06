@@ -6,8 +6,8 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export function useFetchOrder(orderId: string) {
-  const [order, setOrder] = useState<OrderItems | null>(null);
+export function useFetchOrder(userId: number) {
+  const [order, setOrder] = useState<OrderItems[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,7 +15,7 @@ export function useFetchOrder(orderId: string) {
     const fetchOrder = async () => {
       setLoading(true);
       try {
-        const result = await getOrder(orderId);
+        const result = await getOrder(userId);
         if (result.ok) {
           setOrder(result.data.data);
           setError(null);
@@ -31,10 +31,8 @@ export function useFetchOrder(orderId: string) {
       }
     };
 
-    if (orderId) {
-      fetchOrder();
-    }
-  }, [orderId]);
+    fetchOrder();
+  }, [userId]);
 
   return { order, loading, error };
 }
