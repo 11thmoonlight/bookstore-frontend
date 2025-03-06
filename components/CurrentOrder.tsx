@@ -16,7 +16,9 @@ const CurrentOrderTab: React.FC = () => {
     user?.orders[0]?.documentId || ""
   );
 
-  console.log(order);
+  console.log("user", user?.orders);
+
+  console.log("order", order);
 
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;

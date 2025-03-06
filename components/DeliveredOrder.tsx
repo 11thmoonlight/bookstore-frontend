@@ -11,7 +11,7 @@ import { Separator } from "./ui/separator";
 
 const DeliveredOrderTab: React.FC = () => {
   const { user } = useUser();
-  const { order, loading, error } = useFetchDelivered(user?.documentId || "");
+  const { order, loading, error } = useFetchDelivered(user?.id || 0);
 
   console.log(order);
 

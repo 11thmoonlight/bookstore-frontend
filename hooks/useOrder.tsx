@@ -68,7 +68,7 @@ export function useCreateOrder() {
   return { createNewOrder, loading, setLoading, error };
 }
 
-export function useFetchDelivered(userId: string) {
+export function useFetchDelivered(userId: number) {
   const [order, setOrder] = useState<OrderItems[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,7 +94,7 @@ export function useFetchDelivered(userId: string) {
     };
 
     fetchOrder();
-  }, []);
+  }, [userId]);
 
   return { order, loading, error };
 }

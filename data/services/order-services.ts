@@ -65,13 +65,17 @@ export async function getOrder(userId: string) {
 }
 
 // get delivered orders
-export async function getDeliveredOrders(userId: string) {
+export async function getDeliveredOrders(userId: number) {
   const query = qs.stringify({
     filters: {
       orderStatus: {
         $eq: "delivered",
       },
-      users_permissions_user: userId,
+      users_permissions_user: {
+        id: {
+          $eq: userId,
+        },
+      },
     },
     populate: {
       cart_items: {
