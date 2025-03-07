@@ -40,7 +40,7 @@ export default function Register() {
               Sign Up
             </CardTitle>
             <CardDescription className="text-amber-200">
-              Enter your details to create a new account
+              Enter your credentials to create a new account
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -97,7 +97,7 @@ export default function Register() {
         <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">
           Have an account?
           <Link className="underline ml-2" href="log-in">
-            Log In
+            Sign in
           </Link>
         </div>
       </form>

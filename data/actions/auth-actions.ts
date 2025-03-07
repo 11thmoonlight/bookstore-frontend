@@ -128,6 +128,41 @@ export async function loginUserAction(
   redirect("/");
 }
 
+// export async function loginUserAction(
+//   prevState: AuthState,
+//   formData: FormData
+// ) {
+//   const validatedFields = schemaLogin.safeParse({
+//     identifier: formData.get("identifier"),
+//     password: formData.get("password"),
+//   });
+
+//   if (!validatedFields.success) {
+//     return {
+//       ...prevState,
+//       zodErrors: validatedFields.error.flatten().fieldErrors,
+//       message: "Missing Fields. Failed to Login.",
+//     };
+//   }
+
+//   const responseData = await loginUserService(validatedFields.data);
+
+//   if (!responseData || responseData.error) {
+//     return {
+//       ...prevState,
+//       strapiErrors: responseData?.error || "Failed to Login.",
+//       zodErrors: null,
+//       message: responseData?.error || "Invalid credentials or user not found.",
+//     };
+//   }
+//   cookies().set("jwt", responseData.jwt, config);
+
+//   return {
+//     ...prevState,
+//     data: responseData.user,
+//   };
+// }
+
 export async function logoutAction() {
   cookies().set("jwt", "", { ...config, expires: new Date(0) });
   redirect("/");

@@ -29,6 +29,8 @@ const INITIAL_STATE = {
 export default function LogIn() {
   const [formState, formAction] = useFormState(loginUserAction, INITIAL_STATE);
 
+  console.log(formState);
+
   return (
     <div className="w-fit sm:w-full max-w-md">
       <form action={formAction}>
