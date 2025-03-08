@@ -33,6 +33,8 @@ export default function Header() {
     router.refresh();
   };
 
+  console.log("user", user);
+
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-white dark:bg-stone-700 shadow-lg z-50">

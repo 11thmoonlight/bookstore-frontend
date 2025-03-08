@@ -74,7 +74,11 @@ export async function registerUserAction(
   }
 
   cookies().set("jwt", responseData.jwt, config);
-  redirect("/");
+
+  return {
+    ...prevState,
+    data: responseData.user,
+  };
 }
 
 const schemaLogin = z.object({
@@ -95,38 +99,6 @@ const schemaLogin = z.object({
       message: "Password must be between 6 and 100 characters",
     }),
 });
-
-export async function loginUserAction(
-  prevState: AuthState,
-  formData: FormData
-) {
-  const validatedFields = schemaLogin.safeParse({
-    identifier: formData.get("identifier"),
-    password: formData.get("password"),
-  });
-
-  if (!validatedFields.success) {
-    return {
-      ...prevState,
-      zodErrors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Login.",
-    };
-  }
-
-  const responseData = await loginUserService(validatedFields.data);
-
-  if (!responseData || responseData.error) {
-    return {
-      ...prevState,
-      strapiErrors: responseData?.error || "Failed to Login.",
-      zodErrors: null,
-      message: responseData?.error || "Invalid credentials or user not found.",
-    };
-  }
-
-  cookies().set("jwt", responseData.jwt, config);
-  redirect("/");
-}
 
 // export async function loginUserAction(
 //   prevState: AuthState,
@@ -155,13 +127,45 @@ export async function loginUserAction(
 //       message: responseData?.error || "Invalid credentials or user not found.",
 //     };
 //   }
-//   cookies().set("jwt", responseData.jwt, config);
 
-//   return {
-//     ...prevState,
-//     data: responseData.user,
-//   };
+//   cookies().set("jwt", responseData.jwt, config);
+//   redirect("/");
 // }
+
+export async function loginUserAction(
+  prevState: AuthState,
+  formData: FormData
+) {
+  const validatedFields = schemaLogin.safeParse({
+    identifier: formData.get("identifier"),
+    password: formData.get("password"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      ...prevState,
+      zodErrors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Login.",
+    };
+  }
+
+  const responseData = await loginUserService(validatedFields.data);
+
+  if (!responseData || responseData.error) {
+    return {
+      ...prevState,
+      strapiErrors: responseData?.error || "Failed to Login.",
+      zodErrors: null,
+      message: responseData?.error || "Invalid credentials or user not found.",
+    };
+  }
+  cookies().set("jwt", responseData.jwt, config);
+
+  return {
+    ...prevState,
+    data: responseData.user,
+  };
+}
 
 export async function logoutAction() {
   cookies().set("jwt", "", { ...config, expires: new Date(0) });

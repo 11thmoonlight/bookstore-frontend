@@ -16,30 +16,73 @@ const baseUrl = getStrapiURL();
 
 export async function registerUserService(userData: RegisterUserProps) {
   const url = `${baseUrl}/api/auth/local/register`;
+  const query = "populate=*";
 
   try {
-    const response = await axios.post(url, userData, {
+    const registerResponse = await axios.post(url, userData, {
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    return response.data;
-  } catch (error) {
-    console.error("Registration Service Error:", error);
-    throw error;
+    const token = registerResponse.data.jwt;
+
+    const userResponse = await axios.get(`${baseUrl}/api/users/me?${query}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return { jwt: token, user: userResponse.data };
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.error("Login Error Response:", error.response?.data);
+
+      if (error.response?.status === 400 || error.response?.status === 401) {
+        return { error: "Invalid username or password." };
+      }
+    }
+
+    return { error: "Something went wrong. Please try again." };
   }
 }
 
+// export async function loginUserService(userData: LoginUserProps) {
+//   const url = `${baseUrl}/api/auth/local`;
+
+//   try {
+//     const response = await axios.post(url, userData, {
+//       headers: { "Content-Type": "application/json" },
+//     });
+
+//     return response.data;
+//   } catch (error: unknown) {
+//     if (error instanceof AxiosError) {
+//       console.error("Login Error Response:", error.response?.data);
+
+//       if (error.response?.status === 400 || error.response?.status === 401) {
+//         return { error: "Invalid username or password." };
+//       }
+//     }
+
+//     return { error: "Something went wrong. Please try again." };
+//   }
+// }
+
 export async function loginUserService(userData: LoginUserProps) {
   const url = `${baseUrl}/api/auth/local`;
+  const query = "populate=*";
 
   try {
-    const response = await axios.post(url, userData, {
+    const loginResponse = await axios.post(url, userData, {
       headers: { "Content-Type": "application/json" },
     });
 
-    return response.data;
+    const token = loginResponse.data.jwt;
+
+    const userResponse = await axios.get(`${baseUrl}/api/users/me?${query}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return { jwt: token, user: userResponse.data };
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       console.error("Login Error Response:", error.response?.data);

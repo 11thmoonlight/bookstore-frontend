@@ -18,6 +18,9 @@ import { Input } from "@/components/ui/input";
 import { ZodErrors } from "@/components/custom/ZodErrors";
 import { StrapiErrors } from "@/components/custom/StrapiErrors";
 import { SubmitButton } from "@/components/custom/SubmitButton";
+import { useEffect } from "react";
+import { useUser } from "@/context/userContext";
+import { redirect } from "next/navigation";
 
 const INITIAL_STATE = {
   zodErrors: null,
@@ -28,8 +31,14 @@ const INITIAL_STATE = {
 
 export default function LogIn() {
   const [formState, formAction] = useFormState(loginUserAction, INITIAL_STATE);
+  const { setUser } = useUser();
 
-  console.log(formState);
+  useEffect(() => {
+    if (formState?.data) {
+      setUser(formState?.data);
+      redirect("/");
+    }
+  }, [formState?.data]);
 
   return (
     <div className="w-fit sm:w-full max-w-md">
