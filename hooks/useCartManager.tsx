@@ -145,6 +145,7 @@ export function useCartManager() {
 
   return {
     cart,
+    setCart,
     quantities,
     handleIncreaseItem,
     handleDecreaseItem,

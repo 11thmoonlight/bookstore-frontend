@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   zodErrors: null,
   strapiErrors: null,
   message: "",
+  data: null,
 };
 
 export default function Register() {
@@ -40,7 +41,7 @@ export default function Register() {
       setUser(formState?.data);
       redirect("/");
     }
-  }, [formState?.data]);
+  }, [formState?.data, setUser]);
 
   return (
     <div className="w-fit sm:w-full max-w-md">
@@ -102,7 +103,17 @@ export default function Register() {
               text="Sign Up"
               loadingText="Loading"
             />
-            <StrapiErrors error={formState?.strapiErrors} />
+            <StrapiErrors
+              error={
+                formState?.strapiErrors
+                  ? {
+                      message: formState.strapiErrors,
+                      name: "Error",
+                      status: null,
+                    }
+                  : { message: null, name: "Error", status: null }
+              }
+            />
           </CardFooter>
         </Card>
         <div className="mt-4 text-center text-sm bg-opacity-85 bg-amber-950 text-amber-50 rounded-lg p-4">

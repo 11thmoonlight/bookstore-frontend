@@ -68,35 +68,55 @@ export default function BooksById() {
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             <div className="flex justify-between">
-              <p className="font-bold text-amber-800 dark:text-stone-200">Publisher</p>
-              <p className="text-amber-800 dark:text-stone-200">{book?.publisher}</p>
+              <p className="font-bold text-amber-800 dark:text-stone-200">
+                Publisher
+              </p>
+              <p className="text-amber-800 dark:text-stone-200">
+                {book?.publisher}
+              </p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold text-amber-800 dark:text-stone-200">Publication Date</p>
+              <p className="font-bold text-amber-800 dark:text-stone-200">
+                Publication Date
+              </p>
               <p className="text-amber-800 dark:text-stone-200">
                 {book?.publicationYear.replaceAll("-", "/")}
               </p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold text-amber-800 dark:text-stone-200">Language</p>
-              <p className="text-amber-800 dark:text-stone-200">{book?.language}</p>
+              <p className="font-bold text-amber-800 dark:text-stone-200">
+                Language
+              </p>
+              <p className="text-amber-800 dark:text-stone-200">
+                {book?.language}
+              </p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold text-amber-80 dark:text-stone-2000">Pages</p>
-              <p className="text-amber-800 dark:text-stone-200">{book?.pagesNum}</p>
+              <p className="font-bold text-amber-800 dark:text-stone-2000">
+                Pages
+              </p>
+              <p className="text-amber-800 dark:text-stone-200">
+                {book?.pagesNum}
+              </p>
             </div>
 
             <div className="flex justify-between">
-              <p className="font-bold text-amber-800 dark:text-stone-200">Genere</p>
-              <p className="text-amber-800 dark:text-stone-200">{book?.category}</p>
+              <p className="font-bold text-amber-800 dark:text-stone-200">
+                Genere
+              </p>
+              <p className="text-amber-800 dark:text-stone-200">
+                {book?.category}
+              </p>
             </div>
 
             {book?.discount && book?.discount > 0 && (
               <div className="flex justify-between">
-                <p className="font-bold text-amber-800 dark:text-stone-200">Discount</p>
+                <p className="font-bold text-amber-800 dark:text-stone-200">
+                  Discount
+                </p>
                 <p className="text-red-700 text-lg font-bold">
                   {book?.discount}$
                 </p>
@@ -104,7 +124,9 @@ export default function BooksById() {
             )}
 
             <div className="flex justify-between">
-              <p className="font-bold text-amber-800 dark:text-stone-200">Price</p>
+              <p className="font-bold text-amber-800 dark:text-stone-200">
+                Price
+              </p>
               <p className="text-lime-600 text-lg font-bold">{book?.price}$</p>
             </div>
             <div className="flex gap-2">

@@ -45,28 +45,6 @@ export async function registerUserService(userData: RegisterUserProps) {
   }
 }
 
-// export async function loginUserService(userData: LoginUserProps) {
-//   const url = `${baseUrl}/api/auth/local`;
-
-//   try {
-//     const response = await axios.post(url, userData, {
-//       headers: { "Content-Type": "application/json" },
-//     });
-
-//     return response.data;
-//   } catch (error: unknown) {
-//     if (error instanceof AxiosError) {
-//       console.error("Login Error Response:", error.response?.data);
-
-//       if (error.response?.status === 400 || error.response?.status === 401) {
-//         return { error: "Invalid username or password." };
-//       }
-//     }
-
-//     return { error: "Something went wrong. Please try again." };
-//   }
-// }
-
 export async function loginUserService(userData: LoginUserProps) {
   const url = `${baseUrl}/api/auth/local`;
   const query = "populate=*";
