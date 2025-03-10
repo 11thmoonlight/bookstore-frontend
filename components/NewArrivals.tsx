@@ -13,7 +13,7 @@ import Loader from "./custom/Loader";
 import ErrorMessage from "./custom/ErrorMessage";
 
 type PropType = {
-  slides: number[];
+  slides?: number[];
   options?: EmblaOptionsType;
 };
 

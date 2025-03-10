@@ -130,7 +130,10 @@ export default function BooksById() {
               <p className="text-lime-600 text-lg font-bold">{book?.price}$</p>
             </div>
             <div className="flex gap-2">
-              <AddToCartButton productId={book?.documentId ?? ""} />
+              <AddToCartButton
+                productId={book?.documentId ?? ""}
+                stock={book?.stock ?? 0}
+              />
               <AddToWishlistButton productId={book?.documentId ?? ""} />
             </div>
           </CardContent>

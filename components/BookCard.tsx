@@ -21,6 +21,7 @@ interface BookCardProps {
     author: string;
     price: number;
     image: { url: string }[];
+    stock: number;
   };
 }
 
@@ -55,7 +56,11 @@ export default function BookCard({ book }: BookCardProps) {
             </Link>
           </Button>
 
-          <AddToCartButton productId={book.documentId} variant="icon" />
+          <AddToCartButton
+            productId={book.documentId}
+            variant="icon"
+            stock={book.stock}
+          />
         </CardFooter>
       </Card>
     </motion.div>

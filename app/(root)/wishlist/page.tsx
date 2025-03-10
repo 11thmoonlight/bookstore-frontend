@@ -13,9 +13,9 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userContext";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useCartItem } from "@/hooks/useCartItem";
 import Loader from "@/components/custom/Loader";
 import ErrorMessage from "@/components/custom/ErrorMessage";
+import AddToCartButton from "@/components/AddToCartButton";
 
 export default function WishList() {
   const { user } = useUser();
@@ -23,19 +23,9 @@ export default function WishList() {
     user?.wishlists[0]?.documentId || ""
   );
 
-  const { addItemToCart } = useCartItem(user?.cart?.documentId || "");
-
   const handleRemoveWishList = async (productId: string) => {
     try {
       await removeFromWishlist(productId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleAddToCart = async (productId: string) => {
-    try {
-      await addItemToCart(productId);
     } catch (err) {
       console.error(err);
     }
@@ -86,12 +76,17 @@ export default function WishList() {
                 </div>
 
                 <div className="flex md:hidden gap-6 items-center justify-center bg-amber-50 p-4 rounded-lg mb-12">
-                  <Button
+                  {/* <Button
                     onClick={() => handleAddToCart(item.documentId)}
                     className="bg-lime-200 hover:bg-lime-300 text-lime-900 active:scale-95 transition-all active:bg-lime-200"
                   >
                     Add to cart
-                  </Button>
+                  </Button> */}
+                  <AddToCartButton
+                    productId={item.documentId}
+                    variant="wishlist"
+                    stock={item.stock}
+                  />
                   <Button
                     onClick={() => handleRemoveWishList(item.documentId)}
                     className="bg-red-200 hover:bg-red-300 text-amber-900 active:scale-95 transition-all active:bg-red-200"
@@ -108,12 +103,18 @@ export default function WishList() {
               </TableCell>
               <TableCell>
                 <div className="hidden md:flex gap-6 items-center justify-center">
-                  <Button
+                  {/* <Button
                     onClick={() => handleAddToCart(item.documentId)}
                     className="bg-lime-200 hover:bg-lime-300 text-lime-900 active:scale-95 transition-all active:bg-lime-200"
                   >
                     Add to cart
-                  </Button>
+                  </Button> */}
+
+                  <AddToCartButton
+                    productId={item.documentId}
+                    variant="wishlist"
+                    stock={item.stock}
+                  />
                   <Button
                     onClick={() => handleRemoveWishList(item.documentId)}
                     className="bg-red-200 hover:bg-red-300 text-amber-900 active:scale-95 transition-all active:bg-red-200"
