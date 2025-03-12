@@ -14,8 +14,6 @@ const CurrentOrderTab: React.FC = () => {
   const { user } = useUser();
   const { order, loading, error } = useFetchOrder(user?.id || 0);
 
-  console.log("order", order);
-
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;
   if (!order || order.length === 0) {

@@ -13,8 +13,6 @@ const DeliveredOrderTab: React.FC = () => {
   const { user } = useUser();
   const { order, loading, error } = useFetchDelivered(user?.id || 0);
 
-  console.log(order);
-
   if (loading) return <Loader />;
   if (error) return <ErrorMessage />;
   if (!order || order.length === 0) {
