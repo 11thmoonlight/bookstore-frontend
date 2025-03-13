@@ -26,8 +26,13 @@ export async function getUserMeLoader() {
     }
 
     return { ok: true, data: response.data, error: null };
-  } catch (error) {
-    console.error(error);
-    return { ok: false, data: null, error: error.message || error };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching user:", error.message);
+      return { ok: false, data: null, error };
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return { ok: false, data: null, error: new Error("Unknown error") };
+    }
   }
 }

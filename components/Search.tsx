@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -13,28 +13,31 @@ export default function Search() {
 
   const { books, loading, setBooks } = useBooksBySearch(searchQuery);
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (
-      searchBoxRef.current &&
-      !searchBoxRef.current.contains(event.target as Node)
-    ) {
-      setSearchQuery("");
-      setBooks([]);
-    }
-  };
-
-  const handleSelectSuggestion = (documentId: string) => {
-    setSearchQuery("");
-    setBooks([]);
-    router.push(`/book/${documentId}`);
-  };
+  const handleOutsideClick = useCallback(
+    (event: MouseEvent) => {
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(event.target as Node)
+      ) {
+        setSearchQuery("");
+        setBooks([]);
+      }
+    },
+    [setBooks]
+  );
 
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
-  }, []);
+  }, [handleOutsideClick]);
+
+  const handleSelectSuggestion = (documentId: string) => {
+    setSearchQuery("");
+    setBooks([]);
+    router.push(`/book/${documentId}`);
+  };
 
   return (
     <div ref={searchBoxRef} className="relative w-full max-w-md mx-auto">
@@ -75,8 +78,12 @@ export default function Search() {
                     />
                     <div className="flex flex-col gap-1">
                       <p>{book.name}</p>
-                      <p className="text-gray-600 text-sm dark:text-gray-200">By {book.author}</p>
-                      <p className="text-gray-600 text-sm dark:text-gray-200">{book.publisher}</p>
+                      <p className="text-gray-600 text-sm dark:text-gray-200">
+                        By {book.author}
+                      </p>
+                      <p className="text-gray-600 text-sm dark:text-gray-200">
+                        {book.publisher}
+                      </p>
                     </div>
                   </div>
                 </li>
