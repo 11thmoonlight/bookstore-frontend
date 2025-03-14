@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function getStrapiURL() {
   return (
     process.env.NEXT_PUBLIC_STRAPI_URL ??
-    "http://backend-production-dd5c.up.railway.app"
+    "https://backend-production-dd5c.up.railway.app"
   );
 }
 
