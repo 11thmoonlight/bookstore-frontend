@@ -6,7 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getStrapiURL() {
-  return process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+  return (
+    process.env.NEXT_PUBLIC_STRAPI_URL ??
+    "http://backend-production-dd5c.up.railway.app"
+  );
 }
 
 export const formatDate = (dateString: string) => {
