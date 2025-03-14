@@ -7,7 +7,6 @@ import Loader from "./custom/Loader";
 import ErrorMessage from "./custom/ErrorMessage";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
-import { Separator } from "./ui/separator";
 
 const DeliveredOrderTab: React.FC = () => {
   const { user } = useUser();
@@ -27,7 +26,7 @@ const DeliveredOrderTab: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {order?.map((item) => {
         const totalItems =
           item.cart_items?.reduce(
@@ -48,29 +47,29 @@ const DeliveredOrderTab: React.FC = () => {
             .toFixed(2) || "0.00";
 
         return (
-          <>
+          <div key={item.documentId}>
             <TabsContent
-              className="text-center min-h-[250px] rounded-lg border-2 border-gray-100 border-solid"
+              className="min-h-[250px] rounded-lg border-2 border-gray-100 border-solid"
               value="delivered"
               key={item.id}
             >
               <div className="flex flex-col p-7 gap-6">
                 <div className="flex gap-3 items-center">
                   <GoCheckCircleFill size={27} fill="#84cc16" />
-                  <span className="font-bold">Delivered</span>
+                  <span className="font-bold text-lg">Delivered</span>
                 </div>
-                <div className="flex gap-6">
-                  <p>{formatDate(item.updatedAt)}</p>
+                <div className="flex gap-6 sm:flex-row flex-col">
+                  <p className="font-bold">{formatDate(item.updatedAt)}</p>
                   <p className="flex gap-2">
-                    <span>Total Cost:</span>
+                    <span className="font-semibold">Total Cost:</span>
                     <span>$ {item.payAmount}</span>
                   </p>
                   <p className="flex gap-2">
-                    <span>Discount</span>
+                    <span className="font-semibold">Discount:</span>
                     <span>$ {discounts}</span>
                   </p>
                   <p className="flex gap-2">
-                    <span>Total Items:</span>
+                    <span className="font-semibold">Total Items:</span>
                     <span>{totalItems}</span>
                   </p>
                 </div>
@@ -92,8 +91,7 @@ const DeliveredOrderTab: React.FC = () => {
                 </div>
               </div>
             </TabsContent>
-            <Separator orientation="horizontal" />
-          </>
+          </div>
         );
       })}
     </div>
