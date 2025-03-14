@@ -29,7 +29,7 @@ export default function BooksById() {
         <div className="flex flex-col md:flex-row gap-10 items-center">
           <div>
             <Image
-              src={`http://localhost:1337/${book?.image[0]?.url}`}
+              src={`${process.env.NEXT_PUBLIC_STRAPI_UR}/${book?.image[0]?.url}`}
               alt="book image cover"
               width={430}
               height={900}
@@ -42,7 +42,7 @@ export default function BooksById() {
             <div className="text-lg flex gap-4 items-center">
               <Avatar>
                 <AvatarImage
-                  src={`http://localhost:1337/${book?.authorImg?.url}`}
+                  src={`${process.env.NEXT_PUBLIC_STRAPI_UR}/${book?.authorImg?.url}`}
                   alt="writer image"
                 />
                 <AvatarFallback>{book?.author}</AvatarFallback>
