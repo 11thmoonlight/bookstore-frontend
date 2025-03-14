@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PacmanLoader } from "react-spinners";
 import Link from "next/link";
@@ -8,15 +8,19 @@ import { Button } from "@/components/ui/button";
 import { FaArrowRight } from "react-icons/fa6";
 import { useCreateOrder } from "@/hooks/useOrder";
 
-export default function Success() {
+function Success() {
   const { createNewOrder, loading, error, setLoading } = useCreateOrder();
   const searchParams = useSearchParams();
-  const session_id = searchParams.get("session_id");
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const isOrderCreated = useRef(false);
 
   useEffect(() => {
-    if (!session_id || isOrderCreated.current) return;
+    setSessionId(searchParams.get("session_id"));
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!sessionId || isOrderCreated.current) return;
 
     isOrderCreated.current = true;
     (async () => {
@@ -26,7 +30,7 @@ export default function Success() {
       );
 
       if (cart && shippingInfo.address) {
-        await createNewOrder(shippingInfo, session_id);
+        await createNewOrder(shippingInfo, sessionId);
 
         if (error) {
           console.error("Order creation error:", error);
@@ -38,7 +42,7 @@ export default function Success() {
 
       setLoading(false);
     })();
-  }, [session_id, createNewOrder, error, setLoading]);
+  }, [sessionId, createNewOrder, error, setLoading]);
 
   return loading ? (
     <div className="flex flex-col gap-6 justify-center items-center bg-amber-50 dark:bg-stone-800 h-screen">
@@ -57,5 +61,13 @@ export default function Success() {
         </Link>
       </Button>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Success />
+    </Suspense>
   );
 }
