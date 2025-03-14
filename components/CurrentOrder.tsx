@@ -28,7 +28,7 @@ const CurrentOrderTab: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-10">
       {order?.map((item) => {
         const formattedDate = formatDate(item?.createdAt ?? "");
 
@@ -56,7 +56,7 @@ const CurrentOrderTab: React.FC = () => {
             .toFixed(2) || "0.00";
 
         return (
-          <>
+          <div key={item.documentId}>
             <TabsContent
               className="text-center min-h-[250px] rounded-lg border-1 border-2 border-gray-100 border-solid"
               value="current"
@@ -126,8 +126,7 @@ const CurrentOrderTab: React.FC = () => {
                 </div>
               </div>
             </TabsContent>
-            <Separator orientation="horizontal" />
-          </>
+          </div>
         );
       })}
     </div>
