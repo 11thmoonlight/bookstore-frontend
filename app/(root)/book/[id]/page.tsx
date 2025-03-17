@@ -29,11 +29,12 @@ export default function BooksById() {
         <div className="flex flex-col md:flex-row gap-10 items-center">
           <div>
             <Image
-              src={`${process.env.NEXT_PUBLIC_STRAPI_UR}/${book?.image[0]?.url}`}
+              src={`https://backend-production-dd5c.up.railway.app${book?.image[0]?.url}`}
               alt="book image cover"
               width={430}
               height={900}
               className="rounded-xl shadow-lg"
+              unoptimized
             />
           </div>
 
@@ -42,7 +43,7 @@ export default function BooksById() {
             <div className="text-lg flex gap-4 items-center">
               <Avatar>
                 <AvatarImage
-                  src={`${process.env.NEXT_PUBLIC_STRAPI_UR}/${book?.authorImg?.url}`}
+                  src={`https://backend-production-dd5c.up.railway.app${book?.authorImg?.url}`}
                   alt="writer image"
                 />
                 <AvatarFallback>{book?.author}</AvatarFallback>

@@ -43,10 +43,11 @@ const CartTable: React.FC<CartTableProps> = ({
                   }`}
                 >
                   <Image
-                    src={`http://localhost:1337${item.image[0].url}`}
+                    src={`https://backend-production-dd5c.up.railway.app${item?.image[0]?.url}`}
                     alt="book image cover"
                     width={variant === "readonly" ? 70 : 110}
                     height={variant === "readonly" ? 70 : 120}
+                    unoptimized
                   />
 
                   <div className="flex flex-col justify-between gap-4">

@@ -71,10 +71,11 @@ export default function Search() {
                 >
                   <div className="flex gap-4">
                     <Image
-                      src={`http://localhost:1337${book.image[0].url}`}
+                      src={`https://backend-production-dd5c.up.railway.app${book?.image[0]?.url}`}
                       width={60}
                       height={10}
                       alt="book's cover"
+                      unoptimized
                     />
                     <div className="flex flex-col gap-1">
                       <p>{book.name}</p>

@@ -78,10 +78,11 @@ const DeliveredOrderTab: React.FC = () => {
                   {item.cart_items.map((item) => (
                     <div key={item.id} className="flex flex-col gap-4">
                       <Image
-                        src={`http://localhost:1337${item.product.image[0].url}`}
+                        src={`https://backend-production-dd5c.up.railway.app${item.product?.image[0]?.url}`}
                         alt="book image cover"
                         width={80}
                         height={80}
+                        unoptimized
                       />
                       <div className="text-sm text-stone-400">
                         {item.quantity} copies

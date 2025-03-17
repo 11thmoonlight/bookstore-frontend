@@ -58,10 +58,11 @@ export default function WishList() {
               <TableCell className="flex flex-col gap-8">
                 <div className="flex gap-4 items-center">
                   <Image
-                    src={`http://localhost:1337${item.image[0].url}`}
+                    src={`https://backend-production-dd5c.up.railway.app${item?.image[0]?.url}`}
                     alt="book image cover"
                     width={100}
                     height={200}
+                    unoptimized
                   />
                   <div className="flex flex-col justify-between gap-2">
                     <p className="font-bold text-base">{item.name}</p>
