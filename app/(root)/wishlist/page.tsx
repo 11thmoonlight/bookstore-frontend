@@ -77,12 +77,6 @@ export default function WishList() {
                 </div>
 
                 <div className="flex md:hidden gap-6 items-center justify-center bg-amber-50 p-4 rounded-lg mb-12">
-                  {/* <Button
-                    onClick={() => handleAddToCart(item.documentId)}
-                    className="bg-lime-200 hover:bg-lime-300 text-lime-900 active:scale-95 transition-all active:bg-lime-200"
-                  >
-                    Add to cart
-                  </Button> */}
                   <AddToCartButton
                     productId={item.documentId}
                     variant="wishlist"
@@ -104,13 +98,6 @@ export default function WishList() {
               </TableCell>
               <TableCell>
                 <div className="hidden md:flex gap-6 items-center justify-center">
-                  {/* <Button
-                    onClick={() => handleAddToCart(item.documentId)}
-                    className="bg-lime-200 hover:bg-lime-300 text-lime-900 active:scale-95 transition-all active:bg-lime-200"
-                  >
-                    Add to cart
-                  </Button> */}
-
                   <AddToCartButton
                     productId={item.documentId}
                     variant="wishlist"
