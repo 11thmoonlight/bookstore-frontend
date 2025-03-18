@@ -8,7 +8,7 @@ export async function createCheckout(total: number) {
   try {
     const amountInCents = Math.round(total * 100);
     const res = await fetch(
-      "http://localhost:1337/api/create-checkout-session",
+      `${process.env.PUBLIC_URL}/api/create-checkout-session`,
       {
         method: "POST",
         headers: {
