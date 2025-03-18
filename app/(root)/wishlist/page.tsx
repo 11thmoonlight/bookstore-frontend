@@ -40,7 +40,7 @@ export default function WishList() {
   }
 
   if (wishlist?.products.length === 0)
-    return <ErrorMessage message="There are no book in  your wish list !" />;
+    return <ErrorMessage message="There are no books in  your wish list !" />;
 
   return (
     <div className="mt-[160px] lg:px-20 md:px-10 px-2">
