@@ -44,7 +44,7 @@ export default function AddToWishlistButton({
           "bg-stone-200 text-amber-800 hover:shadow-lg hover:bg-white active:scale-95 transition-all active:bg-stone-200"
       )}
     >
-      {variant === "default" ? "Add to cart" : <GoHeart size={27} />}
+      {variant === "default" ? "Add to wish list" : <GoHeart size={27} />}
     </Button>
   );
 }
