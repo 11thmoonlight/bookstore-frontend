@@ -19,9 +19,13 @@ import AddToCartButton from "@/components/AddToCartButton";
 
 export default function WishList() {
   const { user } = useUser();
-  const { wishlist, loading, error, removeFromWishlist } = useWishlist(
-    user?.wishlists[0]?.documentId || ""
-  );
+
+  const wishlistId = user?.wishlists?.length
+    ? user.wishlists[0].documentId
+    : "";
+
+  const { wishlist, loading, error, removeFromWishlist } =
+    useWishlist(wishlistId);
 
   const handleRemoveWishList = async (productId: string) => {
     try {
