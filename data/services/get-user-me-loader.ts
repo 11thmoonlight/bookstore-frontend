@@ -2,8 +2,24 @@
 import axios from "axios";
 import { getAuthToken } from "./get-token";
 import { getStrapiURL } from "@/lib/utils";
+import qs from "qs";
 
-const query = "populate=*";
+// const query = "populate=*";
+const query = qs.stringify({
+  populate: {
+    orders: "*",
+    wishlist: "*",
+    cart: {
+      populate: {
+        cart_items: {
+          populate: {
+            product: {},
+          },
+        },
+      },
+    },
+  },
+});
 
 export async function getUserMeLoader() {
   const baseUrl = getStrapiURL();
