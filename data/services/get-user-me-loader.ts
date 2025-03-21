@@ -11,11 +11,7 @@ const query = qs.stringify({
     wishlist: "*",
     cart: {
       populate: {
-        cart_items: {
-          populate: {
-            product: {},
-          },
-        },
+        cart_items: "*",
       },
     },
   },
