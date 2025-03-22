@@ -22,10 +22,16 @@ import Search from "./Search";
 import { BsBagCheck } from "react-icons/bs";
 import { ModeToggle } from "./custom/ModeToggle";
 import { useRouter } from "next/navigation";
+import { useCartManager } from "@/hooks/useCartManager";
 
 export default function Header() {
   const { user, setUser } = useUser();
   const router = useRouter();
+
+  const { cart, products } = useCartManager();
+
+  console.log(cart);
+  console.log(products);
 
   const handleLogout = async () => {
     await logoutAction();
