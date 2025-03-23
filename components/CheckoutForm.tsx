@@ -70,11 +70,14 @@ export default function CheckoutForm({
     localStorage.setItem("cart", JSON.stringify(cart));
 
     try {
-      const res = await fetch(`${process.env.PUBLIC_URL}/api/payment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ totalPrice, shippingInfo: values }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/payment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ totalPrice, shippingInfo: values }),
+        }
+      );
 
       const { sessionId } = await res.json();
       const stripe = await stripePromise;
