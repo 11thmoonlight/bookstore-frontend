@@ -1,6 +1,11 @@
 import { cookies } from "next/headers";
 
 export async function getAuthToken() {
-  const authToken = cookies().get("jwt")?.value;
+  let authToken = cookies().get("jwt")?.value;
+
+  if (!authToken) {
+    authToken = localStorage.getItem("jwt");
+  }
+
   return authToken;
 }

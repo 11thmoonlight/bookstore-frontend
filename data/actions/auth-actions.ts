@@ -129,6 +129,7 @@ export async function loginUserAction(
     };
   }
   cookies().set("jwt", responseData.jwt, config);
+  localStorage.setItem("jwt", responseData.jwt);
 
   return {
     ...prevState,
@@ -138,5 +139,6 @@ export async function loginUserAction(
 
 export async function logoutAction() {
   cookies().set("jwt", "", { ...config, expires: new Date(0) });
+  localStorage.removeItem("jwt");
   redirect("/");
 }
