@@ -11,7 +11,7 @@ import {
 const config = {
   maxAge: 60 * 60 * 24 * 7, // 1 week
   path: "/",
-  // domain: "backend-production-dd5c.up.railway.app",
+  domain: "backend-production-dd5c.up.railway.app",
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
 };
@@ -74,7 +74,16 @@ export async function registerUserAction(
     };
   }
 
-  cookies().set("jwt", responseData.jwt, config);
+  // cookies().set("jwt", responseData.jwt, config);
+  cookies().set({
+    name: "jwt",
+    value: responseData.jwt,
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
 
   return {
     ...prevState,
@@ -128,7 +137,16 @@ export async function loginUserAction(
       message: responseData?.error || "Invalid credentials or user not found.",
     };
   }
-  cookies().set("jwt", responseData.jwt, config);
+  // cookies().set("jwt", responseData.jwt, config);
+  cookies().set({
+    name: "jwt",
+    value: responseData.jwt,
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
 
   return {
     ...prevState,
