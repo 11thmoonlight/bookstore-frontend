@@ -23,6 +23,7 @@ export async function registerUserService(userData: RegisterUserProps) {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
 
     const token = registerResponse.data.jwt;
@@ -58,6 +59,7 @@ export async function loginUserService(userData: LoginUserProps) {
 
     const userResponse = await axios.get(`${baseUrl}/api/users/me?${query}`, {
       headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
     });
 
     return { jwt: token, user: userResponse.data };
