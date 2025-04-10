@@ -30,6 +30,13 @@ const NewArrivals: React.FC<PropType> = () => {
 
   return (
     <section className="max-w-[70rem] mx-auto flex flex-col gap-8 mb-20">
+      <div className="flex items-center justify-center w-full my-8">
+        <div className="flex-grow border-t border-gray-300 border-2 border-dashed" />
+        <h1 className="mx-4 text-3xl font-bold text-center text-amber-600 font-mono">
+          VIEW ALL CATEGORIES
+        </h1>
+        <div className="flex-grow border-t border-gray-300 border-2 border-dashed" />
+      </div>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex backface-hidden touch-pan-y">
           {books?.map((book, index) => (
