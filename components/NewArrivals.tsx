@@ -33,7 +33,7 @@ const NewArrivals: React.FC<PropType> = () => {
       <div className="flex items-center justify-center w-full my-8">
         <div className="flex-grow border-t border-gray-300 border-2 border-dashed" />
         <h1 className="mx-4 text-3xl font-bold text-center text-amber-600 font-mono">
-          NEW
+          NEW ARRIVALS
         </h1>
         <div className="flex-grow border-t border-gray-300 border-2 border-dashed" />
       </div>
