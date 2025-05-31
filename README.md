@@ -43,8 +43,6 @@ A modern and responsive **online bookstore** built with **Next.js 14**, **TypeSc
 
 ## 🌍 Live API URL
 
-```bash
-echo
 https://backend-production-dd5c.up.railway.app
 
 ---
