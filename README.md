@@ -51,7 +51,7 @@ https://backend-production-dd5c.up.railway.app
 
 1. Clone the repository
 
-git clone https://github.com/your-username/bookstore-frontend.git
+git clone https://github.com/11thmoonlight/bookstore-frontend.git
 cd bookstore-frontend
 
 2. Install dependencies
