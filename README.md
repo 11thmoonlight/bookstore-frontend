@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 Bookstore frontend – Online Bookshop
 
-## Getting Started
+A modern and responsive **online bookstore** built with **Next.js 14**, **TypeScript**, **Tailwind CSS**, and **ShadCN UI**. This full-stack project is powered by **Strapi CMS** as a backend and uses **Stripe** for secure payment processing.
 
-First, run the development server:
+---
+
+## ✨ Features
+
+- 🛍️ Browse and filter books by genre, author, or title  
+- 📖 View detailed book information  
+- ❤️ Add books to wishlist  
+- 🛒 Add to cart and place orders  
+- 💳 Stripe integration for online payments  
+- 🌗 Light/dark theme toggle  
+- 🧾 Admin content management via Strapi  
+- 🎛️ Form validation with React Hook Form + Zod  
+- 🔔 Toast notifications  
+- 🎠 Book carousel with Embla  
+- ⚡ Optimized performance and responsive design  
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- [Next.js 14](https://nextjs.org/)  
+- [TypeScript](https://www.typescriptlang.org/)  
+- [Tailwind CSS](https://tailwindcss.com/)  
+- [ShadCN UI](https://ui.shadcn.dev/)  
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)  
+- [Framer Motion](https://www.framer.com/motion/)  
+- [Embla Carousel](https://www.embla-carousel.com/)  
+- [Stripe](https://stripe.com/)  
+- [Radix UI](https://www.radix-ui.com/)  
+
+### Backend
+
+- [Strapi CMS](https://strapi.io/)  
+  Deployed on: [Railway](https://railway.app/)  
+
+---
+
+## 🌍 Live API URL
 
 ```bash
+https://backend-production-dd5c.up.railway.app
+
+---
+
+## 📦 Installation & Setup
+
+1. Clone the repository
+
+git clone https://github.com/your-username/bookstore-frontend.git
+cd bookstore-frontend
+
+2. Install dependencies
+
+npm install
+# or
+yarn
+
+3. Configure environment variables
+
+Create a .env.local file in the root and add the following:
+
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=your_public_stripe_key
+STRIPE_SECRET_KEY=your_stripe_secret_key
+
+---
+
+## 🚀 Run the app
+
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at https://hinode.vercel.app
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Scripts
 
-## Learn More
+| Script         | Description                        |
+|----------------|------------------------------------|
+| `npm dev`     | Start development server           |
+| `npm build`   | Build for production               |
+| `npm start`   | Run production build               |
+| `npm lint`    | Run ESLint                         |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧑‍💻 Author
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Made with ❤️ by Aida (https://github.com/11thmoonlight)
